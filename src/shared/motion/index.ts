@@ -3,7 +3,6 @@
  * Mỗi module độc lập, tự bỏ qua nếu trang không có phần tử tương ứng.
  */
 import { initReveal } from './reveal';
-import { initCounters } from './counter';
 import { initHeader } from './header';
 import { initPointer } from './pointer';
 import { initDitherCanvases } from './dither-canvas';
@@ -12,7 +11,6 @@ function boot() {
   initHeader();
   initPointer();
   initReveal();
-  initCounters();
   initDitherCanvases();
 }
 

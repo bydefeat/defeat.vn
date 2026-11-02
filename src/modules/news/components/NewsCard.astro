@@ -10,25 +10,25 @@ const { data } = post;
 const href = localizePath(newsPath(post), locale);
 ---
 
-<article class="card-fx group relative flex h-full flex-col border border-transparent p-2 transition-colors hover:border-base-300" data-reveal>
+<article class="group relative flex h-full flex-col" data-reveal="blinds">
   <div class="relative aspect-[16/10] overflow-hidden">
     {
       data.cover ? (
-        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[400, 800]} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="media size-full object-cover" />
+        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[400, 800]} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="media media-zoom size-full object-cover" />
       ) : (
-        <div class="cover-dither media flex size-full items-end p-5">
+        <div class="cover-dither flex size-full items-end p-5">
           <span class="relative z-10 line-clamp-2 font-display text-lg font-semibold text-neutral-content">{data.title}</span>
         </div>
       )
     }
   </div>
-  <div class="flex flex-1 flex-col px-2 pb-3">
+  <div class="flex flex-1 flex-col">
     <div class="mt-5 flex items-center gap-2 text-[13px] text-base-content/55">
       <time datetime={data.pubDate.toISOString()}>{formatDate(data.pubDate, locale)}</time>
       {data.tags[0] && <><span class="text-primary" aria-hidden="true">/</span><span class="text-primary">{data.tags[0]}</span></>}
     </div>
-    <H class="t-h3 mt-2 transition-colors group-hover:text-primary">
-      <a href={href} class="after:absolute after:inset-0">{data.title}</a>
+    <H class="t-h3 mt-2">
+      <a href={href} class="after:absolute after:inset-0"><span class="link-dither">{data.title}</span></a>
     </H>
     <p class="mt-2 line-clamp-2 text-sm text-base-content/65">{data.description}</p>
   </div>

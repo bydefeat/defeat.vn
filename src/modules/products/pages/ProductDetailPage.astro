@@ -43,12 +43,12 @@ const crumbs = [
 
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-3">
-      <div class="lg:col-span-2" data-reveal>
+      <div class="lg:col-span-2" data-reveal="dissolve">
         {data.cover && <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[800, 1200]} sizes="(min-width: 1024px) 66vw, 100vw" class="mb-10 w-full rounded-box" loading="eager" />}
         <div class="prose-defeat"><Content /></div>
       </div>
 
-      <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start" data-reveal>
+      <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start" data-reveal="scan">
         <PriceTag server:defer slug={productSlug(product)} locale={locale}>
           <PriceTagFallback slot="fallback" locale={locale} />
         </PriceTag>

@@ -21,11 +21,11 @@ const crumbs = [
   <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-3">
-      <div class="border border-base-300 bg-base-100 p-5 sm:p-10 lg:col-span-2" data-reveal>
+      <div class="border border-base-300 bg-base-100 p-5 sm:p-10 lg:col-span-2" data-reveal="scan">
         <ContactForm client:visible labels={text.form} locale={locale} />
       </div>
       <aside class="space-y-10" data-reveal-group="120">
-        <div data-reveal>
+        <div data-reveal="slide">
           <h2 class="t-label text-base-content/50">{text.infoTitle}</h2>
           <ul class="mt-4 space-y-3 text-sm">
             <li class="flex gap-3"><Icon name="mail" class="size-5 text-primary" /><a class="hover:text-primary" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
@@ -33,7 +33,7 @@ const crumbs = [
             <li class="flex gap-3"><Icon name="mapPin" class="size-5 text-primary" /><span>{SITE.address.locality}, Việt Nam</span></li>
           </ul>
         </div>
-        <ol class="space-y-6 border-l-2 border-primary/30 pl-6" data-reveal>
+        <ol class="space-y-6 border-l-2 border-primary/30 pl-6" data-reveal="slide">
           {
             text.steps.map((s, i) => (
               <li>

@@ -44,7 +44,7 @@ const crumbs = [
       <section class="border-b border-base-300" aria-label={text.results}>
         <dl class="container-x grid grid-cols-2 gap-6 py-10 md:grid-cols-4" data-reveal-group="100">
           {data.results.map((r) => (
-            <div data-reveal>
+            <div data-reveal="rise">
               <dt class="text-[13px] text-base-content/55">{r.label}</dt>
               <dd class="num mt-1 text-3xl font-semibold text-primary">{r.value}</dd>
             </div>
@@ -56,7 +56,7 @@ const crumbs = [
 
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-3">
-      <article class="lg:col-span-2" data-reveal>
+      <article class="lg:col-span-2" data-reveal="dissolve">
         {data.cover && <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[800, 1200]} sizes="(min-width: 1024px) 66vw, 100vw" class="mb-10 w-full rounded-box" loading="eager" />}
         <div class="prose-defeat"><Content /></div>
       </article>

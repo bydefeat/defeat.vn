@@ -53,7 +53,7 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
   <div class="grid-lines pointer-events-none absolute inset-0 text-neutral-content" aria-hidden="true"></div>
 
   <div class="container-x relative grid gap-12 pb-10 pt-16 sm:pt-20 lg:grid-cols-12 lg:gap-14">
-    <div class="lg:col-span-5" data-reveal>
+    <div class="lg:col-span-5" data-reveal="dissolve">
       <p class="eyebrow">{t('footer.ready')}</p>
       <a href={`mailto:${SITE.email}`} class="group mt-5 inline-flex max-w-full items-center gap-3 break-all font-display text-[clamp(1.625rem,1.2rem+1.8vw,2.5rem)] font-semibold leading-tight tracking-tight">
         <span class="link-dither">{SITE.email}</span>
@@ -82,7 +82,7 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
     <div class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:col-span-7" data-reveal-group="90">
       {
         columns.map((col) => (
-          <nav aria-label={col.title} class="first:col-span-2 sm:first:col-span-1" data-reveal>
+          <nav aria-label={col.title} class="first:col-span-2 sm:first:col-span-1" data-reveal="slide">
             <h2 class="t-label text-neutral-content/45">{col.title}</h2>
             <ul class="mt-4 space-y-1 text-[15px]">
               {col.links.map((l) => (
@@ -102,7 +102,7 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
 
   <!-- Wordmark dither -->
   <div class="relative aspect-[1354/300] w-full select-none" aria-hidden="true">
-    <img src="/brand/defeat-text_dither.png" alt="" width="1200" height="248" loading="lazy" class="pixelated absolute inset-x-[2%] bottom-[4%] w-[96%] opacity-40 [.is-live>&]:hidden" />
+    <img src="/brand/defeat-text_dither.png" alt="" width="1200" height="248" loading="lazy" class="canvas-fallback pixelated absolute inset-x-[2%] bottom-[4%] w-[96%] opacity-40" />
     <canvas data-dither="wordmark" data-src="/brand/defeat-text.png" class="pixelated absolute inset-0 size-full"></canvas>
   </div>
 

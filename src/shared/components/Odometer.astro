@@ -1,0 +1,25 @@
+---
+/**
+ * Số liệu dạng đồng hồ cơ (odometer): mỗi chữ số là một cột 0–9 lăn tới giá trị thật khi vào màn hình.
+ * Không JS / reduced motion: hiển thị ngay giá trị cuối. Trình đọc màn hình đọc giá trị thật qua aria-label.
+ */
+interface Props { value: string; class?: string }
+const { value, class: className } = Astro.props;
+const chars = [...value];
+const strip = [...Array(20).keys()].map((n) => n % 10);
+---
+
+<span class:list={['odo', className]} data-odometer>
+  <span class="sr-only">{value}</span>
+  {
+    chars.map((c) =>
+      /\d/.test(c) ? (
+        <span class={`odo-col odo-${c}`} aria-hidden="true">
+          <span class="odo-strip">{strip.map((n) => <span>{n}</span>)}</span>
+        </span>
+      ) : (
+        <span aria-hidden="true">{c}</span>
+      ),
+    )
+  }
+</span>

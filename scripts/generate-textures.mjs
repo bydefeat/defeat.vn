@@ -87,3 +87,18 @@ async function ditherImage(src, file, cells, scale, color, intensity = 0.9) {
 }
 await ditherImage('defeat_logo.png', 'defeat_logo_dither.png', 190, 4, [232, 32, 36]);
 await ditherImage('defeat-text.png', 'defeat-text_dither.png', 300, 4, [232, 32, 36], 0.75);
+
+// 6) Nhúng texture vào CSS dạng data URI → không phải tải ảnh, mask không bao giờ "trống" trong lúc chờ (tránh nháy).
+{
+  const { readFileSync, writeFileSync } = await import('node:fs');
+  const names = ['dither-6', 'dither-13', 'dither-25', 'dither-38', 'dither-50', 'dither-63', 'dither-75', 'dither-88', 'fade', 'wipe-y', 'wipe-x'];
+  const vars = names.map((n) => {
+    const b64 = readFileSync(new URL(`${n}.png`, OUT)).toString('base64');
+    return `  --tex-${n}: url("data:image/png;base64,${b64}");`;
+  });
+  writeFileSync(
+    new URL('../src/styles/textures.css', import.meta.url),
+    `/* Tự sinh bởi scripts/generate-textures.mjs — KHÔNG sửa tay. */\n:root {\n${vars.join('\n')}\n}\n`,
+  );
+  console.log('✓ src/styles/textures.css');
+}

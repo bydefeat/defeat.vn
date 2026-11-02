@@ -12,13 +12,13 @@ const { data } = item;
 const href = localizePath(caseStudyPath(item), locale);
 ---
 
-<article class="card-fx group grid h-full border border-base-300 bg-base-100 md:grid-cols-5" data-reveal>
+<article class="fx-shadow group grid h-full border border-base-300 bg-base-100 md:grid-cols-5" data-reveal="shutter">
   <div class="relative aspect-[16/10] overflow-hidden md:col-span-2 md:aspect-auto">
     {
       data.cover ? (
-        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[480, 800]} sizes="(min-width: 768px) 40vw, 100vw" class="media size-full object-cover" />
+        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[480, 800]} sizes="(min-width: 768px) 40vw, 100vw" class="media media-zoom size-full object-cover" />
       ) : (
-        <div class="cover-dither media flex size-full min-h-48 items-end p-5">
+        <div class="cover-dither flex size-full min-h-48 items-end p-5">
           <span class="t-label relative z-10 text-neutral-content">{data.industry}</span>
         </div>
       )

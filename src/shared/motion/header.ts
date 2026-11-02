@@ -37,7 +37,7 @@ export function initHeader() {
   const update = () => {
     const y = window.scrollY;
     header.dataset.scrolled = String(y > 8);
-    const busy = menu?.open || megaItems.some((i) => i.dataset.open === 'true');
+    const busy = menu?.open || megaItems.some((i) => i.dataset.open === 'true') || header.matches(':hover');
     if (!busy && y > lastY + 6 && y > 240) header.dataset.hidden = 'true';
     else if (y < lastY - 6 || y <= 240) header.dataset.hidden = 'false';
     lastY = y;
@@ -63,6 +63,15 @@ export function initHeader() {
   window.matchMedia('(min-width: 1024px)').addEventListener('change', (mq) => {
     if (mq.matches && menu?.open) menu.open = false;
   });
+  // Quay lại trang từ bfcache (nút Back): đóng mọi menu, mở khoá cuộn, hiện header.
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted) return;
+    if (menu) menu.open = false;
+    document.documentElement.classList.remove('menu-open');
+    closeAllMega();
+    header.dataset.hidden = 'false';
+  });
+
   window.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (menu?.open) {

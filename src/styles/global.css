@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./textures.css";
 @plugin "daisyui" {
   themes: false;
 }
@@ -45,11 +46,8 @@
   --font-display: var(--font-inter-tight), var(--font-inter), system-ui, sans-serif;
 }
 
-@property --corner {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
+@property --corner { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --blind { syntax: "<length>"; inherits: false; initial-value: 12px; }
 
 :root {
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -111,7 +109,9 @@
 }
 
 /* ==========================================================================
-   PAGE TRANSITIONS — cross-document View Transitions (tương thích CSP)
+   PAGE TRANSITION — cross-document View Transitions (tương thích CSP)
+   Trang cũ GIỮ NGUYÊN (chỉ tối dần) — không lộ nền trắng → không loé.
+   Trang mới quét xuống bằng mask dither. Header không cross-fade, chỉ trượt vị trí.
    ========================================================================== */
 @view-transition {
   navigation: auto;
@@ -119,18 +119,18 @@
 
 .site-header { view-transition-name: site-header; }
 
-::view-transition-old(root) { animation: vt-old 520ms var(--ease-io) both; }
+::view-transition-old(root) { animation: vt-dim 700ms var(--ease-io) both; }
 ::view-transition-new(root) {
-  mask-image: url("/textures/wipe-y.png");
+  mask-image: var(--tex-wipe-y);
   mask-repeat: repeat-x;
   mask-size: 32px 3456px;
-  animation: vt-wipe 760ms var(--ease-io) both;
+  animation: vt-wipe 700ms var(--ease-io) both;
 }
-::view-transition-group(site-header) { animation-duration: 0s; z-index: 50; }
+::view-transition-group(site-header) { z-index: 50; animation-duration: 450ms; animation-timing-function: var(--ease); }
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
 
-@keyframes vt-old {
-  to { opacity: 0.4; transform: translateY(-2vh) scale(0.985); filter: grayscale(1); }
-}
+@keyframes vt-dim { to { filter: brightness(0.55); } }
 @keyframes vt-wipe {
   from { mask-position: 0 -1856px; }
   to { mask-position: 0 0; }
@@ -147,12 +147,9 @@
     -webkit-tap-highlight-color: transparent;
     scroll-padding-top: calc(var(--header-h) + 1rem);
     text-size-adjust: 100%;
+    background: var(--color-base-100);
   }
-  body {
-    font-size: 1rem;
-    line-height: 1.65;
-    text-rendering: optimizeLegibility;
-  }
+  body { font-size: 1rem; line-height: 1.65; text-rendering: optimizeLegibility; }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 600;
@@ -168,12 +165,9 @@
 }
 
 @layer components {
-  .eyebrow {
-    @apply t-label inline-flex max-w-full items-center gap-3 text-primary;
-  }
-  .eyebrow::before { content: ""; @apply inline-block h-px w-6 shrink-0 bg-current; }
+  .eyebrow { @apply t-label inline-flex max-w-full items-center gap-3 text-primary; }
+  .eyebrow::before { content: ""; @apply inline-block h-px w-6 shrink-0 origin-left bg-current; }
 
-  /* ---------- Layout ---------- */
   .container-x { @apply mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8; }
   .section { @apply relative py-16 sm:py-24 lg:py-28; }
 
@@ -185,25 +179,23 @@
   }
 
   /* ---------- Dither primitives ---------- */
-  .dither { background-color: currentColor; mask: url("/textures/dither-25.png") repeat; mask-size: 16px; }
-  .dither-6 { mask-image: url("/textures/dither-6.png"); }
-  .dither-13 { mask-image: url("/textures/dither-13.png"); }
-  .dither-50 { mask-image: url("/textures/dither-50.png"); }
+  .dither { background-color: currentColor; mask: var(--tex-dither-25) repeat; mask-size: 16px; }
+  .dither-6 { mask-image: var(--tex-dither-6); }
+  .dither-13 { mask-image: var(--tex-dither-13); }
+  .dither-50 { mask-image: var(--tex-dither-50); }
   .dither-lg { mask-size: 32px; }
 
   .dither-edge {
     @apply pointer-events-none absolute inset-x-0 h-24 bg-current sm:h-32;
-    mask: url("/textures/fade.png") repeat-x;
+    mask: var(--tex-fade) repeat-x;
     mask-size: 32px 100%;
   }
   .dither-edge-top { top: 0; }
   .dither-edge-bottom { bottom: 0; transform: scaleY(-1); }
 
-  .reveal-text {
-    mask-image: url("/textures/wipe-x.png");
-    mask-repeat: repeat-y;
-    mask-size: 3144px 24px;
-    mask-position: 0 0;
+  /* Ảnh tĩnh dự phòng cho canvas: chỉ hiện khi KHÔNG có JS (tránh "logo hiện → biến mất → lắp lại"). */
+  @media (scripting: enabled) {
+    .canvas-fallback { display: none !important; }
   }
 
   /* ---------- Buttons ---------- */
@@ -213,10 +205,7 @@
     transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), background-color 0.2s, color 0.2s, border-color 0.2s;
   }
   @media (hover: hover) {
-    .btn-primary:hover, .btn-neutral:hover {
-      transform: translate(-3px, -3px);
-      box-shadow: 3px 3px 0 0 var(--px-shadow);
-    }
+    .btn-primary:hover, .btn-neutral:hover { transform: translate(-3px, -3px); box-shadow: 3px 3px 0 0 var(--px-shadow); }
   }
   .btn:active { transform: none; box-shadow: none; }
   .btn .arrow { transition: transform 0.35s var(--ease); }
@@ -225,7 +214,7 @@
   .on-dark .btn-primary { --px-shadow: #fff; }
   .on-red { --px-shadow: var(--color-neutral); }
 
-  /* Nút viền: nền "đổ" vào theo các mức dither khi rê chuột (thay cho đổi màu phẳng). */
+  /* Nút viền: nền "đổ" vào theo các mức dither khi rê chuột. */
   .btn-dither { position: relative; isolation: isolate; overflow: hidden; background: transparent; }
   .btn-dither::before { content: ""; @apply absolute inset-0 -z-10 bg-current opacity-0; }
   .btn-dither:hover { background: transparent; }
@@ -244,28 +233,19 @@
   .link-dither::after {
     content: "";
     @apply absolute inset-x-0 -bottom-1 h-[3px] bg-current;
-    mask: url("/textures/dither-50.png") repeat;
+    mask: var(--tex-dither-50) repeat;
     mask-size: 8px;
     transform: scaleX(0);
     transform-origin: right;
     transition: transform 0.45s var(--ease);
   }
-  .link-dither:hover::after { transform: scaleX(1); transform-origin: left; }
+  .link-dither:hover::after, .group:hover .link-dither::after { transform: scaleX(1); transform-origin: left; }
   .link-dither[aria-current="page"]::after { transform: scaleX(1); mask: none; height: 2px; }
 
-  /* ---------- Card: khung góc + bóng đổ dither trượt ra ---------- */
-  :where(*:has(> .card-fx)) { isolation: isolate; }
-  .card-fx { position: relative; }
-  .card-fx::before {
-    content: "";
-    @apply pointer-events-none absolute inset-0 -z-10 opacity-0;
-    color: var(--color-base-content);
-    background: currentColor;
-    mask: url("/textures/dither-38.png") repeat;
-    mask-size: 8px;
-    transition: transform 0.5s var(--ease), opacity 0.3s;
-  }
-  .card-fx::after {
+  /* ---------- HOVER — mỗi loại card một kiểu ---------- */
+  /* Khung góc (dịch vụ) */
+  .fx-corners { position: relative; }
+  .fx-corners::after {
     content: "";
     @apply pointer-events-none absolute -inset-px;
     --c: var(--color-primary);
@@ -281,25 +261,39 @@
       linear-gradient(var(--c), var(--c)) bottom right / var(--w) var(--corner) no-repeat;
     transition: --corner 0.45s var(--ease);
   }
+  .fx-corners:focus-within::after { --corner: 18px; }
+  @media (hover: hover) { .fx-corners:hover::after { --corner: 18px; } }
+  /* Ô icon được "đổ" màu bằng dither */
+  .fx-icon { position: relative; isolation: isolate; }
+  .fx-icon::before { content: ""; @apply absolute inset-0 -z-10 bg-primary opacity-0; }
   @media (hover: hover) {
-    .card-fx:hover::before { opacity: 0.5; transform: translate(10px, 10px); }
-    .card-fx:hover::after { --corner: 18px; }
-    .card-fx:hover .media { transform: scale(1.04); }
+    .group:hover .fx-icon::before { opacity: 1; animation: dither-fill 0.4s linear both; }
+    .group:hover .fx-icon { color: var(--color-primary-content); }
   }
-  .card-fx:focus-within::after { --corner: 18px; }
-  .on-dark .card-fx::before { color: var(--color-primary); }
-  .card-fx .media { transition: transform 0.9s var(--ease); }
 
+  /* Bóng đổ dither trượt ra (dự án) */
+  :where(*:has(> .fx-shadow)) { isolation: isolate; }
+  .fx-shadow { position: relative; }
+  .fx-shadow::before {
+    content: "";
+    @apply pointer-events-none absolute inset-0 -z-10 opacity-0;
+    background: var(--color-base-content);
+    mask: var(--tex-dither-38) repeat;
+    mask-size: 8px;
+    transition: transform 0.5s var(--ease), opacity 0.3s;
+  }
+  @media (hover: hover) { .fx-shadow:hover::before { opacity: 0.5; transform: translate(10px, 10px); } }
+
+  /* Dải dither dâng lên trong ảnh cover (sản phẩm, tin tức) */
   .cover-dither { @apply relative overflow-hidden bg-neutral text-primary; }
   .cover-dither::before {
     content: "";
-    @apply absolute inset-0 bg-current;
-    mask-image: url("/textures/fade.png");
+    @apply absolute inset-x-0 bottom-0 h-32 bg-current;
+    mask: var(--tex-fade) repeat-x;
     mask-size: 32px 128px;
-    mask-repeat: repeat-x;
-    mask-position: top left;
     transform: scaleY(-1);
-    opacity: 0.95;
+    transform-origin: bottom;
+    transition: height 0.7s var(--ease);
   }
   .cover-dither::after {
     content: "";
@@ -309,15 +303,29 @@
       linear-gradient(to bottom, currentColor 1px, transparent 1px);
     background-size: 24px 24px;
   }
+  @media (hover: hover) { .group:hover .cover-dither::before { height: 100%; } }
+  .media { transition: transform 0.9s var(--ease); }
+  @media (hover: hover) { .group:hover .media-zoom { transform: scale(1.04); } }
+
+  /* Thanh đỏ chạy dọc mép trái (lý do chọn, giá trị) */
+  .fx-bar { position: relative; }
+  .fx-bar > .bar { @apply absolute bottom-0 left-0 top-0 w-[3px] origin-top scale-y-0 bg-primary; transition: transform 0.5s var(--ease); }
+  @media (hover: hover) { .fx-bar:hover > .bar { transform: scaleY(1); } }
 
   /* ---------- Logo công nghệ (SVG dither 4 lớp) ---------- */
   .tech-tile .tech-layer { fill: currentColor; transition: fill 0.35s var(--ease); }
   .tech-tile .tech-layer:nth-child(2) { transition-delay: 70ms; }
   .tech-tile .tech-layer:nth-child(3) { transition-delay: 140ms; }
   .tech-tile .tech-layer:nth-child(4) { transition-delay: 210ms; }
-  @media (hover: hover) {
-    .tech-tile:hover .tech-layer { fill: var(--brand); }
-  }
+  @media (hover: hover) { .tech-tile:hover .tech-layer { fill: var(--brand); } }
+
+  /* ---------- Odometer (số liệu) ---------- */
+  .odo { display: inline-flex; line-height: 1; }
+  .odo-col { display: inline-block; height: 1em; overflow: hidden; }
+  .odo-strip { display: flex; flex-direction: column; transform: translateY(calc(var(--to) * -1em)); }
+  .odo-strip > span { display: block; height: 1em; }
+  .odo-0 { --to: 10; } .odo-1 { --to: 11; } .odo-2 { --to: 12; } .odo-3 { --to: 13; } .odo-4 { --to: 14; }
+  .odo-5 { --to: 15; } .odo-6 { --to: 16; } .odo-7 { --to: 17; } .odo-8 { --to: 18; } .odo-9 { --to: 19; }
 
   /* ---------- Prose ---------- */
   .prose-defeat { @apply max-w-none text-base-content/85; line-height: 1.75; }
@@ -338,28 +346,29 @@
   .site-header .header-bg { border-bottom: 1px solid transparent; transition: border-color 0.3s; }
   .site-header[data-scrolled="true"] .header-bg { @apply border-base-300; }
 
+  /* Mega menu: mở ra theo bậc (clip-path steps), các mục lần lượt hiện */
   .mega {
-    @apply invisible absolute -left-4 top-full z-50 pt-3 opacity-0;
-    transform: translateY(8px);
-    transition: opacity 0.25s var(--ease), transform 0.35s var(--ease), visibility 0s linear 0.35s;
+    @apply invisible absolute -left-4 top-full z-50 pt-3;
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.4s steps(6, end), visibility 0s linear 0.4s;
   }
-  .nav-item[data-open="true"] > .mega { @apply visible opacity-100; transform: none; transition-delay: 0s; }
+  .nav-item[data-open="true"] > .mega { @apply visible; clip-path: inset(0 0 -40px 0); transition-delay: 0s; }
   @media (hover: hover) {
-    .nav-item:hover > .mega { @apply visible opacity-100; transform: none; transition-delay: 0s; }
+    .nav-item:hover > .mega { @apply visible; clip-path: inset(0 0 -40px 0); transition-delay: 0s; }
     .nav-item:hover .chev { transform: scaleY(-1); }
   }
   .nav-item .chev { transition: transform 0.3s var(--ease); }
   .nav-item[data-open="true"] .chev { transform: scaleY(-1); }
 
   .mobile-menu summary::-webkit-details-marker { display: none; }
-  .mobile-menu[open] .mobile-panel { animation: panel-in 0.55s var(--ease-io) both; }
+  .mobile-menu[open] .mobile-panel { animation: panel-in 0.5s steps(8, end) both; }
   .mobile-menu[open] .mobile-panel .m-item { animation: item-in 0.6s var(--ease) both; }
-  .mobile-menu[open] .mobile-panel .m-item:nth-child(2) { animation-delay: 50ms; }
-  .mobile-menu[open] .mobile-panel .m-item:nth-child(3) { animation-delay: 100ms; }
-  .mobile-menu[open] .mobile-panel .m-item:nth-child(4) { animation-delay: 150ms; }
-  .mobile-menu[open] .mobile-panel .m-item:nth-child(5) { animation-delay: 200ms; }
-  .mobile-menu[open] .mobile-panel .m-item:nth-child(6) { animation-delay: 250ms; }
-  .mobile-menu[open] .mobile-panel .m-item:nth-child(7) { animation-delay: 300ms; }
+  .mobile-menu[open] .mobile-panel .m-item:nth-child(2) { animation-delay: 40ms; }
+  .mobile-menu[open] .mobile-panel .m-item:nth-child(3) { animation-delay: 80ms; }
+  .mobile-menu[open] .mobile-panel .m-item:nth-child(4) { animation-delay: 120ms; }
+  .mobile-menu[open] .mobile-panel .m-item:nth-child(5) { animation-delay: 160ms; }
+  .mobile-menu[open] .mobile-panel .m-item:nth-child(6) { animation-delay: 200ms; }
+  .mobile-menu[open] .mobile-panel .m-item:nth-child(7) { animation-delay: 240ms; }
   .m-sub summary::-webkit-details-marker { display: none; }
   .m-sub .chev { transition: transform 0.3s var(--ease); }
   .m-sub[open] .chev { transform: scaleY(-1); }
@@ -374,47 +383,91 @@
 }
 
 /* ==========================================================================
-   MOTION — "dither dissolve": nội dung hiện ra qua 8 mức Bayer (6% → 100%).
-   JS thêm .is-in khi vào viewport. Không JS → nội dung hiện bình thường.
+   MOTION — từ vựng chuyển động. Mỗi loại nội dung có kiểu xuất hiện riêng.
+   - Phần tử dưới màn hình lúc tải: JS gắn [data-pending] (ẩn) rồi .is-in khi cuộn tới.
+   - Phần tử đã nằm trong màn hình lúc tải: KHÔNG bị ẩn → không nháy khi chuyển trang.
+   - Không JS / reduced motion: mọi thứ hiện bình thường.
    ========================================================================== */
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  [data-reveal] {
-    opacity: 0;
-    animation: reveal-failsafe 0s linear 3s forwards;
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal][data-pending]:not(.is-in) { opacity: 0; }
+  [data-reveal].is-in { animation-delay: var(--reveal-delay, 0ms) !important; }
+
+  /* rise — tiêu đề trồi lên từ mép dưới */
+  [data-reveal="rise"].is-in { animation: rv-rise 0.9s var(--ease) both; }
+  /* draw — eyebrow: vạch kẻ vẽ ra rồi chữ trượt theo */
+  [data-reveal="draw"].is-in { animation: rv-draw 0.8s var(--ease) both; }
+  [data-reveal="draw"].is-in::before { animation: rv-line 0.6s var(--ease) both; animation-delay: var(--reveal-delay, 0ms); }
+  /* dissolve — đoạn văn hiện qua 8 mức dither */
+  [data-reveal="dissolve"].is-in { mask-size: 16px; animation: dither-in 0.7s linear both; }
+  /* stair — card dịch vụ mở ra theo bậc từ góc trên-trái */
+  [data-reveal="stair"].is-in { animation: rv-stair 0.7s steps(7, end) both; }
+  /* scan — card sản phẩm quét lên từ dưới theo dòng */
+  [data-reveal="scan"].is-in { animation: rv-scan 0.8s steps(12, end) both; }
+  /* shutter — card dự án mở như cửa chớp từ giữa ra */
+  [data-reveal="shutter"].is-in { animation: rv-shutter 0.75s steps(9, end) both; }
+  /* blinds — card tin tức hiện qua các nan rèm ngang */
+  [data-reveal="blinds"].is-in {
+    mask-image: repeating-linear-gradient(to bottom, #000 0 var(--blind), transparent var(--blind) 12px);
+    animation: rv-blinds 0.9s var(--ease) both;
   }
-  [data-reveal].is-in {
-    opacity: 1;
-    mask-size: 16px;
-    mask-repeat: repeat;
-    animation: dither-in 0.75s linear both, rise 1s var(--ease) both;
+  /* block — một khối đỏ quét qua rồi để lộ nội dung */
+  [data-reveal="block"] { position: relative; }
+  [data-reveal="block"].is-in { animation: rv-block-content 0.9s linear both; }
+  [data-reveal="block"].is-in::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 z-10 bg-primary;
+    animation: rv-block 0.9s var(--ease-io) both;
     animation-delay: var(--reveal-delay, 0ms);
   }
-  [data-reveal="still"].is-in {
-    animation: dither-in 0.75s linear both;
-    animation-delay: var(--reveal-delay, 0ms);
+  /* slide — trượt ngang + lộ dần từ trái (FAQ, cột footer, bước quy trình) */
+  [data-reveal="slide"].is-in { animation: rv-slide 0.8s var(--ease) both; }
+  /* wipe — tiêu đề lớn quét ngang bằng mask dither */
+  [data-reveal="wipe"].is-in {
+    mask-image: var(--tex-wipe-x);
+    mask-repeat: repeat-y;
+    mask-size: 3144px 24px;
+    animation: text-wipe 1.2s var(--ease) both;
   }
+  /* pop — nút bật lên theo nấc pixel */
+  [data-reveal="pop"].is-in { animation: rv-pop 0.45s steps(4, end) both; }
+  /* still — chỉ con bên trong chuyển động (logo công nghệ) */
+  [data-reveal="still"].is-in { animation: none; }
+  [data-reveal="still"][data-pending] .tech-layer { opacity: 0; }
+  [data-reveal="still"].is-in .tech-layer { opacity: 0; animation: layer-in 0.01s linear both; animation-delay: calc(var(--reveal-delay, 0ms) + 80ms); }
+  [data-reveal="still"].is-in .tech-layer:nth-child(2) { animation-delay: calc(var(--reveal-delay, 0ms) + 220ms); }
+  [data-reveal="still"].is-in .tech-layer:nth-child(3) { animation-delay: calc(var(--reveal-delay, 0ms) + 360ms); }
+  [data-reveal="still"].is-in .tech-layer:nth-child(4) { animation-delay: calc(var(--reveal-delay, 0ms) + 500ms); }
 
-  /* Logo công nghệ: dựng lần lượt 4 lớp dither (thưa → đặc) */
-  [data-reveal] .tech-layer { opacity: 0; }
-  [data-reveal].is-in .tech-layer { animation: layer-in 0.01s linear both; animation-delay: calc(var(--reveal-delay, 0ms) + 120ms); }
-  [data-reveal].is-in .tech-layer:nth-child(2) { animation-delay: calc(var(--reveal-delay, 0ms) + 260ms); }
-  [data-reveal].is-in .tech-layer:nth-child(3) { animation-delay: calc(var(--reveal-delay, 0ms) + 400ms); }
-  [data-reveal].is-in .tech-layer:nth-child(4) { animation-delay: calc(var(--reveal-delay, 0ms) + 540ms); }
+  /* Odometer: cột số đứng ở 0 cho tới khi vào màn hình rồi lăn tới giá trị thật */
+  @media (scripting: enabled) {
+    [data-odometer]:not(.is-in) .odo-strip { transform: translateY(0); }
+  }
+  [data-odometer] .odo-strip { transition: transform 1.6s var(--ease); }
+  [data-odometer] .odo-col:nth-child(2) .odo-strip { transition-delay: 90ms; }
+  [data-odometer] .odo-col:nth-child(3) .odo-strip { transition-delay: 180ms; }
+  [data-odometer] .odo-col:nth-child(4) .odo-strip { transition-delay: 270ms; }
 
-  .reveal-text { animation: text-wipe 1.4s var(--ease) both; }
-  .reveal-text-d1 { animation-delay: 0.12s; }
-
-  .hero-in { mask-size: 16px; animation: dither-in 0.7s linear both, rise 1s var(--ease) both; }
-  .hero-in-d1 { animation-delay: 0.15s; }
-  .hero-in-d2 { animation-delay: 0.3s; }
-  .hero-in-d3 { animation-delay: 0.45s; }
-  .hero-in-d4 { animation-delay: 0.6s; }
+  /* Hero (tải trang) — mỗi phần tử một kiểu, so le */
+  .ld-draw { animation: rv-draw 0.8s var(--ease) both; }
+  .ld-draw::before { animation: rv-line 0.6s var(--ease) both; animation-delay: inherit; }
+  .ld-wipe { mask-image: var(--tex-wipe-x); mask-repeat: repeat-y; mask-size: 3144px 24px; animation: text-wipe 1.3s var(--ease) both; }
+  .ld-rise { animation: rv-rise 0.9s var(--ease) both; }
+  .ld-dissolve { mask-size: 16px; animation: dither-in 0.7s linear both; }
+  .ld-pop { animation: rv-pop 0.45s steps(4, end) both; }
+  .ld-slide { animation: rv-slide 0.8s var(--ease) both; }
+  .ld-d1 { animation-delay: 0.1s; }
+  .ld-d2 { animation-delay: 0.22s; }
+  .ld-d3 { animation-delay: 0.4s; }
+  .ld-d4 { animation-delay: 0.55s; }
+  .ld-d5 { animation-delay: 0.7s; }
 }
 
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     .scroll-progress { animation: grow-x linear both; animation-timeline: scroll(root); }
     .process-line { animation: grow-x linear both; animation-timeline: view(); animation-range: entry 20% cover 55%; }
+    /* Số bước quy trình "bật đèn" khi đi qua giữa màn hình */
+    .process-dot { animation: dot-on linear both; animation-timeline: view(); animation-range: cover 30% cover 45%; }
   }
 }
 
@@ -441,40 +494,46 @@
 /* ==========================================================================
    KEYFRAMES
    ========================================================================== */
+@keyframes rv-rise { from { clip-path: inset(0 0 100% 0); transform: translateY(-0.35em); } to { clip-path: inset(-0.3em 0 -0.3em 0); transform: none; } }
+@keyframes rv-draw { from { clip-path: inset(0 100% 0 0); transform: translateX(-10px); } to { clip-path: inset(0 -1px 0 0); transform: none; } }
+@keyframes rv-line { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes rv-stair { from { clip-path: inset(0 100% 100% 0); } to { clip-path: inset(0 -20px -20px 0); } }
+@keyframes rv-scan { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 -20px -20px 0); } }
+@keyframes rv-shutter { from { clip-path: inset(0 50% 0 50%); } to { clip-path: inset(0 -20px -20px -20px); } }
+@keyframes rv-blinds { from { --blind: 0px; transform: translateY(14px); } to { --blind: 12px; transform: none; } }
+@keyframes rv-block-content { 0%, 49.9% { opacity: 0; } 50%, 100% { opacity: 1; } }
+@keyframes rv-block {
+  0% { transform: scaleX(0); transform-origin: left; }
+  50% { transform: scaleX(1); transform-origin: left; }
+  50.1% { transform: scaleX(1); transform-origin: right; }
+  100% { transform: scaleX(0); transform-origin: right; }
+}
+@keyframes rv-slide { from { clip-path: inset(0 100% 0 0); transform: translateX(-24px); } to { clip-path: inset(0 -20px -20px 0); transform: none; } }
+@keyframes rv-pop { from { transform: scale(0.82); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes dither-in {
-  0% { mask-image: url("/textures/dither-6.png"); }
-  12% { mask-image: url("/textures/dither-13.png"); }
-  25% { mask-image: url("/textures/dither-25.png"); }
-  37% { mask-image: url("/textures/dither-38.png"); }
-  50% { mask-image: url("/textures/dither-50.png"); }
-  62% { mask-image: url("/textures/dither-63.png"); }
-  75% { mask-image: url("/textures/dither-75.png"); }
-  87% { mask-image: url("/textures/dither-88.png"); }
+  0% { mask-image: var(--tex-dither-6); }
+  12% { mask-image: var(--tex-dither-13); }
+  25% { mask-image: var(--tex-dither-25); }
+  37% { mask-image: var(--tex-dither-38); }
+  50% { mask-image: var(--tex-dither-50); }
+  62% { mask-image: var(--tex-dither-63); }
+  75% { mask-image: var(--tex-dither-75); }
+  87% { mask-image: var(--tex-dither-88); }
   100% { mask-image: none; }
 }
 @keyframes dither-fill {
-  0% { mask: url("/textures/dither-13.png") 0 0 / 8px repeat; }
-  25% { mask: url("/textures/dither-38.png") 0 0 / 8px repeat; }
-  50% { mask: url("/textures/dither-63.png") 0 0 / 8px repeat; }
-  75% { mask: url("/textures/dither-88.png") 0 0 / 8px repeat; }
+  0% { mask: var(--tex-dither-13) 0 0 / 8px repeat; }
+  25% { mask: var(--tex-dither-38) 0 0 / 8px repeat; }
+  50% { mask: var(--tex-dither-63) 0 0 / 8px repeat; }
+  75% { mask: var(--tex-dither-88) 0 0 / 8px repeat; }
   100% { mask: none; }
 }
-@keyframes rise { from { transform: translate3d(0, 18px, 0); } to { transform: none; } }
 @keyframes layer-in { to { opacity: 1; } }
-@keyframes reveal-failsafe { to { opacity: 1; } }
 @keyframes grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@keyframes text-wipe {
-  from { mask-position: -1644px 0; }
-  to { mask-position: 0 0; }
-}
-@keyframes panel-in {
-  from { clip-path: inset(0 0 100% 0); }
-  to { clip-path: inset(0 0 0 0); }
-}
-@keyframes item-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
-}
+@keyframes dot-on { to { background-color: var(--color-primary); } }
+@keyframes text-wipe { from { mask-position: -1644px 0; } to { mask-position: 0 0; } }
+@keyframes panel-in { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes item-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 /* Prism — code highlight (tương thích CSP) */
 @layer components {

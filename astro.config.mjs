@@ -41,7 +41,10 @@ export default defineConfig({
       provider: fontProviders.google(),
       name: 'Inter',
       cssVariable: '--font-inter',
-      weights: [400, 500, 600],
+      // Dải weight → 1 file variable cho mỗi subset.
+      weights: ['400 600'],
+      // 'fallback': chặn tối đa ~100ms rồi mới dùng font dự phòng → font đã cache hiển thị ngay, không "nháy" đổi font.
+      display: 'fallback',
       styles: ['normal'],
       subsets: ['vietnamese', 'latin'],
       fallbacks: ['system-ui', 'sans-serif'],
@@ -51,7 +54,8 @@ export default defineConfig({
       provider: fontProviders.google(),
       name: 'Inter Tight',
       cssVariable: '--font-inter-tight',
-      weights: [500, 600, 700],
+      weights: ['600 700'],
+      display: 'fallback',
       styles: ['normal'],
       subsets: ['vietnamese', 'latin'],
       fallbacks: ['system-ui', 'sans-serif'],

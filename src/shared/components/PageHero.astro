@@ -17,11 +17,11 @@ const { eyebrow, title, description, crumbs } = Astro.props;
     <span class="dither dither-13 absolute inset-0 text-primary/55"></span>
   </div>
   <div class="container-x relative pb-28 pt-12 sm:pb-36 sm:pt-16">
-    <div class="hero-in"><Breadcrumbs items={crumbs} /></div>
-    {eyebrow && <p class="eyebrow hero-in hero-in-d1 mt-10">{eyebrow}</p>}
-    <h1 class="t-h1 reveal-text mt-4 max-w-4xl">{title}</h1>
-    {description && <p class="t-lead hero-in hero-in-d2 mt-6 max-w-3xl text-neutral-content/70">{description}</p>}
-    <div class="hero-in hero-in-d3"><slot /></div>
+    <div class="ld-slide"><Breadcrumbs items={crumbs} /></div>
+    {eyebrow && <p class="eyebrow ld-draw ld-d1 mt-10">{eyebrow}</p>}
+    <h1 class="t-h1 ld-rise ld-d2 mt-4 max-w-4xl">{title}</h1>
+    {description && <p class="t-lead ld-dissolve ld-d3 mt-6 max-w-3xl text-neutral-content/70">{description}</p>}
+    <div class="ld-pop ld-d4"><slot /></div>
   </div>
   <span class="dither-edge dither-edge-bottom text-base-100" aria-hidden="true"></span>
 </section>

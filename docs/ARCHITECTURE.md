@@ -54,38 +54,57 @@ Làm mới giá khi dữ liệu thay đổi: gọi `context.cache.invalidate({ t
 
 ## 3. Giao diện & Motion (dither style)
 
-**Assets:** logo PNG gốc nằm ở `public/brand/`. Texture dither (Bayer 8x8) và logo dither tĩnh được sinh bằng
-`node scripts/generate-textures.mjs` → `public/textures/`, `public/brand/*_dither.png`.
+**Assets:** logo PNG gốc ở `public/brand/`. Texture dither (Bayer 8x8) sinh bằng `node scripts/generate-textures.mjs`
+→ `public/textures/` và **`src/styles/textures.css`** (nhúng data URI: mask không bao giờ chờ tải ảnh → không nháy).
+Logo công nghệ dither: `node scripts/generate-tech-logos.mjs` (nguồn SVG: thesvg.org, `scripts/assets/tech/`).
 
-**CSS (`src/styles/global.css`):**
-- `.dither`, `.dither-6/12/50`, `.dither-drift`: lớp phủ dither tô bằng `currentColor` (mask PNG).
-- `.dither-edge`: dải chuyển dither giữa hai section sáng/tối.
-- `.reveal-text`: tiêu đề hiện bằng mask dither quét ngang (CSS thuần).
-- `.card-fx`: khung góc animate (`@property --corner`) + spotlight dither theo con trỏ.
-- `.marquee`, mega menu (`.nav-item:hover/:focus-within`), menu mobile (`<details>`), FAQ (`::details-content`).
-- Thanh tiến trình cuộn & timeline quy trình: CSS scroll-driven animations (`@supports`).
+**Font:** Inter (nội dung) + Inter Tight (tiêu đề), variable, subset latin + vietnamese, preload đủ 4 file,
+`font-display: fallback` → font đã cache hiển thị ngay, không đổi font giữa chừng khi chuyển trang/ngôn ngữ.
+Thang chữ: `t-display`, `t-h1`, `t-h2`, `t-h3`, `t-lead`, `t-label`, `num` (line-height ≥ 1.1 cho dấu tiếng Việt).
 
-**Chuyển trang:** cross-document View Transitions (CSS `@view-transition`) — trang mới quét xuống bằng mask
-dither (`wipe-y.png`), trang cũ lùi nhẹ + grayscale, header giữ nguyên (`view-transition-name: site-header`).
-Không dùng `<ClientRouter />` vì CSP.
+**Chuyển trang (View Transitions, CSS):** trang cũ giữ nguyên và tối dần (không lộ nền trắng), trang mới quét xuống
+bằng mask dither; header không cross-fade (chỉ trượt vị trí). Không dùng `<ClientRouter />` vì CSP.
 
-**JS (`src/shared/motion/`, nạp 1 lần trong BaseLayout):**
+**Từ vựng chuyển động — mỗi loại nội dung một kiểu (`data-reveal="…"`):**
 
-| Module | Thuộc tính | Việc |
+| Kiểu | Dùng cho | Mô tả |
 |---|---|---|
-| `reveal.ts` | `data-reveal[="fade/left/scale/blur"]`, `data-reveal-group="ms"` | Hiện khi vào viewport, stagger theo nhóm |
-| `scramble.ts` | `data-scramble[="hover"]` | Chữ "decode" kiểu terminal (chỉ dùng cho font mono) |
-| `counter.ts` | `data-count` | Đếm số |
-| `header.ts` | `data-site-header`, `data-mobile-menu` | Ẩn/hiện khi cuộn, thu gọn topbar, khoá cuộn khi mở menu, Esc để đóng |
-| `spotlight.ts` | `.card-fx`, `data-magnetic="0.2"` | Spotlight theo con trỏ, nút nam châm |
-| `dither-canvas.ts` | `canvas[data-dither="hero/wordmark"][data-src]` | Canvas dither tương tác (hero logo, wordmark footer) |
-| `clock.ts` | `data-clock` | Giờ Việt Nam ở footer |
+| `draw` | eyebrow | vạch kẻ vẽ ra, chữ trượt theo |
+| `rise` | tiêu đề section | lộ từ trên xuống như in |
+| `dissolve` | đoạn mô tả, nội dung bài | hiện qua 8 mức dither |
+| `stair` | card dịch vụ | mở theo bậc từ góc trên-trái |
+| `scan` | card sản phẩm, form, aside | quét lên từ dưới theo dòng |
+| `shutter` | card dự án | mở như cửa chớp từ giữa |
+| `blinds` | card tin tức | hiện qua nan rèm ngang |
+| `block` | lý do chọn, giá trị | khối đỏ quét qua rồi lộ nội dung |
+| `slide` | FAQ, cột footer, bước quy trình | trượt ngang + lộ từ trái |
+| `wipe` | tiêu đề CTA, tiêu đề bài | quét ngang bằng mask dither |
+| `pop` | nút | bật lên theo nấc pixel |
+| `still` | logo công nghệ | dựng lần lượt 4 lớp dither |
+| `[data-odometer]` | số liệu | cột số lăn như đồng hồ cơ |
 
-**Nguyên tắc:**
-- Không JS → mọi nội dung vẫn hiện (ẩn ban đầu chỉ áp dụng khi `@media (scripting: enabled)`, có failsafe 3s).
-- `prefers-reduced-motion: reduce` → tắt animation, chuyển trang, canvas vẽ 1 khung tĩnh.
-- Tương thích CSP: không dùng thuộc tính `style=""` trong HTML; JS chỉ đổi style qua CSSOM.
-- Canvas vẽ ở độ phân giải thấp (1 cell = 3–4px), giới hạn 30fps, dừng khi ngoài màn hình/tab ẩn.
+Hero/đầu trang dùng các lớp tải-trang tương ứng: `ld-draw`, `ld-wipe`, `ld-rise`, `ld-dissolve`, `ld-pop`, `ld-slide` (+ `ld-d1…d5`).
+Theo cuộn (CSS scroll-driven): thanh tiến trình đọc, đường timeline quy trình, số bước "bật đèn".
+
+**Hover — mỗi loại card một kiểu:** dịch vụ (khung góc + ô icon đổ dither), sản phẩm (dải dither dâng lên ảnh),
+dự án (bóng đổ dither trượt ra), tin tức (gạch chân dither tiêu đề), lý do chọn (thanh đỏ mép trái), logo công nghệ
+(đổi màu thương hiệu theo từng lớp), nút viền (nền đổ dither), nút chính (bóng pixel).
+
+**JS (`src/shared/motion/`):**
+
+| Module | Việc |
+|---|---|
+| `reveal.ts` | Ẩn (data-pending) CHỈ phần tử nằm dưới màn hình lúc tải, hiện khi cuộn tới; so le theo `data-reveal-group`; kích hoạt odometer |
+| `header.ts` | Ẩn/hiện khi cuộn, mega menu (aria-expanded, Esc, click ngoài), menu mobile, khôi phục trạng thái khi Back (bfcache) |
+| `pointer.ts` | Nút nam châm `data-magnetic`, biến màu thương hiệu `data-brand` |
+| `dither-canvas.ts` | Canvas dither tương tác (hero logo, wordmark footer) |
+
+**Nguyên tắc chống nháy:**
+- Phần tử nhìn thấy lúc tải không bao giờ bị ẩn bởi JS; không có "tự hiện sau X giây".
+- Ảnh dự phòng của canvas chỉ hiện khi không có JS.
+- Odometer đặt sẵn ở 0 bằng CSS (không đổi số bằng JS sau khi đã hiển thị).
+- Không JS / `prefers-reduced-motion` → nội dung hiện đầy đủ, không animation.
+- Tương thích CSP: không dùng `style=""` trong HTML; JS chỉ đổi style qua CSSOM.
 
 ## 4. SEO
 

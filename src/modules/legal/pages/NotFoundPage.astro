@@ -12,11 +12,11 @@ const t = useTranslations(locale);
     <div class="grid-lines pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
     <span class="dither dither-13 pointer-events-none absolute inset-0 -z-10 text-primary/35" aria-hidden="true"></span>
     <div class="container-x flex flex-col items-start py-20">
-      <p class="eyebrow hero-in">Error 404</p>
-      <p class="num reveal-text mt-4 text-[clamp(6rem,24vw,15rem)] font-bold leading-none text-primary" aria-hidden="true">404</p>
-      <h1 class="t-h1 hero-in hero-in-d1 mt-4">{t('notFound.title')}</h1>
-      <p class="t-lead hero-in hero-in-d2 mt-4 max-w-xl text-neutral-content/70">{t('notFound.desc')}</p>
-      <a href={localizePath('/', locale)} class="btn btn-primary btn-lg hero-in hero-in-d3 mt-10">
+      <p class="eyebrow ld-draw">Error 404</p>
+      <p class="num ld-wipe mt-4 text-[clamp(6rem,24vw,15rem)] font-bold leading-none text-primary" aria-hidden="true">404</p>
+      <h1 class="t-h1 ld-rise ld-d2 mt-4">{t('notFound.title')}</h1>
+      <p class="t-lead ld-dissolve ld-d3 mt-4 max-w-xl text-neutral-content/70">{t('notFound.desc')}</p>
+      <a href={localizePath('/', locale)} class="btn btn-primary btn-lg ld-pop ld-d4 mt-10">
         {t('notFound.back')} <Icon name="arrowRight" class="arrow size-5" />
       </a>
     </div>

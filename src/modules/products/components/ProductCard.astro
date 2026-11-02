@@ -14,13 +14,13 @@ const { data } = product;
 const href = localizePath(productPath(product), locale);
 ---
 
-<article class="card-fx group flex h-full flex-col border border-base-300 bg-base-100" data-category={data.category} data-reveal>
+<article class="group flex h-full flex-col border border-base-300 bg-base-100" data-category={data.category} data-reveal="scan">
   <div class="relative aspect-[16/10] overflow-hidden">
     {
       data.cover ? (
-        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[400, 800]} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="media size-full object-cover" />
+        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[400, 800]} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="media media-zoom size-full object-cover" />
       ) : (
-        <div class="cover-dither media flex size-full items-center justify-center">
+        <div class="cover-dither flex size-full items-center justify-center">
           <span class="relative z-10 flex size-16 items-center justify-center border border-white/15 bg-neutral/60 text-neutral-content backdrop-blur-sm">
             <Icon name="box" class="size-7" />
           </span>
@@ -30,7 +30,7 @@ const href = localizePath(productPath(product), locale);
     <span class="t-label absolute left-4 top-4 z-10 bg-primary px-2 py-1 text-primary-content">{text.categories[data.category]}</span>
   </div>
   <div class="flex flex-1 flex-col p-6">
-    <H class="t-h3">
+    <H class="t-h3 transition-colors group-hover:text-primary">
       <a href={href} class="after:absolute after:inset-0">{data.title}</a>
     </H>
     <p class="mt-2 flex-1 text-[15px] text-base-content/65">{data.summary}</p>

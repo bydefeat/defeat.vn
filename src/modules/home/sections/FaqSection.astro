@@ -15,7 +15,7 @@ const { faq } = homeText[Astro.props.locale];
     <div class="border-t border-base-300 lg:col-span-8" data-reveal-group="80">
       {
         faq.items.map((item, i) => (
-          <details class="faq-item group border-b border-base-300" open={i === 0} data-reveal>
+          <details class="faq-item group border-b border-base-300" open={i === 0} data-reveal="slide">
             <summary class="flex cursor-pointer list-none items-start gap-4 py-5 sm:gap-6 sm:py-6">
               <span class="num mt-0.5 w-6 shrink-0 text-sm font-semibold text-base-content/35 group-open:text-primary">{String(i + 1).padStart(2, '0')}</span>
               <span class="t-h3 flex-1 transition-colors group-hover:text-primary">{item.q}</span>

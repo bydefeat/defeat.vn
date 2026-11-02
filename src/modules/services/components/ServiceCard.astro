@@ -10,9 +10,9 @@ const t = useTranslations(locale);
 const href = localizePath(`/services/${service.slug}`, locale);
 ---
 
-<article class="card-fx group flex h-full flex-col border border-base-300 bg-base-100 p-6 transition-colors duration-300 hover:border-base-content/25 sm:p-7" data-reveal>
+<article class="fx-corners group flex h-full flex-col border border-base-300 bg-base-100 p-6 transition-colors duration-300 hover:border-base-content/25 sm:p-7" data-reveal="stair">
   <div class="flex items-start justify-between">
-    <div class="flex size-12 items-center justify-center bg-neutral text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-content">
+    <div class="fx-icon flex size-12 items-center justify-center bg-neutral text-primary transition-colors duration-300">
       <Icon name={service.icon} />
     </div>
     {index !== undefined && (

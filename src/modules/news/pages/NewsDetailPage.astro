@@ -48,9 +48,9 @@ const crumbs = [
       <div class="grid-lines pointer-events-none absolute inset-0" aria-hidden="true"></div>
       <div class="container-x relative max-w-4xl pb-28 pt-12 sm:pb-36 sm:pt-16">
         <Breadcrumbs items={crumbs} />
-        <h1 class="t-h1 reveal-text mt-8">{data.title}</h1>
-        <p class="t-lead hero-in hero-in-d1 mt-6 text-neutral-content/70">{data.description}</p>
-        <div class="hero-in hero-in-d2 mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-content/55">
+        <h1 class="t-h1 ld-wipe mt-8">{data.title}</h1>
+        <p class="t-lead ld-dissolve ld-d2 mt-6 text-neutral-content/70">{data.description}</p>
+        <div class="ld-slide ld-d3 mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-neutral-content/55">
           {data.author && <span class="font-semibold text-neutral-content">{data.author}</span>}
           <span>{t('common.publishedOn')} <time datetime={data.pubDate.toISOString()}>{formatDate(data.pubDate, locale)}</time></span>
           {data.updatedDate && <span>· {t('common.updatedOn')} <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate, locale)}</time></span>}
@@ -61,7 +61,7 @@ const crumbs = [
     </header>
     <div class="container-x max-w-4xl py-12">
       {data.cover && <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[800, 1200]} sizes="(min-width: 1024px) 896px, 100vw" class="mb-10 w-full rounded-box" loading="eager" />}
-      <div class="prose-defeat text-[17px]" data-reveal><Content /></div>
+      <div class="prose-defeat text-[17px]" data-reveal="dissolve"><Content /></div>
       {
         data.tags.length > 0 && (
           <ul class="mt-10 flex flex-wrap gap-2" aria-label={t('common.tags')}>
@@ -76,7 +76,7 @@ const crumbs = [
     related.length > 0 && (
       <section class="section border-t border-base-300">
         <div class="container-x">
-          <h2 class="t-h2" data-reveal>{text.related}</h2>
+          <h2 class="t-h2" data-reveal="rise">{text.related}</h2>
           <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="90">
             {related.map((p) => <NewsCard post={p} locale={locale} />)}
           </div>
