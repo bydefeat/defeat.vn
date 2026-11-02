@@ -1,6 +1,6 @@
 ---
 /**
- * Layout gốc: <html>, <head> (SEO, font, icon), header, footer.
+ * Layout gốc (app shell): <html>, <head> (SEO, font, icon), header, footer, hệ thống motion.
  * Mọi trang đều đi qua layout này.
  */
 import '@/styles/global.css';
@@ -9,8 +9,8 @@ import { SITE } from '@config/site';
 import { LOCALE_META } from '@i18n/config';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
 import Seo, { type SeoProps } from '@shared/seo/Seo.astro';
-import Header from '@shared/components/Header.astro';
-import Footer from '@shared/components/Footer.astro';
+import Header from '../shell/Header.astro';
+import Footer from '../shell/Footer.astro';
 
 type Props = Omit<SeoProps, 'locale'> & { hideCtaBand?: boolean };
 
@@ -25,22 +25,19 @@ const t = useTranslations(locale);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content={SITE.themeColor} />
+    <meta name="color-scheme" content="light" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={`${SITE.name} — ${t('nav.news')}`}
-      href={localizePath('/rss.xml', locale)}
-    />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — ${t('nav.news')}`} href={localizePath('/rss.xml', locale)} />
     <Font cssVariable="--font-be-vietnam" preload={[{ weight: 400 }, { weight: 800 }]} />
+    <Font cssVariable="--font-jetbrains" />
     <Seo {...props} locale={locale} />
     <slot name="head" />
   </head>
-  <body class="flex min-h-dvh flex-col bg-base-100 font-sans text-base-content">
-    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] btn btn-primary btn-sm">
+  <body id="top" class="flex min-h-dvh flex-col bg-base-100 font-sans text-base-content">
+    <a href="#main" class="btn btn-primary btn-sm sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]">
       {t('common.skipToContent')}
     </a>
     <Header locale={locale} path={props.path} availableLocales={props.availableLocales} />
@@ -48,5 +45,8 @@ const t = useTranslations(locale);
       <slot />
     </main>
     <Footer locale={locale} hideCtaBand={props.hideCtaBand} />
+    <script>
+      import '@shared/motion/index';
+    </script>
   </body>
 </html>

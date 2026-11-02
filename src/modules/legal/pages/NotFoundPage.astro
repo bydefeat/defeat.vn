@@ -1,5 +1,6 @@
 ---
-import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import BaseLayout from '@app/layouts/BaseLayout.astro';
+import Icon from '@shared/components/Icon.astro';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
 
 const locale = resolveLocale(Astro.currentLocale);
@@ -7,12 +8,17 @@ const t = useTranslations(locale);
 ---
 
 <BaseLayout title={t('notFound.title')} description={t('notFound.desc')} path="/404" noindex hideCtaBand>
-  <section class="section">
-    <div class="container-x flex flex-col items-center py-16 text-center">
-      <p class="text-8xl font-extrabold text-primary">404</p>
-      <h1 class="mt-6 text-3xl font-bold">{t('notFound.title')}</h1>
-      <p class="mt-3 text-base-content/70">{t('notFound.desc')}</p>
-      <a href={localizePath('/', locale)} class="btn btn-primary mt-8">{t('notFound.back')}</a>
+  <section class="on-dark relative isolate flex min-h-[80svh] items-center overflow-hidden bg-neutral text-neutral-content">
+    <div class="grid-lines pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
+    <span class="dither dither-12 dither-drift pointer-events-none absolute inset-0 -z-10 text-primary/40" aria-hidden="true"></span>
+    <div class="container-x flex flex-col items-start py-24">
+      <p class="eyebrow hero-in"><span data-scramble>ERROR / 404</span></p>
+      <p class="display reveal-text mt-6 text-[clamp(6rem,22vw,16rem)] leading-none text-primary" aria-hidden="true">404</p>
+      <h1 class="display hero-in hero-in-d1 mt-6 text-3xl sm:text-5xl">{t('notFound.title')}</h1>
+      <p class="hero-in hero-in-d2 mt-4 max-w-xl text-neutral-content/70">{t('notFound.desc')}</p>
+      <a href={localizePath('/', locale)} class="btn btn-primary btn-lg hero-in hero-in-d3 mt-10" data-magnetic="0.2">
+        {t('notFound.back')} <Icon name="arrowRight" class="arrow size-5" />
+      </a>
     </div>
   </section>
 </BaseLayout>

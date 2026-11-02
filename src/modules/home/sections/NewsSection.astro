@@ -1,5 +1,6 @@
 ---
 import SectionHeading from '@shared/components/SectionHeading.astro';
+import Icon from '@shared/components/Icon.astro';
 import type { Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
 import NewsCard from '@modules/news/components/NewsCard.astro';
@@ -18,10 +19,10 @@ const posts = await getNews(locale, 3);
     <section class="section" aria-labelledby="home-news">
       <div class="container-x">
         <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <SectionHeading id="home-news" eyebrow={text.eyebrow} title={text.title} />
-          <a href={localizePath('/news', locale)} class="btn btn-outline btn-sm shrink-0">{t('cta.viewAll')}</a>
+          <SectionHeading index="05" id="home-news" eyebrow={text.eyebrow} title={text.title} />
+          <a href={localizePath('/news', locale)} class="btn btn-outline shrink-0" data-reveal>{t('cta.viewAll')} <Icon name="arrowRight" class="arrow size-4" /></a>
         </div>
-        <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div data-reveal-group="100" class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((p) => <NewsCard post={p} locale={locale} />)}
         </div>
       </div>

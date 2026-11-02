@@ -45,6 +45,16 @@ export default defineConfig({
       subsets: ['vietnamese', 'latin'],
       fallbacks: ['system-ui', 'sans-serif'],
     },
+    {
+      // Font mono cho nhãn, eyebrow, số liệu — chất "terminal/dither".
+      provider: fontProviders.google(),
+      name: 'JetBrains Mono',
+      cssVariable: '--font-jetbrains',
+      weights: [400, 600],
+      styles: ['normal'],
+      subsets: ['vietnamese', 'latin'],
+      fallbacks: ['ui-monospace', 'monospace'],
+    },
   ],
 
   security: {

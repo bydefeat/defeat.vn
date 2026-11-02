@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import BaseLayout from '@app/layouts/BaseLayout.astro';
 import PageHero from '@shared/components/PageHero.astro';
 import { breadcrumbLd } from '@shared/seo/jsonld';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
@@ -26,15 +26,15 @@ const crumbs = [
       {/* Bộ lọc thuần CSS (radio + :has) — không cần JavaScript, nội dung vẫn đầy đủ cho SEO. */}
       {
         usedCategories.length > 1 && (
-          <fieldset class="filter mb-10" aria-label={text.filter}>
-            <input class="btn btn-sm filter-reset" type="radio" name="product-cat" value="all" aria-label={text.all} checked />
+          <fieldset class="filter mb-12 gap-2" aria-label={text.filter} data-reveal>
+            <input class="btn btn-sm filter-reset font-mono uppercase" type="radio" name="product-cat" value="all" aria-label={text.all} checked />
             {usedCategories.map((c) => (
-              <input class="btn btn-sm" type="radio" name="product-cat" value={c} aria-label={text.categories[c]} />
+              <input class="btn btn-sm font-mono uppercase checked:btn-primary" type="radio" name="product-cat" value={c} aria-label={text.categories[c]} />
             ))}
           </fieldset>
         )
       }
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="90">
         {products.map((p) => <ProductCard product={p} locale={locale} headingLevel="h2" />)}
       </div>
     </div>

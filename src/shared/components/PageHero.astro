@@ -1,5 +1,5 @@
 ---
-/** Hero cho các trang con: breadcrumb + h1 + mô tả. */
+/** Hero trang con: nền tối, lưới kỹ thuật, dither trôi, breadcrumb, h1 hiện bằng dither wipe. */
 import Breadcrumbs, { type Crumb } from './Breadcrumbs.astro';
 
 interface Props {
@@ -11,12 +11,17 @@ interface Props {
 const { eyebrow, title, description, crumbs } = Astro.props;
 ---
 
-<section class="border-b border-base-300 bg-base-200">
-  <div class="container-x py-12 sm:py-16">
-    <Breadcrumbs items={crumbs} />
-    {eyebrow && <p class="eyebrow mt-6">{eyebrow}</p>}
-    <h1 class="mt-3 max-w-4xl text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">{title}</h1>
-    {description && <p class="mt-5 max-w-3xl text-lg text-base-content/70 text-pretty">{description}</p>}
-    <slot />
+<section class="on-dark relative overflow-hidden bg-neutral text-neutral-content">
+  <div class="grid-lines pointer-events-none absolute inset-0" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute inset-y-0 right-0 w-2/3 [mask-image:linear-gradient(to_left,#000_15%,transparent)]" aria-hidden="true">
+    <span class="dither dither-12 dither-drift absolute inset-0 text-primary/60"></span>
   </div>
+  <div class="container-x relative pb-24 pt-14 sm:pb-32 sm:pt-20">
+    <div class="hero-in"><Breadcrumbs items={crumbs} /></div>
+    {eyebrow && <p class="eyebrow hero-in hero-in-d1 mt-10"><span data-scramble>{eyebrow}</span></p>}
+    <h1 class="display reveal-text mt-4 max-w-5xl text-4xl leading-[1.04] sm:text-6xl">{title}</h1>
+    {description && <p class="hero-in hero-in-d2 mt-6 max-w-3xl text-lg text-neutral-content/70 text-pretty">{description}</p>}
+    <div class="hero-in hero-in-d3"><slot /></div>
+  </div>
+  <span class="dither-edge dither-edge-bottom text-base-100" aria-hidden="true"></span>
 </section>

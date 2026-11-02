@@ -1,5 +1,5 @@
 ---
-/** FAQ dùng <details> gốc (không JS). JSON-LD FAQPage được trang chủ thêm qua faqLd(). */
+/** FAQ dùng <details> gốc (không JS), mở/đóng có animation chiều cao (interpolate-size). JSON-LD FAQPage do HomePage thêm. */
 import SectionHeading from '@shared/components/SectionHeading.astro';
 import type { Locale } from '@i18n/config';
 import { homeText } from '../i18n';
@@ -7,15 +7,21 @@ interface Props { locale: Locale }
 const { faq } = homeText[Astro.props.locale];
 ---
 
-<section class="section bg-base-200" aria-labelledby="home-faq">
-  <div class="container-x grid gap-12 lg:grid-cols-3">
-    <SectionHeading id="home-faq" eyebrow={faq.eyebrow} title={faq.title} />
-    <div class="space-y-3 lg:col-span-2">
+<section class="section border-t border-base-300" aria-labelledby="home-faq">
+  <div class="container-x grid gap-14 lg:grid-cols-12">
+    <div class="lg:col-span-4">
+      <SectionHeading id="home-faq" index="06" eyebrow={faq.eyebrow} title={faq.title} />
+    </div>
+    <div class="border-t border-base-300 lg:col-span-8" data-reveal-group="80">
       {
         faq.items.map((item, i) => (
-          <details class="collapse collapse-plus rounded-box border border-base-300 bg-base-100" open={i === 0}>
-            <summary class="collapse-title font-semibold">{item.q}</summary>
-            <div class="collapse-content text-base-content/75"><p>{item.a}</p></div>
+          <details class="faq-item group border-b border-base-300" open={i === 0} data-reveal>
+            <summary class="flex cursor-pointer list-none items-center gap-6 py-6 text-lg font-semibold transition-colors hover:text-primary">
+              <span class="label-mono text-base-content/35 group-open:text-primary">{String(i + 1).padStart(2, '0')}</span>
+              <span class="flex-1">{item.q}</span>
+              <span class="plus flex size-9 shrink-0 items-center justify-center border border-base-300 text-xl font-light group-open:border-primary group-open:bg-primary group-open:text-primary-content" aria-hidden="true">+</span>
+            </summary>
+            <div class="pb-7 pl-12 pr-14 text-base-content/70"><p>{item.a}</p></div>
           </details>
         ))
       }

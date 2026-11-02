@@ -1,18 +1,39 @@
 ---
+/** Dải công nghệ chạy ngang (marquee) 2 hàng ngược chiều; dừng khi rê chuột. */
 import type { Locale } from '@i18n/config';
 import { homeText, TECH_STACK } from '../i18n';
 interface Props { locale: Locale }
 const text = homeText[Astro.props.locale].tech;
+const half = Math.ceil(TECH_STACK.length / 2);
+const rows = [TECH_STACK, [...TECH_STACK.slice(half), ...TECH_STACK.slice(0, half)]];
 ---
 
-<section class="border-y border-base-300 py-12" aria-labelledby="home-tech">
-  <div class="container-x flex flex-col gap-6 lg:flex-row lg:items-center">
-    <div class="shrink-0 lg:w-64">
-      <p class="eyebrow">{text.eyebrow}</p>
-      <h2 id="home-tech" class="mt-2 text-xl font-bold">{text.title}</h2>
+<section class="on-dark relative overflow-hidden bg-neutral pb-36 pt-36 text-neutral-content" aria-labelledby="home-tech">
+  <span class="dither-edge dither-edge-top text-base-100" aria-hidden="true"></span>
+  <span class="dither-edge dither-edge-bottom text-base-100" aria-hidden="true"></span>
+  <div class="container-x relative mb-10 flex items-end justify-between gap-6" data-reveal>
+    <div>
+      <p class="eyebrow"><span data-scramble>{text.eyebrow}</span></p>
+      <h2 id="home-tech" class="display mt-3 text-2xl sm:text-3xl">{text.title}</h2>
     </div>
-    <ul class="flex flex-wrap gap-2">
-      {TECH_STACK.map((tech) => <li class="rounded-field border border-base-300 px-4 py-2 text-sm font-medium text-base-content/80">{tech}</li>)}
-    </ul>
+    <p class="label-mono hidden text-neutral-content/40 md:block">{TECH_STACK.length}+ stacks</p>
+  </div>
+  <div class="relative space-y-3">
+    {
+      rows.map((row, r) => (
+        <div class:list={['marquee', r === 1 && 'marquee-reverse']}>
+          {[0, 1].map((copy) => (
+            <ul class="marquee-track" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {row.map((tech) => (
+                <li class="flex items-center gap-3 whitespace-nowrap border border-white/10 px-6 py-4 font-mono text-sm text-neutral-content/80 transition-colors hover:border-primary hover:text-primary">
+                  <span class="size-1.5 bg-primary" />
+                  {tech}
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      ))
+    }
   </div>
 </section>

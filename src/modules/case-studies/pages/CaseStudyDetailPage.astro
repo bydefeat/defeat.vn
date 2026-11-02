@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
-import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import BaseLayout from '@app/layouts/BaseLayout.astro';
 import PageHero from '@shared/components/PageHero.astro';
 import { articleLd, breadcrumbLd } from '@shared/seo/jsonld';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
@@ -42,10 +42,10 @@ const crumbs = [
   {
     data.results.length > 0 && (
       <section class="border-b border-base-300" aria-label={text.results}>
-        <dl class="container-x grid grid-cols-2 gap-6 py-10 md:grid-cols-4">
+        <dl class="container-x grid grid-cols-2 gap-6 py-10 md:grid-cols-4" data-reveal-group="100">
           {data.results.map((r) => (
-            <div>
-              <dt class="text-sm text-base-content/60">{r.label}</dt>
+            <div data-reveal>
+              <dt class="label-mono text-base-content/55">{r.label}</dt>
               <dd class="mt-1 text-3xl font-extrabold text-primary">{r.value}</dd>
             </div>
           ))}
@@ -56,7 +56,7 @@ const crumbs = [
 
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-3">
-      <article class="lg:col-span-2">
+      <article class="lg:col-span-2" data-reveal>
         {data.cover && <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[800, 1200]} sizes="(min-width: 1024px) 66vw, 100vw" class="mb-10 w-full rounded-box" loading="eager" />}
         <div class="prose-defeat"><Content /></div>
       </article>

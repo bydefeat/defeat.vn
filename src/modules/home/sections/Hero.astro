@@ -1,47 +1,70 @@
 ---
-import { Image } from 'astro:assets';
-import logo from '@/assets/brand/defeat_logo.png';
+/**
+ * Hero: canvas dither tương tác (logo DEFEAT lắp ghép từ pixel + trường nhiễu động + glow theo con trỏ).
+ * Không JS / reduced motion: hiển thị logo dither tĩnh (PNG trong /public/brand).
+ */
 import Icon from '@shared/components/Icon.astro';
 import type { Locale } from '@i18n/config';
-import { localizePath } from '@i18n/utils';
+import { localizePath, useTranslations } from '@i18n/utils';
 import { homeText } from '../i18n';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
+const t = useTranslations(locale);
 const { hero, stats } = homeText[locale];
 ---
 
-<section class="relative overflow-hidden bg-neutral text-neutral-content">
-  <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(232,32,36,0.35),transparent_55%)]" aria-hidden="true"></div>
-  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:48px_48px]" aria-hidden="true"></div>
+<section class="on-dark relative isolate overflow-hidden bg-neutral text-neutral-content" aria-labelledby="hero-title">
+  <!-- Canvas dither -->
+  <div class="absolute inset-0 -z-10" aria-hidden="true">
+    <img
+      src="/brand/defeat_logo_dither.png"
+      alt=""
+      width="760"
+      height="760"
+      class="pixelated absolute right-[4%] top-1/2 hidden w-[38%] max-w-[560px] -translate-y-1/2 opacity-90 lg:block [.is-live>&]:hidden"
+    />
+    <canvas data-dither="hero" data-src="/brand/defeat_logo.png" class="pixelated absolute inset-0 size-full"></canvas>
+  </div>
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-neutral via-neutral/75 to-transparent max-lg:via-neutral/85 max-lg:to-neutral/40" aria-hidden="true"></div>
+  <div class="grid-lines pointer-events-none absolute inset-0 -z-10 opacity-60" aria-hidden="true"></div>
 
-  <div class="container-x relative grid items-center gap-12 py-20 sm:py-28 lg:grid-cols-12">
-    <div class="lg:col-span-7">
-      <p class="eyebrow">{hero.eyebrow}</p>
-      <h1 class="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-balance sm:text-5xl lg:text-6xl">
-        {hero.title} <span class="text-primary">{hero.highlight}</span>
+  <div class="container-x relative flex min-h-[calc(100svh-var(--header-h)-2.25rem)] flex-col justify-center pb-10 pt-16 sm:pt-20">
+    <div class="max-w-3xl">
+      <p class="eyebrow hero-in"><span data-scramble>{hero.eyebrow}</span></p>
+      <h1 id="hero-title" class="display mt-6 text-5xl leading-[0.98] sm:text-7xl lg:text-[5.5rem]">
+        <span class="reveal-text block">{hero.title}</span>
+        <span class="reveal-text reveal-text-d1 block text-primary">{hero.highlight}</span>
       </h1>
-      <p class="mt-6 max-w-2xl text-lg text-neutral-content/75 text-pretty">{hero.desc}</p>
-      <div class="mt-9 flex flex-wrap gap-3">
-        <a href={localizePath('/contact', locale)} class="btn btn-primary btn-lg">{hero.primary}</a>
-        <a href={localizePath('/products', locale)} class="btn btn-lg btn-outline border-white/30 text-neutral-content hover:border-primary hover:bg-primary">{hero.secondary}</a>
+      <p class="hero-in hero-in-d2 mt-8 max-w-xl text-lg text-neutral-content/70 text-pretty">{hero.desc}</p>
+      <div class="hero-in hero-in-d3 mt-10 flex flex-wrap gap-3">
+        <a href={localizePath('/contact', locale)} class="btn btn-primary btn-lg" data-magnetic="0.2">
+          {hero.primary} <Icon name="arrowRight" class="arrow size-5" />
+        </a>
+        <a href={localizePath('/products', locale)} class="btn btn-lg btn-outline border-white/25 text-neutral-content hover:border-primary hover:bg-primary">
+          {hero.secondary}
+        </a>
       </div>
-      <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-content/75">
-        {hero.bullets.map((b) => <li class="flex items-center gap-2"><Icon name="check" class="size-4 text-primary" />{b}</li>)}
+      <ul class="hero-in hero-in-d4 mt-10 flex flex-wrap gap-x-6 gap-y-2 label-mono text-neutral-content/60">
+        {hero.bullets.map((b) => <li class="flex items-center gap-2"><span class="size-1.5 bg-primary" />{b}</li>)}
       </ul>
     </div>
-    <div class="hidden justify-center lg:col-span-5 lg:flex">
-      <Image src={logo} alt="" width={380} height={380} class="w-80 drop-shadow-[0_20px_60px_rgba(232,32,36,0.45)]" loading="eager" fetchpriority="high" />
-    </div>
+
+    <a href="#home-services" class="hero-in hero-in-d4 group mt-16 hidden items-center gap-3 self-start label-mono text-neutral-content/50 transition-colors hover:text-primary sm:flex">
+      <span class="relative flex h-10 w-6 justify-center border border-current pt-2">
+        <span class="h-2 w-0.5 animate-bounce bg-current"></span>
+      </span>
+      {t('common.scroll')}
+    </a>
   </div>
 
-  <div class="relative border-t border-white/10">
-    <dl class="container-x grid grid-cols-2 divide-white/10 py-8 md:grid-cols-4 md:divide-x">
+  <div class="relative border-t border-white/10 bg-neutral/60 backdrop-blur-sm">
+    <dl class="container-x grid grid-cols-2 md:grid-cols-4" data-reveal-group="100">
       {
-        stats.map((s) => (
-          <div class="flex flex-col-reverse px-4 py-3 md:px-8">
-            <dt class="mt-1 text-sm text-neutral-content/60">{s.label}</dt>
-            <dd class="text-3xl font-extrabold text-neutral-content">{s.value}</dd>
+        stats.map((s, i) => (
+          <div class:list={['flex flex-col-reverse gap-1 border-white/10 px-4 py-7 md:px-8', i > 0 && 'md:border-l', i % 2 === 1 && 'max-md:border-l', i > 1 && 'max-md:border-t']} data-reveal>
+            <dt class="label-mono text-neutral-content/50">{s.label}</dt>
+            <dd class="text-4xl font-extrabold tabular-nums text-neutral-content" data-count>{s.value}</dd>
           </div>
         ))
       }

@@ -6,9 +6,12 @@
 src/
 ├─ config/site.ts            # Thông tin công ty, menu chính
 ├─ i18n/                     # Cấu hình ngôn ngữ, chuỗi giao diện dùng chung, helper URL
-├─ shared/                   # Dùng chung, KHÔNG phụ thuộc module nghiệp vụ
+├─ app/                      # App shell: ghép các module thành khung trang
 │  ├─ layouts/BaseLayout.astro
-│  ├─ components/            # Header, Footer, PageHero, Breadcrumbs, Icon, CtaBand...
+│  └─ shell/                 # Header (mega menu), Footer, CtaBand
+├─ shared/                   # Dùng chung, KHÔNG phụ thuộc module nghiệp vụ
+│  ├─ components/            # PageHero, SectionHeading, Breadcrumbs, Icon...
+│  ├─ motion/                # Hệ thống motion (xem mục Motion)
 │  ├─ seo/                   # Seo.astro (meta/OG/hreflang), jsonld.ts (schema.org)
 │  └─ lib/                   # Helper thuần
 ├─ modules/                  # Mỗi module = một miền nghiệp vụ, tự chứa
@@ -26,8 +29,9 @@ src/
    └─ en/                    # Bản tiếng Anh (vi là mặc định, không có prefix)
 ```
 
-**Quy tắc phụ thuộc:** `pages → modules → shared → (config, i18n)`.
-- `shared` không import `modules`.
+**Quy tắc phụ thuộc:** `pages → app → modules → shared → (config, i18n)`.
+- `shared` không import `modules` hay `app`.
+- `app` (layout, header, footer) được phép dùng dữ liệu/component của module (vd. mega menu lấy `SERVICES`).
 - Module có thể dùng component công khai của module khác (vd. `home` dùng `ProductCard`), không dùng nội bộ.
 - Một module thường có: `schema.ts` (Zod), `api.ts` (truy cập dữ liệu), `i18n.ts` (chuỗi riêng), `components/`, `pages/`.
 
@@ -48,7 +52,42 @@ Làm mới giá khi dữ liệu thay đổi: gọi `context.cache.invalidate({ t
 
 **Quy ước endpoint:** mọi endpoint HTTP đặt dưới `/ingest/v1/` (`src/pages/ingest/v1/`), không dùng `/api/`. Phiên bản mới (breaking change) → `/ingest/v2/`.
 
-## 3. SEO
+## 3. Giao diện & Motion (dither style)
+
+**Assets:** logo PNG gốc nằm ở `public/brand/`. Texture dither (Bayer 8x8) và logo dither tĩnh được sinh bằng
+`node scripts/generate-textures.mjs` → `public/textures/`, `public/brand/*_dither.png`.
+
+**CSS (`src/styles/global.css`):**
+- `.dither`, `.dither-6/12/50`, `.dither-drift`: lớp phủ dither tô bằng `currentColor` (mask PNG).
+- `.dither-edge`: dải chuyển dither giữa hai section sáng/tối.
+- `.reveal-text`: tiêu đề hiện bằng mask dither quét ngang (CSS thuần).
+- `.card-fx`: khung góc animate (`@property --corner`) + spotlight dither theo con trỏ.
+- `.marquee`, mega menu (`.nav-item:hover/:focus-within`), menu mobile (`<details>`), FAQ (`::details-content`).
+- Thanh tiến trình cuộn & timeline quy trình: CSS scroll-driven animations (`@supports`).
+
+**Chuyển trang:** cross-document View Transitions (CSS `@view-transition`) — trang mới quét xuống bằng mask
+dither (`wipe-y.png`), trang cũ lùi nhẹ + grayscale, header giữ nguyên (`view-transition-name: site-header`).
+Không dùng `<ClientRouter />` vì CSP.
+
+**JS (`src/shared/motion/`, nạp 1 lần trong BaseLayout):**
+
+| Module | Thuộc tính | Việc |
+|---|---|---|
+| `reveal.ts` | `data-reveal[="fade/left/scale/blur"]`, `data-reveal-group="ms"` | Hiện khi vào viewport, stagger theo nhóm |
+| `scramble.ts` | `data-scramble[="hover"]` | Chữ "decode" kiểu terminal (chỉ dùng cho font mono) |
+| `counter.ts` | `data-count` | Đếm số |
+| `header.ts` | `data-site-header`, `data-mobile-menu` | Ẩn/hiện khi cuộn, thu gọn topbar, khoá cuộn khi mở menu, Esc để đóng |
+| `spotlight.ts` | `.card-fx`, `data-magnetic="0.2"` | Spotlight theo con trỏ, nút nam châm |
+| `dither-canvas.ts` | `canvas[data-dither="hero/wordmark"][data-src]` | Canvas dither tương tác (hero logo, wordmark footer) |
+| `clock.ts` | `data-clock` | Giờ Việt Nam ở footer |
+
+**Nguyên tắc:**
+- Không JS → mọi nội dung vẫn hiện (ẩn ban đầu chỉ áp dụng khi `@media (scripting: enabled)`, có failsafe 3s).
+- `prefers-reduced-motion: reduce` → tắt animation, chuyển trang, canvas vẽ 1 khung tĩnh.
+- Tương thích CSP: không dùng thuộc tính `style=""` trong HTML; JS chỉ đổi style qua CSSOM.
+- Canvas vẽ ở độ phân giải thấp (1 cell = 3–4px), giới hạn 30fps, dừng khi ngoài màn hình/tab ẩn.
+
+## 4. SEO
 
 - Mỗi trang: `title`, `description`, `canonical`, `robots`, Open Graph, Twitter Card (`src/shared/seo/Seo.astro`).
 - `hreflang` vi-VN / en-US / x-default; chỉ khai báo ngôn ngữ thật sự có bản dịch (`availableLocales`).
@@ -58,7 +97,7 @@ Làm mới giá khi dữ liệu thay đổi: gọi `context.cache.invalidate({ t
 - Font tự host qua Fonts API, chỉ preload weight 400 & 800.
 - URL không có dấu `/` cuối (`trailingSlash: 'never'`, `build.format: 'file'`).
 
-## 4. Bảo mật
+## 5. Bảo mật
 
 - CSP bật (`security.csp`), hash tự động cho script/style. Vì vậy:
   - Code highlight dùng **Prism** (Shiki dùng inline style, không tương thích CSP).
@@ -66,13 +105,13 @@ Làm mới giá khi dữ liệu thay đổi: gọi `context.cache.invalidate({ t
 - Form: kiểm tra Zod phía server, honeypot chống bot, bắt buộc đồng ý liên hệ.
 - Secret qua `astro:env` (`RESEND_API_KEY`...). Xem `.env.example`.
 
-## 5. Nội dung
+## 6. Nội dung
 
 - File: `src/content/<collection>/<vi|en>/<slug>.mdx`. Cùng slug ở hai ngôn ngữ = bản dịch của nhau.
 - `draft: true` → chỉ hiện khi dev.
 - Nội dung có tiền tố **[Mẫu] / [Sample]** là dữ liệu mẫu, phải thay trước khi go-live. Số liệu ở `src/modules/home/i18n.ts` (`stats`) và thông tin ở `src/config/site.ts` cũng cần cập nhật.
 
-## 6. Lệnh
+## 7. Lệnh
 
 ```bash
 npm install

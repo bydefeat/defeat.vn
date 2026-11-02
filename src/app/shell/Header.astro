@@ -1,0 +1,173 @@
+---
+/**
+ * Header enterprise:
+ *  - Topbar (trạng thái, liên hệ nhanh, ngôn ngữ) — thu gọn khi cuộn.
+ *  - Thanh chính: logo, menu + mega menu Dịch vụ (CSS :hover/:focus-within, không JS), CTA.
+ *  - Thanh tiến trình cuộn (CSS scroll-driven).
+ *  - Menu mobile toàn màn hình bằng <details> (không cần JS), item xuất hiện so le.
+ * Hành vi ẩn/hiện khi cuộn: src/shared/motion/header.ts
+ */
+import { MAIN_NAV, SITE } from '@config/site';
+import { LOCALES, LOCALE_META, type Locale } from '@i18n/config';
+import { localizePath, useTranslations } from '@i18n/utils';
+import Icon from '@shared/components/Icon.astro';
+import { SERVICES } from '@modules/services/data';
+
+interface Props {
+  locale: Locale;
+  path: string;
+  availableLocales?: readonly Locale[];
+}
+
+const { locale, path, availableLocales = LOCALES } = Astro.props;
+const t = useTranslations(locale);
+const href = (p: string) => localizePath(p, locale);
+const isActive = (navPath: string) => path === navPath || path.startsWith(navPath + '/');
+const langHref = (l: Locale) => localizePath(availableLocales.includes(l) ? path : '/', l);
+---
+
+<header class="site-header sticky top-0 z-50 border-b border-transparent" data-site-header>
+  <!-- Lớp nền blur tách riêng: backdrop-filter trên chính header sẽ "nhốt" panel fixed của menu mobile. -->
+  <div class="header-bg pointer-events-none absolute inset-0 -z-10 bg-base-100/70 backdrop-blur-md transition-colors duration-300" aria-hidden="true"></div>
+  <!-- Topbar -->
+  <div class="topbar hidden bg-neutral text-neutral-content md:block">
+    <div class="container-x flex h-9 items-center justify-between label-mono text-neutral-content/70">
+      <p class="flex items-center gap-2">
+        <span class="relative flex size-2">
+          <span class="absolute inline-flex size-full animate-ping bg-primary opacity-75"></span>
+          <span class="relative inline-flex size-2 bg-primary"></span>
+        </span>
+        <span>{t('header.status')}</span>
+        <span class="text-neutral-content/30">/</span>
+        <span>{t('header.response')}</span>
+      </p>
+      <div class="flex items-center gap-5">
+        <a href={`mailto:${SITE.email}`} class="transition-colors hover:text-primary">{SITE.email}</a>
+        <span class="text-neutral-content/30">|</span>
+        <nav class="flex items-center gap-1" aria-label={t('common.language')}>
+          {
+            LOCALES.map((l) => (
+              <a
+                href={langHref(l)}
+                hreflang={LOCALE_META[l].hreflang}
+                lang={LOCALE_META[l].hreflang}
+                title={LOCALE_META[l].label}
+                class:list={['px-1.5 py-0.5 transition-colors', l === locale ? 'bg-primary text-primary-content' : 'hover:text-primary']}
+                aria-current={l === locale ? 'true' : undefined}
+              >
+                {l.toUpperCase()}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thanh chính -->
+  <nav class="container-x flex h-[var(--header-h)] items-center gap-8" aria-label="Main">
+    <a href={href('/')} class="group flex shrink-0 items-center" aria-label={`DEFEAT — ${t('nav.home')}`} data-magnetic="0.15">
+      <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" class="h-7 w-auto transition-[filter] duration-300 group-hover:[filter:drop-shadow(2px_0_0_#0a0a0b)]" />
+    </a>
+
+    <ul class="hidden flex-1 items-center gap-1 lg:flex">
+      {
+        MAIN_NAV.map((item) =>
+          item.key === 'services' ? (
+            <li class="nav-item relative">
+              <a
+                href={href(item.path)}
+                class:list={['link-dither flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors hover:text-primary', isActive(item.path) ? 'text-primary' : 'text-base-content/80']}
+                aria-current={isActive(item.path) ? 'page' : undefined}
+              >
+                {t(`nav.${item.key}`)}
+                <svg class="chev size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+              </a>
+              <div class="mega w-[min(860px,90vw)]">
+                <div class="grid grid-cols-5 overflow-hidden border border-base-300 bg-base-100 shadow-[8px_8px_0_0_rgba(10,10,11,0.08)]">
+                  <div class="relative col-span-2 overflow-hidden bg-neutral p-6 text-neutral-content">
+                    <span class="dither dither-12 dither-drift absolute inset-0 text-primary/60" aria-hidden="true"></span>
+                    <div class="relative">
+                      <p class="eyebrow">{t('nav.services')}</p>
+                      <p class="mt-3 text-lg font-bold leading-snug">{t('header.servicesIntro')}</p>
+                      <a href={href('/services')} class="btn btn-primary btn-sm mt-6">
+                        {t('header.allServices')} <Icon name="arrowRight" class="arrow size-4" />
+                      </a>
+                    </div>
+                  </div>
+                  <ul class="col-span-3 grid grid-cols-2 gap-px bg-base-300 p-px">
+                    {SERVICES.map((s, i) => (
+                      <li>
+                        <a href={href(`/services/${s.slug}`)} class="group/item flex h-full items-start gap-3 bg-base-100 p-3.5 transition-colors hover:bg-base-200">
+                          <span class="label-mono mt-0.5 text-base-content/40 group-hover/item:text-primary">{String(i + 1).padStart(2, '0')}</span>
+                          <span>
+                            <span class="block text-sm font-semibold group-hover/item:text-primary">{s.title[locale]}</span>
+                            <span class="mt-1 line-clamp-2 block text-xs text-base-content/60">{s.summary[locale]}</span>
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </li>
+          ) : (
+            <li>
+              <a
+                href={href(item.path)}
+                class:list={['link-dither block px-3 py-2 text-sm font-medium transition-colors hover:text-primary', isActive(item.path) ? 'text-primary' : 'text-base-content/80']}
+                aria-current={isActive(item.path) ? 'page' : undefined}
+              >
+                {t(`nav.${item.key}`)}
+              </a>
+            </li>
+          ),
+        )
+      }
+    </ul>
+
+    <div class="ml-auto hidden items-center gap-4 lg:flex">
+      <a href={href('/contact')} class="link-dither text-sm font-medium text-base-content/80 hover:text-primary">{t('nav.contact')}</a>
+      <a href={href('/contact')} class="btn btn-primary btn-sm" data-magnetic="0.2">
+        {t('cta.quote')} <Icon name="arrowRight" class="arrow size-4" />
+      </a>
+    </div>
+
+    <!-- Mobile -->
+    <details class="mobile-menu ml-auto lg:hidden" data-mobile-menu>
+      <summary class="btn btn-square btn-ghost btn-sm list-none" aria-label={t('nav.menu')}>
+        <span class="relative block h-3 w-5" aria-hidden="true">
+          <span class="absolute left-0 top-0 h-0.5 w-5 bg-current transition-transform duration-300 [.mobile-menu[open]_&]:translate-y-[5px] [.mobile-menu[open]_&]:rotate-45"></span>
+          <span class="absolute bottom-0 left-0 h-0.5 w-5 bg-current transition-transform duration-300 [.mobile-menu[open]_&]:-translate-y-[5px] [.mobile-menu[open]_&]:-rotate-45"></span>
+        </span>
+      </summary>
+      <div class="mobile-panel fixed inset-x-0 bottom-0 top-[var(--header-h)] overflow-y-auto bg-neutral text-neutral-content">
+        <span class="dither dither-6 pointer-events-none absolute inset-0 text-primary/50" aria-hidden="true"></span>
+        <ul class="container-x relative flex flex-col py-6">
+          {
+            [...MAIN_NAV, { key: 'contact' as const, path: '/contact' }].map((item, i) => (
+              <li class="border-b border-white/10">
+                <a href={href(item.path)} class="flex items-baseline gap-4 py-4 text-2xl font-bold hover:text-primary">
+                  <span class="label-mono text-primary">{String(i + 1).padStart(2, '0')}</span>
+                  {t(`nav.${item.key}`)}
+                </a>
+              </li>
+            ))
+          }
+          <li class="flex items-center justify-between gap-4 pt-6">
+            <div class="flex gap-2">
+              {LOCALES.map((l) => (
+                <a href={langHref(l)} hreflang={LOCALE_META[l].hreflang} class:list={['btn btn-sm', l === locale ? 'btn-primary' : 'btn-ghost text-neutral-content']}>
+                  {l.toUpperCase()}
+                </a>
+              ))}
+            </div>
+            <a href={href('/contact')} class="btn btn-primary btn-sm">{t('cta.quote')}</a>
+          </li>
+        </ul>
+      </div>
+    </details>
+  </nav>
+
+  <div class="scroll-progress absolute inset-x-0 bottom-0 h-0.5 bg-primary" aria-hidden="true"></div>
+</header>

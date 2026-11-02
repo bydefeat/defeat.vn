@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import BaseLayout from '@app/layouts/BaseLayout.astro';
 import PageHero from '@shared/components/PageHero.astro';
 import { breadcrumbLd } from '@shared/seo/jsonld';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
@@ -20,7 +20,7 @@ const crumbs = [
 <BaseLayout title={text.title} description={text.desc} path="/news" jsonLd={[breadcrumbLd(crumbs)]}>
   <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
   <section class="section">
-    <div class="container-x grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="container-x grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="90">
       {posts.map((post) => <NewsCard post={post} locale={locale} headingLevel="h2" />)}
     </div>
   </section>

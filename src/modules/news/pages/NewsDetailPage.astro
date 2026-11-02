@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
-import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import BaseLayout from '@app/layouts/BaseLayout.astro';
 import Breadcrumbs from '@shared/components/Breadcrumbs.astro';
 import { articleLd, breadcrumbLd } from '@shared/seo/jsonld';
 import { readingTime } from '@shared/lib/content';
@@ -44,26 +44,28 @@ const crumbs = [
   ]}
 >
   <article>
-    <header class="border-b border-base-300 bg-base-200">
-      <div class="container-x max-w-4xl py-12 sm:py-16">
+    <header class="on-dark relative overflow-hidden bg-neutral text-neutral-content">
+      <div class="grid-lines pointer-events-none absolute inset-0" aria-hidden="true"></div>
+      <div class="container-x relative max-w-4xl pb-28 pt-14 sm:pb-32 sm:pt-20">
         <Breadcrumbs items={crumbs} />
-        <h1 class="mt-6 text-3xl font-extrabold tracking-tight text-balance sm:text-5xl">{data.title}</h1>
-        <p class="mt-5 text-lg text-base-content/70">{data.description}</p>
-        <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-base-content/60">
-          {data.author && <span class="font-medium text-base-content">{data.author}</span>}
+        <h1 class="display reveal-text mt-8 text-4xl leading-[1.06] sm:text-6xl">{data.title}</h1>
+        <p class="hero-in hero-in-d1 mt-6 text-lg text-neutral-content/70">{data.description}</p>
+        <div class="hero-in hero-in-d2 mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 label-mono text-neutral-content/55">
+          {data.author && <span class="text-primary">{data.author}</span>}
           <span>{t('common.publishedOn')} <time datetime={data.pubDate.toISOString()}>{formatDate(data.pubDate, locale)}</time></span>
           {data.updatedDate && <span>· {t('common.updatedOn')} <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate, locale)}</time></span>}
           <span>· {minutes} {t('common.minRead')}</span>
         </div>
       </div>
+      <span class="dither-edge dither-edge-bottom text-base-100" aria-hidden="true"></span>
     </header>
     <div class="container-x max-w-4xl py-12">
       {data.cover && <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[800, 1200]} sizes="(min-width: 1024px) 896px, 100vw" class="mb-10 w-full rounded-box" loading="eager" />}
-      <div class="prose-defeat text-lg"><Content /></div>
+      <div class="prose-defeat text-lg" data-reveal><Content /></div>
       {
         data.tags.length > 0 && (
           <ul class="mt-10 flex flex-wrap gap-2" aria-label={t('common.tags')}>
-            {data.tags.map((tag) => <li class="badge badge-outline">{tag}</li>)}
+            {data.tags.map((tag) => <li class="label-mono border border-base-300 px-2.5 py-1">{tag}</li>)}
           </ul>
         )
       }
@@ -72,10 +74,10 @@ const crumbs = [
 
   {
     related.length > 0 && (
-      <section class="section border-t border-base-300 pt-16">
+      <section class="section border-t border-base-300">
         <div class="container-x">
-          <h2 class="text-2xl font-bold">{text.related}</h2>
-          <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <h2 class="display text-3xl" data-reveal>{text.related}</h2>
+          <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="90">
             {related.map((p) => <NewsCard post={p} locale={locale} />)}
           </div>
         </div>

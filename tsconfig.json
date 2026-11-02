@@ -11,6 +11,7 @@
       "@config/*": ["src/config/*"],
       "@i18n/*": ["src/i18n/*"],
       "@shared/*": ["src/shared/*"],
+      "@app/*": ["src/app/*"],
       "@modules/*": ["src/modules/*"]
     }
   }

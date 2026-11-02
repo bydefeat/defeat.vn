@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import BaseLayout from '@app/layouts/BaseLayout.astro';
 import PageHero from '@shared/components/PageHero.astro';
 import Icon from '@shared/components/Icon.astro';
 import { breadcrumbLd, serviceLd } from '@shared/seo/jsonld';
@@ -29,17 +29,17 @@ const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
   jsonLd={[serviceLd({ name: service.title[locale], description: service.summary[locale], path: localizePath(path, locale) }), breadcrumbLd(crumbs)]}
 >
   <PageHero eyebrow={text.eyebrow} title={service.title[locale]} description={service.summary[locale]} crumbs={crumbs}>
-    <a href={localizePath('/contact', locale)} class="btn btn-primary mt-8">{t('cta.quote')}</a>
+    <a href={localizePath('/contact', locale)} class="btn btn-primary btn-lg mt-10" data-magnetic="0.2">{t('cta.quote')} <Icon name="arrowRight" class="arrow size-5" /></a>
   </PageHero>
 
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-3">
       <div class="lg:col-span-2">
-        <h2 class="text-2xl font-bold">{text.included}</h2>
-        <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+        <h2 class="display text-3xl" data-reveal>{text.included}</h2>
+        <ul class="mt-8 grid gap-4 sm:grid-cols-2" data-reveal-group="90">
           {
             service.points[locale].map((p) => (
-              <li class="flex gap-3 rounded-box border border-base-300 p-4">
+              <li class="card-fx flex gap-4 border border-base-300 bg-base-100 p-5" data-reveal>
                 <Icon name="check" class="size-5 shrink-0 text-primary" />
                 <span>{p}</span>
               </li>
@@ -47,19 +47,20 @@ const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
           }
         </ul>
       </div>
-      <aside class="rounded-box bg-base-200 p-6">
-        <h2 class="font-semibold">{t('cta.contact')}</h2>
-        <p class="mt-2 text-sm text-base-content/70">{t('ctaBand.desc')}</p>
-        <a href={localizePath('/contact', locale)} class="btn btn-primary btn-block mt-5">{t('cta.quote')}</a>
+      <aside class="on-dark relative self-start overflow-hidden bg-neutral p-7 text-neutral-content lg:sticky lg:top-28" data-reveal>
+        <span class="dither dither-6 dither-drift pointer-events-none absolute inset-0 text-primary/60" aria-hidden="true"></span>
+        <h2 class="relative text-xl font-bold">{t('cta.contact')}</h2>
+        <p class="relative mt-3 text-sm text-neutral-content/70">{t('ctaBand.desc')}</p>
+        <a href={localizePath('/contact', locale)} class="btn btn-primary btn-block relative mt-6">{t('cta.quote')}</a>
       </aside>
     </div>
   </section>
 
-  <section class="section border-t border-base-300 pt-16">
+  <section class="section border-t border-base-300">
     <div class="container-x">
-      <h2 class="text-2xl font-bold">{t('nav.services')}</h2>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {others.map((s) => <ServiceCard service={s} locale={locale} />)}
+      <h2 class="display text-3xl" data-reveal>{t('nav.services')}</h2>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="90">
+        {others.map((s) => <ServiceCard service={s} locale={locale} index={SERVICES.indexOf(s)} total={SERVICES.length} />)}
       </div>
     </div>
   </section>
