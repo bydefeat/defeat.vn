@@ -1,0 +1,25 @@
+---
+import SectionHeading from '@shared/components/SectionHeading.astro';
+import type { Locale } from '@i18n/config';
+import { localizePath, useTranslations } from '@i18n/utils';
+import ServiceCard from '@modules/services/components/ServiceCard.astro';
+import { SERVICES } from '@modules/services/data';
+import { homeText } from '../i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const text = homeText[locale].services;
+---
+
+<section class="section" aria-labelledby="home-services">
+  <div class="container-x">
+    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <SectionHeading id="home-services" eyebrow={text.eyebrow} title={text.title} description={text.desc} />
+      <a href={localizePath('/services', locale)} class="btn btn-outline btn-sm shrink-0">{t('cta.viewAll')}</a>
+    </div>
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {SERVICES.map((s) => <ServiceCard service={s} locale={locale} />)}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,9 @@
+---
+import Page from '@modules/case-studies/pages/CaseStudyDetailPage.astro';
+import { caseStudyStaticPaths } from '@modules/case-studies/api';
+
+export async function getStaticPaths() {
+  return caseStudyStaticPaths('vi');
+}
+---
+<Page {...Astro.props} />

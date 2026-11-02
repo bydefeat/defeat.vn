@@ -1,0 +1,50 @@
+---
+import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import Icon from '@shared/components/Icon.astro';
+import { breadcrumbLd } from '@shared/seo/jsonld';
+import { SITE } from '@config/site';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import ContactForm from '../components/ContactForm';
+import { contactText } from '../i18n';
+
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = contactText[locale];
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: t('nav.contact'), href: localizePath('/contact', locale) },
+];
+---
+
+<BaseLayout title={text.title} description={text.desc} path="/contact" hideCtaBand jsonLd={[breadcrumbLd(crumbs)]}>
+  <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
+  <section class="section">
+    <div class="container-x grid gap-12 lg:grid-cols-3">
+      <div class="rounded-box border border-base-300 p-6 sm:p-8 lg:col-span-2">
+        <ContactForm client:visible labels={text.form} locale={locale} />
+      </div>
+      <aside class="space-y-8">
+        <div>
+          <h2 class="text-lg font-semibold">{text.infoTitle}</h2>
+          <ul class="mt-4 space-y-3 text-sm">
+            <li class="flex gap-3"><Icon name="mail" class="size-5 text-primary" /><a class="hover:text-primary" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+            <li class="flex gap-3"><Icon name="phone" class="size-5 text-primary" /><a class="hover:text-primary" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></li>
+            <li class="flex gap-3"><Icon name="mapPin" class="size-5 text-primary" /><span>{SITE.address.locality}, Việt Nam</span></li>
+          </ul>
+        </div>
+        <ol class="space-y-5 border-l-2 border-primary/30 pl-5">
+          {
+            text.steps.map((s, i) => (
+              <li>
+                <p class="text-xs font-bold text-primary">0{i + 1}</p>
+                <p class="font-semibold">{s.title}</p>
+                <p class="text-sm text-base-content/70">{s.desc}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

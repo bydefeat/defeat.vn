@@ -1,0 +1,24 @@
+---
+/** FAQ dùng <details> gốc (không JS). JSON-LD FAQPage được trang chủ thêm qua faqLd(). */
+import SectionHeading from '@shared/components/SectionHeading.astro';
+import type { Locale } from '@i18n/config';
+import { homeText } from '../i18n';
+interface Props { locale: Locale }
+const { faq } = homeText[Astro.props.locale];
+---
+
+<section class="section bg-base-200" aria-labelledby="home-faq">
+  <div class="container-x grid gap-12 lg:grid-cols-3">
+    <SectionHeading id="home-faq" eyebrow={faq.eyebrow} title={faq.title} />
+    <div class="space-y-3 lg:col-span-2">
+      {
+        faq.items.map((item, i) => (
+          <details class="collapse collapse-plus rounded-box border border-base-300 bg-base-100" open={i === 0}>
+            <summary class="collapse-title font-semibold">{item.q}</summary>
+            <div class="collapse-content text-base-content/75"><p>{item.a}</p></div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

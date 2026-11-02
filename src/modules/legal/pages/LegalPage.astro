@@ -1,0 +1,28 @@
+---
+/**
+ * Trang pháp lý (bảo mật, điều khoản).
+ * TODO: thay nội dung pháp lý thật. Đang để noindex cho đến khi có nội dung chính thức.
+ */
+import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+
+interface Props { kind: 'privacy' | 'terms' }
+const { kind } = Astro.props;
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const title = t(kind === 'privacy' ? 'footer.privacy' : 'footer.terms');
+const path = `/${kind}`;
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: title, href: localizePath(path, locale) },
+];
+const placeholder = locale === 'vi' ? 'Nội dung đang được cập nhật.' : 'Content coming soon.';
+---
+
+<BaseLayout title={title} description={`${title} — DEFEAT`} path={path} noindex hideCtaBand>
+  <PageHero title={title} crumbs={crumbs} />
+  <section class="section">
+    <div class="container-x prose-defeat max-w-3xl"><p>{placeholder}</p></div>
+  </section>
+</BaseLayout>

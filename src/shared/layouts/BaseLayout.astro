@@ -1,0 +1,52 @@
+---
+/**
+ * Layout gốc: <html>, <head> (SEO, font, icon), header, footer.
+ * Mọi trang đều đi qua layout này.
+ */
+import '@/styles/global.css';
+import { Font } from 'astro:assets';
+import { SITE } from '@config/site';
+import { LOCALE_META } from '@i18n/config';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import Seo, { type SeoProps } from '@shared/seo/Seo.astro';
+import Header from '@shared/components/Header.astro';
+import Footer from '@shared/components/Footer.astro';
+
+type Props = Omit<SeoProps, 'locale'> & { hideCtaBand?: boolean };
+
+const props = Astro.props as Props;
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<!doctype html>
+<html lang={LOCALE_META[locale].hreflang} data-theme="defeat">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={SITE.themeColor} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${SITE.name} — ${t('nav.news')}`}
+      href={localizePath('/rss.xml', locale)}
+    />
+    <Font cssVariable="--font-be-vietnam" preload={[{ weight: 400 }, { weight: 800 }]} />
+    <Seo {...props} locale={locale} />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-dvh flex-col bg-base-100 font-sans text-base-content">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] btn btn-primary btn-sm">
+      {t('common.skipToContent')}
+    </a>
+    <Header locale={locale} path={props.path} availableLocales={props.availableLocales} />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer locale={locale} hideCtaBand={props.hideCtaBand} />
+  </body>
+</html>

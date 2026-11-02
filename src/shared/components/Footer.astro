@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import brand from '@/assets/brand/defeat_brand.png';
+import { SITE } from '@config/site';
+import type { Locale } from '@i18n/config';
+import { localizePath, useTranslations } from '@i18n/utils';
+import CtaBand from './CtaBand.astro';
+
+interface Props {
+  locale: Locale;
+  hideCtaBand?: boolean;
+}
+
+const { locale, hideCtaBand = false } = Astro.props;
+const t = useTranslations(locale);
+const href = (p: string) => localizePath(p, locale);
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: t('footer.company'),
+    links: [
+      { label: t('nav.about'), href: href('/about') },
+      { label: t('nav.caseStudies'), href: href('/case-studies') },
+      { label: t('nav.contact'), href: href('/contact') },
+    ],
+  },
+  {
+    title: t('footer.solutions'),
+    links: [
+      { label: t('nav.services'), href: href('/services') },
+      { label: t('nav.products'), href: href('/products') },
+    ],
+  },
+  {
+    title: t('footer.resources'),
+    links: [
+      { label: t('nav.news'), href: href('/news') },
+      { label: t('footer.rss'), href: href('/rss.xml') },
+    ],
+  },
+];
+---
+
+{!hideCtaBand && <CtaBand locale={locale} />}
+
+<footer class="bg-neutral text-neutral-content">
+  <div class="container-x grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5">
+    <div class="lg:col-span-2">
+      <a href={href('/')} class="inline-block" aria-label="DEFEAT">
+        <Image src={brand} alt="DEFEAT" height={32} class="h-8 w-auto" />
+      </a>
+      <p class="mt-4 max-w-sm text-sm text-neutral-content/70">{t('footer.tagline')}</p>
+      <address class="mt-6 space-y-1 text-sm not-italic text-neutral-content/70">
+        <div><a class="hover:text-primary" href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
+        <div><a class="hover:text-primary" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></div>
+        <div>{SITE.address.locality}, Việt Nam</div>
+      </address>
+    </div>
+    {
+      columns.map((col) => (
+        <nav aria-label={col.title}>
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-neutral-content">{col.title}</h2>
+          <ul class="mt-4 space-y-2 text-sm">
+            {col.links.map((l) => (
+              <li>
+                <a class="text-neutral-content/70 transition-colors hover:text-primary" href={l.href}>
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
+  </div>
+  <div class="border-t border-white/10">
+    <div class="container-x flex flex-col gap-3 py-6 text-xs text-neutral-content/60 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {SITE.legalName}. {t('footer.rights')}</p>
+      <ul class="flex gap-4">
+        <li><a class="hover:text-primary" href={href('/privacy')}>{t('footer.privacy')}</a></li>
+        <li><a class="hover:text-primary" href={href('/terms')}>{t('footer.terms')}</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,5 @@
+---
+interface Props { label: string; variant?: 'default' | 'primary' }
+const { label, variant = 'default' } = Astro.props;
+---
+<span class:list={['badge badge-sm', variant === 'primary' ? 'badge-primary' : 'badge-ghost']}>{label}</span>

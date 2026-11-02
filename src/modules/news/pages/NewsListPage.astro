@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import { breadcrumbLd } from '@shared/seo/jsonld';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import NewsCard from '../components/NewsCard.astro';
+import { getNews } from '../api';
+import { newsText } from '../i18n';
+
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = newsText[locale];
+const posts = await getNews(locale);
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: t('nav.news'), href: localizePath('/news', locale) },
+];
+---
+
+<BaseLayout title={text.title} description={text.desc} path="/news" jsonLd={[breadcrumbLd(crumbs)]}>
+  <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
+  <section class="section">
+    <div class="container-x grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post) => <NewsCard post={post} locale={locale} headingLevel="h2" />)}
+    </div>
+  </section>
+</BaseLayout>

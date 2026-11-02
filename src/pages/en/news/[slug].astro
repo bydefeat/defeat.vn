@@ -1,0 +1,9 @@
+---
+import Page from '@modules/news/pages/NewsDetailPage.astro';
+import { newsStaticPaths } from '@modules/news/api';
+
+export async function getStaticPaths() {
+  return newsStaticPaths('en');
+}
+---
+<Page {...Astro.props} />

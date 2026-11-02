@@ -1,0 +1,66 @@
+---
+import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import Icon from '@shared/components/Icon.astro';
+import { breadcrumbLd, serviceLd } from '@shared/seo/jsonld';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import ServiceCard from '../components/ServiceCard.astro';
+import { SERVICES, type Service } from '../data';
+import { servicesText } from '../i18n';
+
+interface Props { service: Service }
+const { service } = Astro.props;
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = servicesText[locale];
+const path = `/services/${service.slug}`;
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: t('nav.services'), href: localizePath('/services', locale) },
+  { name: service.title[locale], href: localizePath(path, locale) },
+];
+const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
+---
+
+<BaseLayout
+  title={service.title[locale]}
+  description={service.summary[locale]}
+  path={path}
+  jsonLd={[serviceLd({ name: service.title[locale], description: service.summary[locale], path: localizePath(path, locale) }), breadcrumbLd(crumbs)]}
+>
+  <PageHero eyebrow={text.eyebrow} title={service.title[locale]} description={service.summary[locale]} crumbs={crumbs}>
+    <a href={localizePath('/contact', locale)} class="btn btn-primary mt-8">{t('cta.quote')}</a>
+  </PageHero>
+
+  <section class="section">
+    <div class="container-x grid gap-12 lg:grid-cols-3">
+      <div class="lg:col-span-2">
+        <h2 class="text-2xl font-bold">{text.included}</h2>
+        <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+          {
+            service.points[locale].map((p) => (
+              <li class="flex gap-3 rounded-box border border-base-300 p-4">
+                <Icon name="check" class="size-5 shrink-0 text-primary" />
+                <span>{p}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <aside class="rounded-box bg-base-200 p-6">
+        <h2 class="font-semibold">{t('cta.contact')}</h2>
+        <p class="mt-2 text-sm text-base-content/70">{t('ctaBand.desc')}</p>
+        <a href={localizePath('/contact', locale)} class="btn btn-primary btn-block mt-5">{t('cta.quote')}</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section border-t border-base-300 pt-16">
+    <div class="container-x">
+      <h2 class="text-2xl font-bold">{t('nav.services')}</h2>
+      <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {others.map((s) => <ServiceCard service={s} locale={locale} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -161,7 +161,8 @@ Astro 7.4 + TypeScript 6 (Node 26 LTS, Vite 8)
   // astro.config.mjs
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' }
   ```
-- **Nâng lên `<ClientRouter />`** (từ `astro:transitions`; `<ViewTransitions />` cũ **đã bị xóa**) khi cần giữ state hoặc phần tử qua các trang (`transition:persist`), hoặc cần hiệu ứng morph (`transition:name`) trên mọi trình duyệt.
+- ⚠️ **Khi bật CSP, `<ClientRouter />` không được hỗ trợ** → dự án dùng CSS `@view-transition` (đã triển khai).
+- **Nâng lên `<ClientRouter />`** (chỉ khi tắt CSP) (từ `astro:transitions`; `<ViewTransitions />` cũ **đã bị xóa**) khi cần giữ state hoặc phần tử qua các trang (`transition:persist`), hoặc cần hiệu ứng morph (`transition:name`) trên mọi trình duyệt.
 - Lưu ý khi dùng ClientRouter:
   - `<script>` chỉ chạy một lần → khởi tạo trong sự kiện `astro:page-load`;
   - island React mất state khi chuyển trang nếu không có `transition:persist`;

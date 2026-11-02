@@ -1,0 +1,51 @@
+---
+import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import { breadcrumbLd } from '@shared/seo/jsonld';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import ProductCard from '../components/ProductCard.astro';
+import { getProducts } from '../api';
+import { PRODUCT_CATEGORIES } from '../schema';
+import { productsText } from '../i18n';
+
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = productsText[locale];
+const products = await getProducts(locale);
+const usedCategories = PRODUCT_CATEGORIES.filter((c) => products.some((p) => p.data.category === c));
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: t('nav.products'), href: localizePath('/products', locale) },
+];
+---
+
+<BaseLayout title={text.title} description={text.desc} path="/products" jsonLd={[breadcrumbLd(crumbs)]}>
+  <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
+  <section class="section">
+    <div class="container-x product-explorer">
+      {/* Bộ lọc thuần CSS (radio + :has) — không cần JavaScript, nội dung vẫn đầy đủ cho SEO. */}
+      {
+        usedCategories.length > 1 && (
+          <fieldset class="filter mb-10" aria-label={text.filter}>
+            <input class="btn btn-sm filter-reset" type="radio" name="product-cat" value="all" aria-label={text.all} checked />
+            {usedCategories.map((c) => (
+              <input class="btn btn-sm" type="radio" name="product-cat" value={c} aria-label={text.categories[c]} />
+            ))}
+          </fieldset>
+        )
+      }
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {products.map((p) => <ProductCard product={p} locale={locale} headingLevel="h2" />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .product-explorer:has(input[value='source-code']:checked) :global([data-category]:not([data-category='source-code'])),
+  .product-explorer:has(input[value='saas']:checked) :global([data-category]:not([data-category='saas'])),
+  .product-explorer:has(input[value='solution']:checked) :global([data-category]:not([data-category='solution'])),
+  .product-explorer:has(input[value='template']:checked) :global([data-category]:not([data-category='template'])) {
+    display: none;
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import { Image } from 'astro:assets';
+import type { Locale } from '@i18n/config';
+import { localizePath, useTranslations } from '@i18n/utils';
+import Icon from '@shared/components/Icon.astro';
+import { caseStudyPath, type CaseStudyEntry } from '../api';
+
+interface Props { item: CaseStudyEntry; locale: Locale; headingLevel?: 'h2' | 'h3' }
+const { item, locale, headingLevel: H = 'h3' } = Astro.props;
+const t = useTranslations(locale);
+const { data } = item;
+const href = localizePath(caseStudyPath(item), locale);
+---
+
+<article class="group relative grid overflow-hidden rounded-box border border-base-300 bg-base-100 transition hover:border-primary hover:shadow-lg md:grid-cols-5">
+  <div class="aspect-[16/10] bg-neutral md:col-span-2 md:aspect-auto">
+    {
+      data.cover ? (
+        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[480, 800]} sizes="(min-width: 768px) 40vw, 100vw" class="size-full object-cover" />
+      ) : (
+        <div class="flex size-full min-h-40 items-center justify-center bg-gradient-to-br from-neutral via-neutral to-primary/70 text-neutral-content">
+          <span class="text-sm font-semibold uppercase tracking-widest opacity-80">{data.industry}</span>
+        </div>
+      )
+    }
+  </div>
+  <div class="flex flex-col p-6 md:col-span-3">
+    <p class="text-xs font-semibold uppercase tracking-wider text-primary">{data.industry}</p>
+    <H class="mt-2 text-xl font-semibold">
+      <a href={href} class="after:absolute after:inset-0">{data.title}</a>
+    </H>
+    <p class="mt-2 flex-1 text-sm text-base-content/70">{data.summary}</p>
+    {
+      data.results.length > 0 && (
+        <dl class="mt-5 grid grid-cols-2 gap-4 border-t border-base-300 pt-4 sm:grid-cols-3">
+          {data.results.slice(0, 3).map((r) => (
+            <div>
+              <dt class="sr-only">{r.label}</dt>
+              <dd class="text-2xl font-extrabold text-primary">{r.value}</dd>
+              <dd class="text-xs text-base-content/60">{r.label}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+    <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+      {t('cta.viewDetail')} <Icon name="arrowRight" class="size-4 transition group-hover:translate-x-1" />
+    </span>
+  </div>
+</article>

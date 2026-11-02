@@ -1,0 +1,18 @@
+---
+import type { Locale } from '@i18n/config';
+import { homeText, TECH_STACK } from '../i18n';
+interface Props { locale: Locale }
+const text = homeText[Astro.props.locale].tech;
+---
+
+<section class="border-y border-base-300 py-12" aria-labelledby="home-tech">
+  <div class="container-x flex flex-col gap-6 lg:flex-row lg:items-center">
+    <div class="shrink-0 lg:w-64">
+      <p class="eyebrow">{text.eyebrow}</p>
+      <h2 id="home-tech" class="mt-2 text-xl font-bold">{text.title}</h2>
+    </div>
+    <ul class="flex flex-wrap gap-2">
+      {TECH_STACK.map((tech) => <li class="rounded-field border border-base-300 px-4 py-2 text-sm font-medium text-base-content/80">{tech}</li>)}
+    </ul>
+  </div>
+</section>

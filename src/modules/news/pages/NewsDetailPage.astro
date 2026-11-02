@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import Breadcrumbs from '@shared/components/Breadcrumbs.astro';
+import { articleLd, breadcrumbLd } from '@shared/seo/jsonld';
+import { readingTime } from '@shared/lib/content';
+import { resolveLocale, useTranslations, localizePath, formatDate } from '@i18n/utils';
+import type { Locale } from '@i18n/config';
+import NewsCard from '../components/NewsCard.astro';
+import { getNews, newsPath, type NewsEntry } from '../api';
+import { newsText } from '../i18n';
+
+interface Props { post: NewsEntry; availableLocales: Locale[] }
+const { post, availableLocales } = Astro.props;
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = newsText[locale];
+const { data } = post;
+const path = newsPath(post);
+const { Content } = await render(post);
+const minutes = readingTime(post.body);
+const related = (await getNews(locale)).filter((p) => p.id !== post.id).slice(0, 3);
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: t('nav.news'), href: localizePath('/news', locale) },
+  { name: data.title, href: localizePath(path, locale) },
+];
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  path={path}
+  type="article"
+  availableLocales={availableLocales}
+  image={data.cover?.src}
+  imageAlt={data.coverAlt}
+  publishedTime={data.pubDate}
+  modifiedTime={data.updatedDate}
+  jsonLd={[
+    articleLd({ title: data.title, description: data.description, path: localizePath(path, locale), image: data.cover?.src, datePublished: data.pubDate, dateModified: data.updatedDate, author: data.author, locale }),
+    breadcrumbLd(crumbs),
+  ]}
+>
+  <article>
+    <header class="border-b border-base-300 bg-base-200">
+      <div class="container-x max-w-4xl py-12 sm:py-16">
+        <Breadcrumbs items={crumbs} />
+        <h1 class="mt-6 text-3xl font-extrabold tracking-tight text-balance sm:text-5xl">{data.title}</h1>
+        <p class="mt-5 text-lg text-base-content/70">{data.description}</p>
+        <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-base-content/60">
+          {data.author && <span class="font-medium text-base-content">{data.author}</span>}
+          <span>{t('common.publishedOn')} <time datetime={data.pubDate.toISOString()}>{formatDate(data.pubDate, locale)}</time></span>
+          {data.updatedDate && <span>· {t('common.updatedOn')} <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate, locale)}</time></span>}
+          <span>· {minutes} {t('common.minRead')}</span>
+        </div>
+      </div>
+    </header>
+    <div class="container-x max-w-4xl py-12">
+      {data.cover && <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[800, 1200]} sizes="(min-width: 1024px) 896px, 100vw" class="mb-10 w-full rounded-box" loading="eager" />}
+      <div class="prose-defeat text-lg"><Content /></div>
+      {
+        data.tags.length > 0 && (
+          <ul class="mt-10 flex flex-wrap gap-2" aria-label={t('common.tags')}>
+            {data.tags.map((tag) => <li class="badge badge-outline">{tag}</li>)}
+          </ul>
+        )
+      }
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="section border-t border-base-300 pt-16">
+        <div class="container-x">
+          <h2 class="text-2xl font-bold">{text.related}</h2>
+          <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((p) => <NewsCard post={p} locale={locale} />)}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>

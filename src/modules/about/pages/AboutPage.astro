@@ -1,0 +1,65 @@
+---
+import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import SectionHeading from '@shared/components/SectionHeading.astro';
+import { breadcrumbLd, organizationLd } from '@shared/seo/jsonld';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import type { Locale } from '@i18n/config';
+
+const TEXT: Record<Locale, { eyebrow: string; title: string; desc: string; missionTitle: string; mission: string; valuesTitle: string; values: { title: string; desc: string }[] }> = {
+  vi: {
+    eyebrow: 'Về DEFEAT',
+    title: 'Đội ngũ kỹ sư phần mềm vì kết quả của khách hàng',
+    desc: 'DEFEAT là công ty phần mềm tập trung vào gia công, giải pháp và mã nguồn cho doanh nghiệp trong và ngoài nước.',
+    missionTitle: 'Sứ mệnh',
+    mission: 'Giúp doanh nghiệp chuyển đổi số nhanh hơn bằng phần mềm chất lượng, chi phí hợp lý và quy trình minh bạch.',
+    valuesTitle: 'Giá trị cốt lõi',
+    values: [
+      { title: 'Chất lượng', desc: 'Không thoả hiệp với chất lượng mã nguồn và trải nghiệm người dùng.' },
+      { title: 'Trách nhiệm', desc: 'Cam kết đúng phạm vi, đúng tiến độ và hỗ trợ sau bàn giao.' },
+      { title: 'Minh bạch', desc: 'Chia sẻ rõ tiến độ, rủi ro và chi phí trong suốt dự án.' },
+    ],
+  },
+  en: {
+    eyebrow: 'About DEFEAT',
+    title: 'Software engineers focused on client outcomes',
+    desc: 'DEFEAT is a software company focused on outsourcing, solutions and source code for businesses in Vietnam and abroad.',
+    missionTitle: 'Mission',
+    mission: 'Help businesses digitalise faster through quality software, fair pricing and a transparent process.',
+    valuesTitle: 'Core values',
+    values: [
+      { title: 'Quality', desc: 'No compromise on code quality or user experience.' },
+      { title: 'Accountability', desc: 'Delivering the agreed scope on time, with support after handover.' },
+      { title: 'Transparency', desc: 'Clear communication on progress, risks and costs throughout.' },
+    ],
+  },
+};
+
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = TEXT[locale];
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: t('nav.about'), href: localizePath('/about', locale) },
+];
+---
+
+<BaseLayout title={text.title} description={text.desc} path="/about" jsonLd={[organizationLd(), breadcrumbLd(crumbs)]}>
+  <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
+  <section class="section">
+    <div class="container-x grid gap-12 lg:grid-cols-3">
+      <SectionHeading title={text.missionTitle} description={text.mission} />
+      <div class="lg:col-span-2">
+        <h2 class="text-2xl font-bold">{text.valuesTitle}</h2>
+        <ul class="mt-6 grid gap-6 sm:grid-cols-3">
+          {text.values.map((v) => (
+            <li class="rounded-box border border-base-300 p-6">
+              <h3 class="font-semibold text-primary">{v.title}</h3>
+              <p class="mt-2 text-sm text-base-content/70">{v.desc}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

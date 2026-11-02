@@ -1,0 +1,83 @@
+---
+/**
+ * Toàn bộ thẻ SEO trong <head>: title, description, canonical, hreflang,
+ * Open Graph, Twitter Card, robots và JSON-LD.
+ */
+import { SITE } from '@config/site';
+import { LOCALES, LOCALE_META, DEFAULT_LOCALE, type Locale } from '@i18n/config';
+import { localizePath } from '@i18n/utils';
+import type { JsonLd } from './jsonld';
+
+export interface SeoProps {
+  title: string;
+  description: string;
+  locale: Locale;
+  /** Đường dẫn KHÔNG gồm prefix ngôn ngữ, vd. "/news/abc". */
+  path: string;
+  /** Ngôn ngữ có bản dịch của trang này. Mặc định: tất cả. */
+  availableLocales?: readonly Locale[];
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article' | 'product';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  noindex?: boolean;
+  jsonLd?: JsonLd[];
+}
+
+const {
+  title,
+  description,
+  locale,
+  path,
+  availableLocales = LOCALES,
+  image = SITE.ogImage,
+  imageAlt = SITE.name,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  noindex = false,
+  jsonLd = [],
+} = Astro.props as SeoProps;
+
+const fullTitle = path === '/' ? `${SITE.name} — ${title}` : `${title} | ${SITE.name}`;
+const canonical = new URL(localizePath(path, locale), SITE.url).toString();
+const imageUrl = new URL(image, SITE.url).toString();
+const alternates = availableLocales.map((l) => ({
+  hreflang: LOCALE_META[l].hreflang,
+  href: new URL(localizePath(path, l), SITE.url).toString(),
+}));
+const xDefaultLocale = availableLocales.includes(DEFAULT_LOCALE) ? DEFAULT_LOCALE : availableLocales[0];
+const xDefault = new URL(localizePath(path, xDefaultLocale ?? locale), SITE.url).toString();
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'} />
+
+{alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+<link rel="alternate" hreflang="x-default" href={xDefault} />
+
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:type" content={type === 'product' ? 'website' : type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:alt" content={imageAlt} />
+<meta property="og:locale" content={LOCALE_META[locale].ogLocale} />
+{
+  availableLocales
+    .filter((l) => l !== locale)
+    .map((l) => <meta property="og:locale:alternate" content={LOCALE_META[l].ogLocale} />)
+}
+{publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+{modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+
+{jsonLd.map((data) => <script type="application/ld+json" is:inline set:html={JSON.stringify(data).replace(/</g, '\\u003c')} />)}

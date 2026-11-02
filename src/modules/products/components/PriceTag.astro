@@ -1,0 +1,33 @@
+---
+/**
+ * SERVER ISLAND — dùng với `server:defer`.
+ * Trang sản phẩm vẫn là SSG; riêng giá được render on-demand và cache kiểu ISR
+ * (stale-while-revalidate) để giá luôn mới mà không phải build lại site.
+ */
+import type { Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/utils';
+import { getLivePrice, formatVnd } from '../pricing';
+
+interface Props { slug: string; locale: Locale }
+const { slug, locale } = Astro.props;
+const t = useTranslations(locale);
+
+if (Astro.cache.enabled) {
+  Astro.cache.set({ maxAge: 600, swr: 86400, tags: ['pricing', `pricing:${slug}`] });
+}
+
+const price = await getLivePrice(slug, locale);
+---
+
+<div class="rounded-box border border-base-300 bg-base-100 p-5">
+  {
+    price?.amountVnd ? (
+      <>
+        <p class="text-sm text-base-content/60">{t('pricing.from')}</p>
+        <p class="mt-1 text-3xl font-extrabold text-primary">{formatVnd(price.amountVnd, locale)}</p>
+      </>
+    ) : (
+      <p class="text-lg font-semibold">{t('pricing.contact')}</p>
+    )
+  }
+</div>

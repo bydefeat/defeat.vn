@@ -1,0 +1,51 @@
+---
+import SectionHeading from '@shared/components/SectionHeading.astro';
+import Icon, { type IconName } from '@shared/components/Icon.astro';
+import type { Locale } from '@i18n/config';
+import { homeText } from '../i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const { why, process } = homeText[locale];
+const icons: IconName[] = ['layers', 'search', 'shield', 'zap'];
+---
+
+<section class="section bg-base-200" aria-labelledby="home-why">
+  <div class="container-x grid gap-12 lg:grid-cols-2">
+    <div>
+      <SectionHeading id="home-why" eyebrow={why.eyebrow} title={why.title} description={why.desc} />
+      <ul class="mt-10 grid gap-6 sm:grid-cols-2">
+        {
+          why.items.map((item, i) => (
+            <li>
+              <div class="flex size-10 items-center justify-center rounded-field bg-primary text-primary-content">
+                <Icon name={icons[i % icons.length]!} class="size-5" />
+              </div>
+              <h3 class="mt-4 font-semibold">{item.title}</h3>
+              <p class="mt-1 text-sm text-base-content/70">{item.desc}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="rounded-box bg-base-100 p-8 shadow-sm">
+      <p class="eyebrow">{process.eyebrow}</p>
+      <h2 class="mt-3 text-2xl font-bold">{process.title}</h2>
+      <ol class="mt-8 space-y-6">
+        {
+          process.steps.map((step, i) => (
+            <li class="flex gap-4">
+              <span class="flex size-10 shrink-0 items-center justify-center rounded-full border-2 border-primary text-sm font-bold text-primary">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h3 class="font-semibold">{step.title}</h3>
+                <p class="mt-1 text-sm text-base-content/70">{step.desc}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>

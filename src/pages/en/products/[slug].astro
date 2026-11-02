@@ -1,0 +1,9 @@
+---
+import Page from '@modules/products/pages/ProductDetailPage.astro';
+import { productStaticPaths } from '@modules/products/api';
+
+export async function getStaticPaths() {
+  return productStaticPaths('en');
+}
+---
+<Page {...Astro.props} />

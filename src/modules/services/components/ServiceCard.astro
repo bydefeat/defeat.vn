@@ -1,0 +1,24 @@
+---
+import Icon from '@shared/components/Icon.astro';
+import type { Locale } from '@i18n/config';
+import { localizePath, useTranslations } from '@i18n/utils';
+import type { Service } from '../data';
+
+interface Props { service: Service; locale: Locale; headingLevel?: 'h2' | 'h3' }
+const { service, locale, headingLevel: H = 'h3' } = Astro.props;
+const t = useTranslations(locale);
+const href = localizePath(`/services/${service.slug}`, locale);
+---
+
+<article class="group relative flex flex-col rounded-box border border-base-300 bg-base-100 p-6 transition hover:-translate-y-0.5 hover:border-primary hover:shadow-lg">
+  <div class="flex size-12 items-center justify-center rounded-field bg-primary/10 text-primary">
+    <Icon name={service.icon} />
+  </div>
+  <H class="mt-5 text-lg font-semibold">
+    <a href={href} class="after:absolute after:inset-0">{service.title[locale]}</a>
+  </H>
+  <p class="mt-2 flex-1 text-sm text-base-content/70">{service.summary[locale]}</p>
+  <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+    {t('cta.viewDetail')} <Icon name="arrowRight" class="size-4 transition group-hover:translate-x-1" />
+  </span>
+</article>

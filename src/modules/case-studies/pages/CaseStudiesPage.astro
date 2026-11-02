@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import { breadcrumbLd } from '@shared/seo/jsonld';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import CaseStudyCard from '../components/CaseStudyCard.astro';
+import { getCaseStudies } from '../api';
+import { caseStudiesText } from '../i18n';
+
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = caseStudiesText[locale];
+const items = await getCaseStudies(locale);
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: t('nav.caseStudies'), href: localizePath('/case-studies', locale) },
+];
+---
+
+<BaseLayout title={text.title} description={text.desc} path="/case-studies" jsonLd={[breadcrumbLd(crumbs)]}>
+  <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
+  <section class="section">
+    <div class="container-x grid gap-6 lg:grid-cols-2">
+      {items.map((item) => <CaseStudyCard item={item} locale={locale} headingLevel="h2" />)}
+    </div>
+  </section>
+</BaseLayout>

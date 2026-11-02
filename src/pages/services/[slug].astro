@@ -1,0 +1,9 @@
+---
+import Page from '@modules/services/pages/ServiceDetailPage.astro';
+import { serviceStaticPaths } from '@modules/services/data';
+
+export function getStaticPaths() {
+  return serviceStaticPaths();
+}
+---
+<Page {...Astro.props} />

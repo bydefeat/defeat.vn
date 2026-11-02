@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@shared/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import { breadcrumbLd } from '@shared/seo/jsonld';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import ServiceCard from '../components/ServiceCard.astro';
+import { SERVICES } from '../data';
+import { servicesText } from '../i18n';
+
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = servicesText[locale];
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: t('nav.services'), href: localizePath('/services', locale) },
+];
+---
+
+<BaseLayout title={text.title} description={text.desc} path="/services" jsonLd={[breadcrumbLd(crumbs)]}>
+  <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
+  <section class="section">
+    <div class="container-x grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {SERVICES.map((s) => <ServiceCard service={s} locale={locale} headingLevel="h2" />)}
+    </div>
+  </section>
+</BaseLayout>
