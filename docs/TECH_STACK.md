@@ -207,7 +207,7 @@ Astro 7.4 + TypeScript 6 (Node 26 LTS, Vite 8)
 | Chuyển trang mượt | View Transitions, `<ClientRouter />` | React Router, Swup, Barba |
 | Tải trước trang | `prefetch` | quicklink |
 | Xử lý form / API có kiểm tra dữ liệu | Actions (Zod 4) | tự viết API + validate |
-| API route, webhook thanh toán | Endpoints (`src/pages/api/*.ts`) | server Express riêng |
+| API route, webhook thanh toán | Endpoints (`src/pages/ingest/v1/*.ts`) | server Express riêng |
 | Auth check, redirect theo ngôn ngữ, header | Middleware (`src/middleware.ts`) | |
 | Giỏ hàng, trạng thái người dùng | Sessions | lưu cookie thủ công |
 | Biến môi trường an toàn kiểu | `astro:env` (`envField`) | dotenv + tự kiểm tra |

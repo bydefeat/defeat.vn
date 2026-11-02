@@ -38,13 +38,15 @@ src/
 | Kiểu | Dùng ở đâu | Cách làm |
 |---|---|---|
 | **SSG** | Toàn bộ trang (home, dịch vụ, sản phẩm, dự án, tin tức, liên hệ...) | Mặc định `output: 'static'`, `getStaticPaths()` cho trang chi tiết |
-| **SSR** | `/api/pricing/[slug]`, Actions (`/_actions/*`), server island | `export const prerender = false` / Actions & server island luôn on-demand |
+| **SSR** | `/ingest/v1/pricing/[slug]`, Actions (`/_actions/*`), server island | `export const prerender = false` / Actions & server island luôn on-demand |
 | **ISR** (stale-while-revalidate) | Giá sản phẩm (API + server island) | `routeRules` trong `astro.config.mjs` và `Astro.cache.set({ maxAge, swr, tags })`; provider `cacheCloudflare()` |
 | **Server Island** | Khối giá trên trang sản phẩm | `<PriceTag server:defer>` + slot `fallback` (skeleton) |
 | **CSR** | Form báo giá | React island `client:visible` (form vẫn gửi được khi chưa có JS) |
 | **Không JS** | Menu mobile, FAQ, bộ lọc sản phẩm | `<details>`, radio + CSS `:has()` |
 
 Làm mới giá khi dữ liệu thay đổi: gọi `context.cache.invalidate({ tags: ['pricing'] })` (hoặc `pricing:<slug>`) từ webhook quản trị.
+
+**Quy ước endpoint:** mọi endpoint HTTP đặt dưới `/ingest/v1/` (`src/pages/ingest/v1/`), không dùng `/api/`. Phiên bản mới (breaking change) → `/ingest/v2/`.
 
 ## 3. SEO
 

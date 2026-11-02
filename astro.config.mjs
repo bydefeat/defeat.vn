@@ -56,7 +56,7 @@ export default defineConfig({
   },
   routeRules: {
     // ISR: endpoint giá sản phẩm cache 10 phút, cho phép trả bản cũ 1 ngày khi đang làm mới.
-    '/api/pricing/[slug]': { maxAge: 600, swr: 86400, tags: ['pricing'] },
+    '/ingest/v1/pricing/[slug]': { maxAge: 600, swr: 86400, tags: ['pricing'] },
   },
 
   env: {
@@ -73,7 +73,7 @@ export default defineConfig({
     sitemap({
       i18n: { defaultLocale: 'vi', locales: { vi: 'vi-VN', en: 'en-US' } },
       // Loại trang noindex (pháp lý chưa có nội dung, 404) khỏi sitemap.
-      filter: (page) => !/\/(api\/|404|privacy|terms)/.test(new URL(page).pathname),
+      filter: (page) => !/\/(ingest\/|404|privacy|terms)/.test(new URL(page).pathname),
     }),
   ],
 
