@@ -3,12 +3,12 @@
 > Website landing page cho DEFEAT: gia công phần mềm (outsourcing), giải pháp & bán mã nguồn / phần mềm.
 > Mục tiêu: showcase sản phẩm, tin tức, case study, thu lead báo giá; sau này mở rộng bán hàng.
 >
-> Cập nhật: 11/2026 — theo **Astro 7.4** (bản mới nhất trên npm: 7.4.5).
+> Cập nhật: 02/11/2026 — Astro 7.4.5, Node 26 LTS, TypeScript 6, Tailwind 4.3, daisyUI 5.7, React 19.3.
 
 ## 1. Tổng quan
 
 ```
-Astro 7.4 + TypeScript (Node ≥ 22.22.0, Vite 8)
+Astro 7.4 + TypeScript 6 (Node 26 LTS, Vite 8)
 ├─ UI:        Tailwind CSS 4.3 + daisyUI 5 (theme "defeat") — dùng thẳng trong .astro
 ├─ Island:    React 19 (+ React Aria Components khi cần component tương tác phức tạp)
 ├─ Content:   MDX + Content Layer (glob loader, Zod 4) (+ Keystatic nếu người không phải dev đăng bài)
@@ -25,24 +25,33 @@ Astro 7.4 + TypeScript (Node ≥ 22.22.0, Vite 8)
 └─ Admin:     React + Ant Design
 ```
 
-### Phiên bản tham chiếu (npm, 11/2026)
+### Phiên bản tham chiếu (kiểm tra trên npm ngày 02/11/2026)
 
-| Package | Version |
-|---|---|
-| `astro` | 7.4.x |
-| `@astrojs/react` | 7.1.x |
-| `@astrojs/mdx` | 8.1.x |
-| `@astrojs/cloudflare` | 14.4.x (yêu cầu `astro@^7.4.0`) |
-| `@astrojs/sitemap` | 3.7.x |
-| `react` / `react-dom` | 19.x |
-| `tailwindcss` | 4.3.x |
-| `motion` | 14.x |
-| `daisyui` | 5.x |
-| `react-aria-components` | 1.x (tùy chọn) |
-| `@astrojs/rss` | 4.x |
-| `@astrojs/check` | 0.9.x |
-| `@keystatic/astro` | 6.x (peer: `astro 5 \|\| 6 \|\| 7`) |
-| Node.js | ≥ 22.22.0 (ghi vào `.nvmrc`) |
+| Package | Bản mới nhất | Ghi chú |
+|---|---|---|
+| Node.js | **26.13.0 LTS** | Astro 7.4.5 yêu cầu `>=22.23.4`; dùng Node 26 LTS, ghi vào `.nvmrc` |
+| `astro` | 7.4.5 | |
+| `vite` | 8.3.5 | Astro tự kéo theo, không cài riêng |
+| `typescript` | **6.0.3** | ⚠️ Không dùng TS 7.0.2: `@astrojs/check` chỉ hỗ trợ `^5 \|\| ^6` |
+| `@astrojs/check` | 0.9.12 | |
+| `@astrojs/react` | 7.1.2 | |
+| `@astrojs/mdx` | 8.1.2 | |
+| `@astrojs/markdown-remark` | 7.3.5 | Chỉ cài nếu cần plugin remark/rehype |
+| `@astrojs/cloudflare` | 14.4.4 | Yêu cầu `astro@^7.4.0` |
+| `wrangler` | 4.156.2 | CLI deploy Cloudflare |
+| `@astrojs/sitemap` | 3.7.4 | |
+| `@astrojs/rss` | 4.0.19 | |
+| `react` / `react-dom` | 19.3.1 | `@types/react` 19.3.0 |
+| `tailwindcss` / `@tailwindcss/vite` | 4.3.3 | |
+| `daisyui` | 5.7.50 | |
+| `react-aria-components` | 1.22.1 | Tùy chọn |
+| `motion` | 14.9.0 | Tùy chọn |
+| `zod` | 4.6.7 | Không cài riêng, dùng `astro/zod` |
+| `@keystatic/astro` / `@keystatic/core` | 6.0.0 / 0.6.9 | Giai đoạn 2; peer `astro 5 \|\| 6 \|\| 7` |
+| `resend` | 6.37.0 | Gửi email từ form |
+| `drizzle-orm` | 0.45.4 | Giai đoạn 3; bản 1.0 đang RC, cân nhắc khi lên Store |
+
+> Quy tắc: trước khi khởi tạo hoặc nâng cấp, chạy `npx @astrojs/upgrade` và `npm outdated` để kiểm tra lại phiên bản.
 
 ## 2. Chi tiết từng lớp
 
@@ -182,7 +191,7 @@ Astro 7.4 + TypeScript (Node ≥ 22.22.0, Vite 8)
   }
   ```
 - Lưu ý: `experimental.parallelPrerender` **không có tác dụng** trên adapter Cloudflare (adapter tự prerender).
-- Node trên máy dev và CI: **≥ 22.22.0**.
+- Node trên máy dev và CI: **26 LTS** (Astro yêu cầu tối thiểu 22.23.4).
 
 ## 3. Tận dụng built-in của Astro (không cài thêm thư viện)
 
@@ -248,5 +257,5 @@ src/
 └─ content.config.ts # collections + schema Zod 4
 public/
 └─ brand/            # logo, favicon
-.nvmrc               # 22.22.0 trở lên
+.nvmrc               # 26 (LTS)
 ```
