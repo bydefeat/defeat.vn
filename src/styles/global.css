@@ -348,7 +348,7 @@
 
   /* Mega menu: mở ra theo bậc (clip-path steps), các mục lần lượt hiện */
   .mega {
-    @apply invisible absolute -left-4 top-full z-50 pt-3;
+    @apply invisible absolute left-8 top-full z-50 pt-1;
     clip-path: inset(0 0 100% 0);
     transition: clip-path 0.4s steps(6, end), visibility 0s linear 0.4s;
   }

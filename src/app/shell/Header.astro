@@ -31,7 +31,7 @@ const navLink = 'link-dither inline-flex h-10 items-center text-[15px] font-medi
   <!-- Nền tách lớp, đặc. Không dùng backdrop-filter: view-transition-name khiến header thành backdrop root nên blur không có tác dụng. -->
   <div class="header-bg pointer-events-none absolute inset-0 -z-10 bg-base-100" aria-hidden="true"></div>
 
-  <nav class="container-x flex h-[var(--header-h)] items-center gap-6 xl:gap-10" aria-label="Main">
+  <nav class="container-x relative flex h-[var(--header-h)] items-center gap-6 xl:gap-10" aria-label="Main">
     <a href={href('/')} class="flex shrink-0 items-center py-2" aria-label={`DEFEAT — ${t('nav.home')}`}>
       <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" class="h-6 w-auto lg:h-7" fetchpriority="high" />
     </a>
@@ -41,7 +41,7 @@ const navLink = 'link-dither inline-flex h-10 items-center text-[15px] font-medi
       {
         MAIN_NAV.map((item) =>
           item.key === 'services' ? (
-            <li class="nav-item relative flex items-center gap-0.5" data-mega>
+            <li class="nav-item flex items-center gap-0.5" data-mega>
               <a
                 href={href(item.path)}
                 class:list={[navLink, isActive(item.path) ? 'text-base-content' : 'text-base-content/70']}
@@ -59,7 +59,7 @@ const navLink = 'link-dither inline-flex h-10 items-center text-[15px] font-medi
               >
                 <svg class="chev size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
               </button>
-              <div class="mega w-[min(880px,calc(100vw-4rem))]" id="mega-services">
+              <div class="mega w-[min(880px,calc(100%-4rem))]" id="mega-services">
                 <div class="grid grid-cols-12 overflow-hidden border border-base-300 bg-base-100 shadow-[0_24px_48px_-24px_rgba(10,10,11,0.25)]">
                   <div class="relative col-span-4 overflow-hidden bg-neutral p-7 text-neutral-content">
                     <span class="dither dither-13 pointer-events-none absolute inset-0 text-primary/50 [mask-size:16px]" aria-hidden="true"></span>

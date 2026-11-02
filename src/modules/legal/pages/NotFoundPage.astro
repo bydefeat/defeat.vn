@@ -7,7 +7,7 @@ const locale = resolveLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 ---
 
-<BaseLayout title={t('notFound.title')} description={t('notFound.desc')} path="/404" noindex hideCtaBand>
+<BaseLayout title={t('notFound.title')} description={t('notFound.desc')} path="/404" availableLocales={[]} noindex hideCtaBand>
   <section class="on-dark relative isolate flex min-h-[78svh] items-center overflow-hidden bg-neutral text-neutral-content">
     <div class="grid-lines pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
     <span class="dither dither-13 pointer-events-none absolute inset-0 -z-10 text-primary/35" aria-hidden="true"></span>
