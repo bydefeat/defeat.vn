@@ -228,9 +228,11 @@ export function initDitherCanvases() {
         fps: window.innerWidth < 768 ? 24 : 30,
         place: (w, h, aspect, cssWidth) => {
           const desktop = cssWidth >= 1024;
-          const size = desktop ? Math.min(h * 0.74, w * 0.38) : Math.min(w * 0.7, h * 0.32);
-          const cx = desktop ? w * 0.76 : w * 0.78;
-          const cy = desktop ? h * 0.46 : h * 0.14;
+          // Mobile: logo nhỏ ở dải trên cùng (vùng padding của hero), không đè lên tiêu đề.
+          const cell = cssWidth / w;
+          const size = desktop ? Math.min(h * 0.74, w * 0.38) : Math.min(w * 0.42, 130 / cell);
+          const cx = desktop ? w * 0.76 : w - size * 0.75;
+          const cy = desktop ? h * 0.46 : 86 / cell;
           return { x: cx - (size * aspect) / 2, y: cy - size / 2, w: size * aspect, h: size };
         },
         shapeLevel: 0.62,

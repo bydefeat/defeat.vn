@@ -24,14 +24,14 @@ const text = homeText[Astro.props.locale].tech;
       <p class="text-sm text-neutral-content/45"><span class="num text-2xl font-semibold text-neutral-content">{TECH_LOGOS.length}</span> {text.count}</p>
     </div>
 
-    <ul class="mt-12 grid grid-cols-3 border-l border-t border-white/10 sm:grid-cols-4 lg:grid-cols-8" data-reveal-group="55">
+    <ul class="mt-12 grid grid-cols-4 border-l border-t border-white/10 lg:grid-cols-8" data-reveal-group="55">
       {
         TECH_LOGOS.map((logo) => (
-          <li class="tech-tile group relative flex aspect-square flex-col items-center justify-center gap-3 border-b border-r border-white/10 p-4 text-neutral-content/80 transition-colors duration-300 hover:bg-white/[0.03]" data-brand={logo.color} data-reveal="still">
-            <svg viewBox={`0 0 ${TECH_GRID} ${TECH_GRID}`} class="size-12 sm:size-14" shape-rendering="crispEdges" role="img" aria-label={logo.name}>
+          <li class="tech-tile group relative flex aspect-square flex-col items-center justify-center gap-2 border-b border-r border-white/10 p-2 sm:gap-3 sm:p-4 text-neutral-content/80 transition-colors duration-300 hover:bg-white/[0.03]" data-brand={logo.color} data-reveal="still">
+            <svg viewBox={`0 0 ${TECH_GRID} ${TECH_GRID}`} class="size-9 sm:size-12 lg:size-14" shape-rendering="crispEdges" role="img" aria-label={logo.name}>
               {logo.layers.map((d) => <path class="tech-layer" d={d} />)}
             </svg>
-            <span class="text-center text-xs font-medium text-neutral-content/55 transition-colors group-hover:text-neutral-content">{logo.name}</span>
+            <span class="text-center text-[10px] font-medium leading-tight sm:text-xs text-neutral-content/55 transition-colors group-hover:text-neutral-content">{logo.name}</span>
           </li>
         ))
       }

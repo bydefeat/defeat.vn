@@ -24,10 +24,10 @@ const { hero, stats } = homeText[locale];
     />
     <canvas data-dither="hero" data-src="/brand/defeat_logo.png" class="pixelated absolute inset-0 size-full"></canvas>
   </div>
-  <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-neutral via-neutral/80 to-transparent max-lg:bg-gradient-to-b max-lg:from-transparent max-lg:via-neutral/85 max-lg:to-neutral" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-neutral via-neutral/80 to-transparent max-lg:bg-gradient-to-b max-lg:from-transparent max-lg:from-[150px] max-lg:via-neutral/90 max-lg:via-[230px] max-lg:to-neutral" aria-hidden="true"></div>
   <div class="grid-lines pointer-events-none absolute inset-0 -z-10 opacity-60" aria-hidden="true"></div>
 
-  <div class="container-x relative flex flex-col justify-center pb-14 pt-28 sm:pb-20 sm:pt-32 lg:min-h-[calc(100svh-var(--header-h)-2.25rem)] lg:py-20">
+  <div class="container-x relative flex flex-col justify-center pb-14 pt-44 sm:pb-20 sm:pt-52 lg:min-h-[calc(100svh-var(--header-h)-2.25rem)] lg:py-20">
     <div class="max-w-3xl">
       <p class="eyebrow hero-in">{hero.eyebrow}</p>
       <h1 id="hero-title" class="t-display mt-6">
@@ -53,7 +53,7 @@ const { hero, stats } = homeText[locale];
     <dl class="container-x grid grid-cols-2 md:grid-cols-4" data-reveal-group="100">
       {
         stats.map((s, i) => (
-          <div class:list={['flex flex-col-reverse gap-1.5 border-white/10 py-6 sm:py-8', i % 2 === 1 ? 'pl-5 max-md:border-l' : 'pr-5', 'md:px-8 md:first:pl-0', i > 0 && 'md:border-l', i > 1 && 'max-md:border-t']} data-reveal>
+          <div class:list={['flex flex-col-reverse justify-end gap-1.5 border-white/10 py-6 sm:py-8', i % 2 === 1 ? 'pl-5 max-md:border-l' : 'pr-5', 'md:px-8 md:first:pl-0', i > 0 && 'md:border-l', i > 1 && 'max-md:border-t']} data-reveal>
             <dt class="text-[13px] leading-snug text-neutral-content/55">{s.label}</dt>
             <dd class="num text-4xl font-semibold text-neutral-content sm:text-5xl" data-count>{s.value}</dd>
           </div>

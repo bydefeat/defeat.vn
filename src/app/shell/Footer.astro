@@ -83,7 +83,7 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
       {
         columns.map((col) => (
           <nav aria-label={col.title} class="first:col-span-2 sm:first:col-span-1" data-reveal>
-            <h2 class="label text-neutral-content/45">{col.title}</h2>
+            <h2 class="t-label text-neutral-content/45">{col.title}</h2>
             <ul class="mt-4 space-y-1 text-[15px]">
               {col.links.map((l) => (
                 <li>

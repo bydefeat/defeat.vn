@@ -28,8 +28,8 @@ const navLink = 'link-dither inline-flex h-10 items-center text-[15px] font-medi
 ---
 
 <header class="site-header sticky top-0 z-50" data-site-header>
-  <!-- Nền tách lớp, gần như đặc. Không dùng backdrop-filter: view-transition-name khiến header thành backdrop root nên blur không có tác dụng. -->
-  <div class="header-bg pointer-events-none absolute inset-0 -z-10 bg-base-100/95" aria-hidden="true"></div>
+  <!-- Nền tách lớp, đặc. Không dùng backdrop-filter: view-transition-name khiến header thành backdrop root nên blur không có tác dụng. -->
+  <div class="header-bg pointer-events-none absolute inset-0 -z-10 bg-base-100" aria-hidden="true"></div>
 
   <nav class="container-x flex h-[var(--header-h)] items-center gap-6 xl:gap-10" aria-label="Main">
     <a href={href('/')} class="flex shrink-0 items-center py-2" aria-label={`DEFEAT — ${t('nav.home')}`}>
