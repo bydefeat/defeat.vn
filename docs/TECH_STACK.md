@@ -9,7 +9,8 @@
 
 ```
 Astro 7.4 + TypeScript (Node ≥ 22.22.0, Vite 8)
-├─ UI:        Tailwind CSS 4.3 + shadcn/ui (React 19 islands)
+├─ UI:        Tailwind CSS 4.3 + daisyUI 5 (theme "defeat") — dùng thẳng trong .astro
+├─ Island:    React 19 (+ React Aria Components khi cần component tương tác phức tạp)
 ├─ Content:   MDX + Content Layer (glob loader, Zod 4) (+ Keystatic nếu người không phải dev đăng bài)
 ├─ Font:      Astro Fonts API (stable) — Be Vietnam Pro
 ├─ Bảo mật:   Astro CSP (stable) + Cloudflare Turnstile
@@ -36,7 +37,10 @@ Astro 7.4 + TypeScript (Node ≥ 22.22.0, Vite 8)
 | `react` / `react-dom` | 19.x |
 | `tailwindcss` | 4.3.x |
 | `motion` | 14.x |
-| `shadcn` (CLI) | 4.x |
+| `daisyui` | 5.x |
+| `react-aria-components` | 1.x (tùy chọn) |
+| `@astrojs/rss` | 4.x |
+| `@astrojs/check` | 0.9.x |
 | `@keystatic/astro` | 6.x (peer: `astro 5 \|\| 6 \|\| 7`) |
 | Node.js | ≥ 22.22.0 (ghi vào `.nvmrc`) |
 
@@ -51,16 +55,38 @@ Astro 7.4 + TypeScript (Node ≥ 22.22.0, Vite 8)
 - i18n routing có sẵn: `/` (vi) và `/en/`. Lưu ý: `redirectToDefaultLocale` mặc định là `false`.
 
 ### React 19 — chỉ dùng cho island có tương tác
-- Giữ React vì: shadcn/ui cần React, hệ sinh thái lớn, dùng chung với admin sau này, dễ tuyển dev.
+- Giữ React vì: hệ sinh thái lớn (form, animation), dùng chung với admin sau này, dễ tuyển dev.
+- Island React vẫn dùng class daisyUI để giao diện đồng nhất với phần `.astro`.
 - Dùng cho: form báo giá/liên hệ, bộ lọc/tìm kiếm sản phẩm, menu mobile, dialog, tabs, bảng giá, giỏ hàng.
 - **Quy tắc team:**
   > Mặc định viết `.astro`. Chỉ dùng React khi component cần state hoặc sự kiện của người dùng.
   > Ưu tiên `client:visible` / `client:idle`, hạn chế `client:load`.
 
-### UI — Tailwind CSS 4.3 + shadcn/ui
-- shadcn/ui (dựa trên Radix): copy code vào dự án, tùy biến 100% theo nhận diện DEFEAT.
-- Tailwind 4 cấu hình bằng CSS (`@theme`), không cần `tailwind.config.js`; tích hợp qua plugin `@tailwindcss/vite`.
-- Hiệu ứng: Motion, chỉ dùng khi cần.
+### UI — Tailwind CSS 4.3 + daisyUI 5
+- daisyUI là plugin Tailwind, **chỉ gồm class CSS, không có JS** → dùng thẳng trong component `.astro`, không cần React. Rất hợp tinh thần Astro.
+- Tailwind 4 cấu hình bằng CSS, không cần `tailwind.config.js`; tích hợp qua plugin `@tailwindcss/vite`.
+- Tạo theme riêng `defeat` (màu đỏ `#E82024`, bo góc nhỏ để hợp logo góc cạnh); có thể thêm theme tối:
+  ```css
+  /* src/styles/global.css */
+  @import "tailwindcss";
+  @plugin "daisyui" { themes: false; }
+
+  @plugin "daisyui/theme" {
+    name: "defeat";
+    default: true;
+    color-scheme: light;
+    --color-primary: #E82024;
+    --color-primary-content: #ffffff;
+    --color-neutral: #111111;
+    --radius-box: 0.25rem;
+    --radius-field: 0.25rem;
+    --radius-selector: 0.125rem;
+  }
+  ```
+- Tránh giao diện "daisyUI mặc định": chỉnh token theme, typography, khoảng cách theo nhận diện DEFEAT ngay từ đầu.
+- Những gì cần JS (dropdown, modal, tabs) ưu tiên dùng HTML gốc mà daisyUI hỗ trợ: `<dialog>`, `<details>`, popover API, radio tabs.
+- Component tương tác phức tạp (combobox, date picker, select có tìm kiếm): dùng **React Aria Components** (headless), style bằng class daisyUI/Tailwind.
+- Hiệu ứng: Motion, chỉ dùng khi cần. Block "wow" cho landing có thể tham khảo Magic UI / Aceternity UI, chỉ lấy đúng block cần.
 - **Không dùng Ant Design cho landing page**, vì:
   - antd sinh ra cho dashboard, giao diện dễ trông như trang admin;
   - nặng JS, đi ngược triết lý của Astro;
@@ -158,12 +184,39 @@ Astro 7.4 + TypeScript (Node ≥ 22.22.0, Vite 8)
 - Lưu ý: `experimental.parallelPrerender` **không có tác dụng** trên adapter Cloudflare (adapter tự prerender).
 - Node trên máy dev và CI: **≥ 22.22.0**.
 
-## 3. Nhận diện thương hiệu
+## 3. Tận dụng built-in của Astro (không cài thêm thư viện)
+
+| Nhu cầu | Built-in Astro | Thay cho |
+|---|---|---|
+| Ảnh tối ưu, responsive, WebP/AVIF, lazy | `<Image />`, `<Picture />`, `getImage()` (`astro:assets`) | sharp tự viết, next/image |
+| Logo/icon SVG thành component | `import Logo from '../assets/logo.svg'` → `<Logo width={120} />` | svgr, thư viện icon |
+| Font tự host, preload | Fonts API | link Google Fonts, Fontsource |
+| Highlight code trong bài news | `<Code />` (Shiki) + highlight trong Markdown | Prism, highlight.js |
+| Quản lý nội dung có schema | Content Layer, live collections | CMS headless (giai đoạn đầu) |
+| Đa ngôn ngữ | i18n routing, `getRelativeLocaleUrl()`, `Astro.currentLocale`, fallback | thư viện i18n routing |
+| Chuyển trang mượt | View Transitions, `<ClientRouter />` | React Router, Swup, Barba |
+| Tải trước trang | `prefetch` | quicklink |
+| Xử lý form / API có kiểm tra dữ liệu | Actions (Zod 4) | tự viết API + validate |
+| API route, webhook thanh toán | Endpoints (`src/pages/api/*.ts`) | server Express riêng |
+| Auth check, redirect theo ngôn ngữ, header | Middleware (`src/middleware.ts`) | |
+| Giỏ hàng, trạng thái người dùng | Sessions | lưu cookie thủ công |
+| Biến môi trường an toàn kiểu | `astro:env` (`envField`) | dotenv + tự kiểm tra |
+| Phần động trong trang tĩnh (giá, "đã đăng nhập") | Server Islands (`server:defer`) | render toàn bộ trang on-demand |
+| Bảo mật header | CSP | tự viết header |
+| Redirect URL | `redirects` (+ `experimental.redirectPage`) | |
+| Trang lỗi | `src/pages/404.astro`, `500.astro` | |
+| Kiểm tra lỗi kiểu | `astro check` (cần `@astrojs/check`) | |
+| Gỡ lỗi khi dev | Dev Toolbar (audit a11y, hiệu năng) | |
+
+**Tích hợp chính thức (cài thêm nhưng do Astro duy trì):** `@astrojs/react`, `@astrojs/mdx`, `@astrojs/sitemap`, `@astrojs/rss`, `@astrojs/cloudflare`.
+**Không có sẵn, phải cài:** Tailwind (`@tailwindcss/vite`), daisyUI, gửi email, thanh toán, analytics.
+
+## 4. Nhận diện thương hiệu
 - Màu chính: đỏ `#E82024` (lấy từ logo).
 - Font: **Be Vietnam Pro** (qua Fonts API, subset `vietnamese`). Font hiển thị có thể dùng loại vuông vức cho hợp logo, nhưng phải kiểm tra dấu tiếng Việt.
 - Cần bổ sung: logo dạng **SVG**, bản cho nền tối / đơn sắc, favicon.
 
-## 4. Lộ trình
+## 5. Lộ trình
 
 | Giai đoạn | Nội dung |
 |---|---|
@@ -172,14 +225,13 @@ Astro 7.4 + TypeScript (Node ≥ 22.22.0, Vite 8)
 | **3 — Store** | Trang on-demand + **Sessions** (giỏ hàng; cấu hình qua `sessionDrivers`), Postgres + **Drizzle** (`@astrojs/db` đã bị xóa ở Astro 7), thanh toán PayOS/SePay/VNPay + Lemon Squeezy/Paddle, cấp license, link tải có giới hạn; live collections cho giá/tồn kho |
 | **4 — Admin/Portal** | React + Ant Design: quản lý đơn hàng, license, khách hàng |
 
-## 5. Cấu trúc thư mục dự kiến
+## 6. Cấu trúc thư mục dự kiến
 
 ```
 src/
 ├─ components/
-│  ├─ ui/            # shadcn/ui (React)
 │  ├─ islands/       # React có tương tác (ContactForm, ProductFilter...)
-│  └─ *.astro        # component tĩnh (Hero, Footer, Card...)
+│  └─ *.astro        # component tĩnh dùng class daisyUI (Hero, Footer, Card...)
 ├─ content/
 │  ├─ products/      # *.mdx
 │  ├─ news/          # *.mdx
