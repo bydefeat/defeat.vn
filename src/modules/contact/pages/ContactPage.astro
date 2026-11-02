@@ -21,12 +21,12 @@ const crumbs = [
   <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-3">
-      <div class="card-fx border border-base-300 bg-base-100 p-6 sm:p-10 lg:col-span-2" data-reveal>
+      <div class="border border-base-300 bg-base-100 p-5 sm:p-10 lg:col-span-2" data-reveal>
         <ContactForm client:visible labels={text.form} locale={locale} />
       </div>
       <aside class="space-y-10" data-reveal-group="120">
         <div data-reveal>
-          <h2 class="label-mono text-base-content/50">{text.infoTitle}</h2>
+          <h2 class="label text-base-content/50">{text.infoTitle}</h2>
           <ul class="mt-4 space-y-3 text-sm">
             <li class="flex gap-3"><Icon name="mail" class="size-5 text-primary" /><a class="hover:text-primary" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
             <li class="flex gap-3"><Icon name="phone" class="size-5 text-primary" /><a class="hover:text-primary" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></li>
@@ -37,7 +37,7 @@ const crumbs = [
           {
             text.steps.map((s, i) => (
               <li>
-                <p class="label-mono text-primary">0{i + 1}</p>
+                <p class="num text-sm font-semibold text-primary">0{i + 1}</p>
                 <p class="font-semibold">{s.title}</p>
                 <p class="text-sm text-base-content/70">{s.desc}</p>
               </li>

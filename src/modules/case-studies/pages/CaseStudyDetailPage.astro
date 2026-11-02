@@ -45,8 +45,8 @@ const crumbs = [
         <dl class="container-x grid grid-cols-2 gap-6 py-10 md:grid-cols-4" data-reveal-group="100">
           {data.results.map((r) => (
             <div data-reveal>
-              <dt class="label-mono text-base-content/55">{r.label}</dt>
-              <dd class="mt-1 text-3xl font-extrabold text-primary">{r.value}</dd>
+              <dt class="text-[13px] text-base-content/55">{r.label}</dt>
+              <dd class="num mt-1 text-3xl font-semibold text-primary">{r.value}</dd>
             </div>
           ))}
         </dl>

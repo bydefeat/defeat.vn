@@ -3,7 +3,7 @@
  * Footer enterprise + motion:
  *  - Khối liên hệ lớn, các cột liên kết (xuất hiện so le).
  *  - Wordmark DEFEAT dither bằng canvas, phản ứng theo con trỏ (fallback: PNG dither tĩnh).
- *  - Thanh dưới: bản quyền, giờ Việt Nam trực tiếp, nút lên đầu trang.
+ *  - Thanh dưới: bản quyền, pháp lý, nút lên đầu trang.
  */
 import { SITE } from '@config/site';
 import type { Locale } from '@i18n/config';
@@ -41,8 +41,6 @@ const columns = [
     links: [
       { label: t('nav.news'), href: href('/news') },
       { label: t('footer.rss'), href: href('/rss.xml') },
-      { label: t('footer.privacy'), href: href('/privacy') },
-      { label: t('footer.terms'), href: href('/terms') },
     ],
   },
 ];
@@ -54,12 +52,12 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
 <footer class="on-dark relative overflow-hidden bg-neutral text-neutral-content">
   <div class="grid-lines pointer-events-none absolute inset-0 text-neutral-content" aria-hidden="true"></div>
 
-  <div class="container-x relative grid gap-14 pb-10 pt-20 lg:grid-cols-12">
+  <div class="container-x relative grid gap-12 pb-10 pt-16 sm:pt-20 lg:grid-cols-12 lg:gap-14">
     <div class="lg:col-span-5" data-reveal>
       <p class="eyebrow">{t('footer.ready')}</p>
-      <a href={`mailto:${SITE.email}`} class="group mt-5 inline-flex items-center gap-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
+      <a href={`mailto:${SITE.email}`} class="group mt-5 inline-flex max-w-full items-center gap-3 break-all font-display text-[clamp(1.625rem,1.2rem+1.8vw,2.5rem)] font-semibold leading-tight tracking-tight">
         <span class="link-dither">{SITE.email}</span>
-        <Icon name="arrowRight" class="size-7 -rotate-45 text-primary transition-transform duration-500 group-hover:rotate-0" />
+        <Icon name="arrowRight" class="size-6 shrink-0 text-primary transition-transform duration-500 group-hover:translate-x-1.5" />
       </a>
       <p class="mt-6 max-w-sm text-sm text-neutral-content/60">{t('footer.tagline')}</p>
       <address class="mt-6 space-y-1.5 text-sm not-italic text-neutral-content/70">
@@ -71,7 +69,7 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
           <ul class="mt-6 flex gap-2" aria-label={t('footer.followUs')}>
             {socials.map(([name, url]) => (
               <li>
-                <a href={url} rel="noopener" target="_blank" class="btn btn-sm btn-outline border-white/20 capitalize text-neutral-content hover:border-primary hover:bg-primary">
+                <a href={url} rel="noopener" target="_blank" class="btn btn-sm btn-outline btn-dither tone-dark border-white/25 capitalize text-neutral-content">
                   {name}
                 </a>
               </li>
@@ -81,15 +79,15 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
       }
     </div>
 
-    <div class="grid gap-10 sm:grid-cols-3 lg:col-span-7" data-reveal-group="90">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:col-span-7" data-reveal-group="90">
       {
         columns.map((col) => (
-          <nav aria-label={col.title} data-reveal>
-            <h2 class="label-mono text-neutral-content/45">{col.title}</h2>
-            <ul class="mt-5 space-y-3 text-sm">
+          <nav aria-label={col.title} class="first:col-span-2 sm:first:col-span-1" data-reveal>
+            <h2 class="label text-neutral-content/45">{col.title}</h2>
+            <ul class="mt-4 space-y-1 text-[15px]">
               {col.links.map((l) => (
                 <li>
-                  <a class="group inline-flex items-center text-neutral-content/80 transition-colors hover:text-primary" href={l.href}>
+                  <a class="group inline-flex min-h-9 items-center text-neutral-content/75 transition-colors hover:text-neutral-content" href={l.href}>
                     <span class="mr-0 h-px w-0 bg-primary transition-all duration-300 group-hover:mr-2 group-hover:w-3" aria-hidden="true" />
                     {l.label}
                   </a>
@@ -109,16 +107,16 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
   </div>
 
   <div class="relative border-t border-white/10">
-    <div class="container-x flex flex-col gap-4 py-6 label-mono text-neutral-content/50 md:flex-row md:items-center md:justify-between">
+    <div class="container-x flex flex-col gap-4 py-6 text-[13px] text-neutral-content/55 md:flex-row md:items-center md:justify-between">
       <p>© {year} {SITE.legalName}. {t('footer.rights')}</p>
-      <p class="flex items-center gap-2">
-        <span class="inline-block size-1.5 animate-pulse bg-primary"></span>
-        {t('footer.localTime')} <time data-clock class="tabular-nums text-neutral-content/80">--:--:--</time> GMT+7
-      </p>
-      <a href="#top" class="group inline-flex items-center gap-2 transition-colors hover:text-primary">
+      <ul class="flex gap-6">
+        <li><a class="transition-colors hover:text-neutral-content" href={href('/privacy')}>{t('footer.privacy')}</a></li>
+        <li><a class="transition-colors hover:text-neutral-content" href={href('/terms')}>{t('footer.terms')}</a></li>
+      </ul>
+      <a href="#top" class="group inline-flex items-center gap-3 transition-colors hover:text-neutral-content">
         {t('footer.backToTop')}
-        <span class="flex size-7 items-center justify-center border border-white/20 transition-all duration-300 group-hover:-translate-y-1 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-content">
-          <Icon name="arrowRight" class="size-3.5 -rotate-90" />
+        <span class="flex size-9 items-center justify-center border border-white/20 transition-colors duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-content">
+          <Icon name="arrowUp" class="size-4 transition-transform duration-300 group-hover:-translate-y-0.5" />
         </span>
       </a>
     </div>

@@ -17,7 +17,7 @@ const text = homeText[locale].services;
   <div class="container-x">
     <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
       <SectionHeading id="home-services" index="01" eyebrow={text.eyebrow} title={text.title} description={text.desc} />
-      <a href={localizePath('/services', locale)} class="btn btn-outline shrink-0" data-reveal>
+      <a href={localizePath('/services', locale)} class="btn btn-outline btn-dither tone-light shrink-0 self-start md:self-auto" data-reveal>
         {t('cta.viewAll')} <Icon name="arrowRight" class="arrow size-4" />
       </a>
     </div>

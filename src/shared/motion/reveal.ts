@@ -1,6 +1,6 @@
 /**
- * Scroll reveal: phần tử [data-reveal] hiện dần khi vào viewport.
- * Nhóm [data-reveal-group] tự stagger các con [data-reveal] theo thứ tự.
+ * Scroll reveal "dither dissolve": [data-reveal] hiện qua các mức Bayer khi vào viewport.
+ * Nhóm [data-reveal-group="ms"] tự stagger các con theo thứ tự (biến CSS --reveal-delay).
  */
 import { prefersReducedMotion } from './env';
 
@@ -14,8 +14,8 @@ export function initReveal() {
 
   for (const group of document.querySelectorAll<HTMLElement>('[data-reveal-group]')) {
     const step = Number(group.dataset.revealGroup) || 80;
-    group.querySelectorAll<HTMLElement>('[data-reveal]').forEach((child, i) => {
-      child.style.transitionDelay = `${Math.min(i * step, 600)}ms`;
+    group.querySelectorAll<HTMLElement>(':scope [data-reveal]').forEach((child, i) => {
+      child.style.setProperty('--reveal-delay', `${Math.min(i * step, 720)}ms`);
     });
   }
 
@@ -23,13 +23,11 @@ export function initReveal() {
     (entries) => {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
-        const el = entry.target as HTMLElement;
-        el.classList.add('is-in');
-        el.dispatchEvent(new CustomEvent('reveal', { bubbles: false }));
-        io.unobserve(el);
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
       }
     },
-    { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+    { rootMargin: '0px 0px -6% 0px', threshold: 0.06 },
   );
   items.forEach((el) => io.observe(el));
 }

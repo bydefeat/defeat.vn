@@ -3,7 +3,7 @@
  * Chạy lại khi cần đổi kích thước / mật độ:  node scripts/generate-textures.mjs
  *
  * Output (public/textures):
- *  - dither-{6,12,25,50}.png : tile 16x16, pixel trắng trên nền trong suốt — dùng làm mask tô màu bất kỳ.
+ *  - dither-{6,13,25,38,50,63,75,88}.png: tile 16x16, pixel trắng trên nền trong suốt — dùng làm mask tô màu bất kỳ.
  *  - fade.png                : dải chuyển dither theo chiều dọc (đặc ở trên → trong suốt ở dưới), lặp ngang.
  *  - wipe-y.png              : mask quét dọc cho hiệu ứng chuyển trang.
  *  - wipe-x.png              : mask quét ngang cho hiệu ứng hiện chữ.
@@ -46,7 +46,7 @@ const ON = [255, 255, 255, 255];
 const OFF = [0, 0, 0, 0];
 
 // 1) Tile mật độ cố định.
-for (const d of [6, 12, 25, 50]) {
+for (const d of [6, 13, 25, 38, 50, 63, 75, 88]) {
   await png(`dither-${d}.png`, 8, 8, 2, (x, y) => (d / 100 > th(x, y) ? ON : OFF));
 }
 

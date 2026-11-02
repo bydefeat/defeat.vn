@@ -8,7 +8,7 @@ export const homeText: Record<Locale, {
   services: { eyebrow: string; title: string; desc: string };
   why: { eyebrow: string; title: string; desc: string; items: { title: string; desc: string }[] };
   process: { eyebrow: string; title: string; steps: { title: string; desc: string }[] };
-  tech: { eyebrow: string; title: string };
+  tech: { eyebrow: string; title: string; desc: string; count: string; note: string };
   products: { eyebrow: string; title: string; desc: string };
   cases: { eyebrow: string; title: string; desc: string };
   news: { eyebrow: string; title: string };
@@ -54,7 +54,13 @@ export const homeText: Record<Locale, {
         { title: 'Bàn giao & vận hành', desc: 'Triển khai, đào tạo, bảo hành và hỗ trợ dài hạn.' },
       ],
     },
-    tech: { eyebrow: 'Công nghệ', title: 'Làm chủ công nghệ hiện đại' },
+    tech: {
+      eyebrow: 'Công nghệ',
+      title: 'Làm chủ công nghệ hiện đại',
+      desc: 'Lựa chọn công nghệ theo bài toán: ổn định cho vận hành dài hạn, đủ hiện đại để mở rộng.',
+      count: 'nền tảng & công cụ',
+      note: 'Logo là thương hiệu của các chủ sở hữu tương ứng.',
+    },
     products: { eyebrow: 'Sản phẩm', title: 'Sản phẩm & mã nguồn nổi bật', desc: 'Giải pháp đã đóng gói, triển khai nhanh và tuỳ biến theo nhu cầu.' },
     cases: { eyebrow: 'Dự án', title: 'Dự án tiêu biểu', desc: 'Kết quả thực tế từ các dự án DEFEAT đã thực hiện.' },
     news: { eyebrow: 'Tin tức', title: 'Tin tức & chia sẻ mới nhất' },
@@ -109,7 +115,13 @@ export const homeText: Record<Locale, {
         { title: 'Launch & operate', desc: 'Deployment, training, warranty and long-term support.' },
       ],
     },
-    tech: { eyebrow: 'Technology', title: 'Modern technology, mastered' },
+    tech: {
+      eyebrow: 'Technology',
+      title: 'Modern technology, mastered',
+      desc: 'We choose technology to fit the problem: stable for long-term operations, modern enough to scale.',
+      count: 'platforms & tools',
+      note: 'Logos are trademarks of their respective owners.',
+    },
     products: { eyebrow: 'Products', title: 'Featured products & source code', desc: 'Packaged solutions, deployed fast and customised to your needs.' },
     cases: { eyebrow: 'Case studies', title: 'Selected projects', desc: 'Real results from projects delivered by DEFEAT.' },
     news: { eyebrow: 'News', title: 'Latest news & insights' },
@@ -125,5 +137,3 @@ export const homeText: Record<Locale, {
     },
   },
 };
-
-export const TECH_STACK = ['TypeScript', 'React', 'Astro', 'Next.js', 'Node.js', 'NestJS', 'Flutter', 'React Native', 'PostgreSQL', 'Docker', 'Kubernetes', 'Cloudflare', 'AWS'];

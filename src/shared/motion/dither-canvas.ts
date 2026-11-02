@@ -188,8 +188,9 @@ export class DitherCanvas {
         if (s > 0.02) {
           // Intro: mỗi cell xuất hiện theo ngưỡng ngẫu nhiên → hiệu ứng "lắp ghép pixel".
           const born = clamp((intro * 1.6 - rnd[i]! * 0.6) / 0.4, 0, 1);
-          const wave = 0.5 + 0.5 * Math.sin(x * 0.11 + y * 0.07 - t * 1.6);
-          const v = s * born * (o.shapeLevel + (1 - o.shapeLevel) * wave) + g * 0.55;
+          // Đổ bóng chéo tĩnh (không nhấp nháy) + vùng sáng theo con trỏ.
+          const shade = o.shapeLevel + (1 - o.shapeLevel) * (1 - (x / w + y / h) / 2);
+          const v = s * born * shade + g * 0.55;
           if (v > th) {
             buf[i] = shapeC;
             continue;
@@ -223,16 +224,17 @@ export function initDitherCanvases() {
     if (kind === 'hero') {
       new DitherCanvas(canvas, {
         src,
-        cell: 4,
+        cell: window.innerWidth < 768 ? 5 : 4,
+        fps: window.innerWidth < 768 ? 24 : 30,
         place: (w, h, aspect, cssWidth) => {
           const desktop = cssWidth >= 1024;
-          const size = desktop ? Math.min(h * 0.78, w * 0.4) : Math.min(w * 0.85, h * 0.55);
-          const cx = desktop ? w * 0.76 : w * 0.62;
-          const cy = desktop ? h * 0.46 : h * 0.3;
+          const size = desktop ? Math.min(h * 0.74, w * 0.38) : Math.min(w * 0.7, h * 0.32);
+          const cx = desktop ? w * 0.76 : w * 0.78;
+          const cy = desktop ? h * 0.46 : h * 0.14;
           return { x: cx - (size * aspect) / 2, y: cy - size / 2, w: size * aspect, h: size };
         },
-        shapeLevel: 0.8,
-        fieldLevel: 0.34,
+        shapeLevel: 0.62,
+        fieldLevel: 0.3,
         glowRadius: 30,
       }).start();
     } else if (kind === 'wordmark') {
@@ -244,7 +246,7 @@ export function initDitherCanvases() {
           const height = width / aspect;
           return { x: (w - width) / 2, y: h - height - h * 0.04, w: width, h: height };
         },
-        shapeLevel: 0.42,
+        shapeLevel: 0.3,
         fieldLevel: 0,
         glowRadius: 40,
         intro: 2000,

@@ -47,11 +47,10 @@ const vi = {
   'header.allProducts': 'Tất cả sản phẩm',
   'header.servicesIntro': 'Giải pháp phần mềm trọn vòng đời — từ tư vấn đến vận hành.',
   'header.close': 'Đóng menu',
+  'header.openServices': 'Mở danh sách dịch vụ',
   'footer.backToTop': 'Lên đầu trang',
-  'footer.localTime': 'Giờ Việt Nam',
   'footer.ready': 'Sẵn sàng bắt đầu?',
   'footer.followUs': 'Theo dõi',
-  'common.scroll': 'Cuộn xuống',
   'notFound.back': 'Về trang chủ',
 } as const;
 
@@ -103,11 +102,10 @@ const en: Record<UIKey, string> = {
   'header.allProducts': 'All products',
   'header.servicesIntro': 'Full-lifecycle software solutions — from consulting to operations.',
   'header.close': 'Close menu',
+  'header.openServices': 'Open services list',
   'footer.backToTop': 'Back to top',
-  'footer.localTime': 'Vietnam time',
   'footer.ready': 'Ready to start?',
   'footer.followUs': 'Follow',
-  'common.scroll': 'Scroll',
   'notFound.back': 'Back to home',
 };
 

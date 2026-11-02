@@ -10,22 +10,22 @@ const t = useTranslations(locale);
 const href = localizePath(`/services/${service.slug}`, locale);
 ---
 
-<article class="card-fx group flex h-full flex-col border border-base-300 bg-base-100 p-7 transition-colors duration-300 hover:border-base-content/20" data-reveal>
+<article class="card-fx group flex h-full flex-col border border-base-300 bg-base-100 p-6 transition-colors duration-300 hover:border-base-content/25 sm:p-7" data-reveal>
   <div class="flex items-start justify-between">
     <div class="flex size-12 items-center justify-center bg-neutral text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-content">
       <Icon name={service.icon} />
     </div>
     {index !== undefined && (
-      <span class="label-mono text-base-content/35">
+      <span class="num text-sm font-semibold text-base-content/30">
         {String(index + 1).padStart(2, '0')}{total ? ` / ${String(total).padStart(2, '0')}` : ''}
       </span>
     )}
   </div>
-  <H class="mt-8 text-xl font-bold tracking-tight">
+  <H class="t-h3 mt-7">
     <a href={href} class="after:absolute after:inset-0">{service.title[locale]}</a>
   </H>
-  <p class="mt-3 flex-1 text-sm leading-relaxed text-base-content/65">{service.summary[locale]}</p>
-  <span class="mt-8 inline-flex items-center gap-2 label-mono text-base-content/60 transition-colors group-hover:text-primary">
+  <p class="mt-2.5 flex-1 text-[15px] text-base-content/65">{service.summary[locale]}</p>
+  <span class="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-base-content/70 transition-colors group-hover:text-primary">
     {t('cta.viewDetail')}
     <Icon name="arrowRight" class="size-4 transition-transform duration-500 group-hover:translate-x-1.5" />
   </span>

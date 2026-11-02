@@ -35,7 +35,7 @@ const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-3">
       <div class="lg:col-span-2">
-        <h2 class="display text-3xl" data-reveal>{text.included}</h2>
+        <h2 class="t-h2" data-reveal>{text.included}</h2>
         <ul class="mt-8 grid gap-4 sm:grid-cols-2" data-reveal-group="90">
           {
             service.points[locale].map((p) => (
@@ -48,8 +48,8 @@ const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
         </ul>
       </div>
       <aside class="on-dark relative self-start overflow-hidden bg-neutral p-7 text-neutral-content lg:sticky lg:top-28" data-reveal>
-        <span class="dither dither-6 dither-drift pointer-events-none absolute inset-0 text-primary/60" aria-hidden="true"></span>
-        <h2 class="relative text-xl font-bold">{t('cta.contact')}</h2>
+        <span class="dither dither-6 pointer-events-none absolute inset-0 text-primary/60" aria-hidden="true"></span>
+        <h2 class="t-h3 relative text-xl">{t('cta.contact')}</h2>
         <p class="relative mt-3 text-sm text-neutral-content/70">{t('ctaBand.desc')}</p>
         <a href={localizePath('/contact', locale)} class="btn btn-primary btn-block relative mt-6">{t('cta.quote')}</a>
       </aside>
@@ -58,7 +58,7 @@ const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
 
   <section class="section border-t border-base-300">
     <div class="container-x">
-      <h2 class="display text-3xl" data-reveal>{t('nav.services')}</h2>
+      <h2 class="t-h2" data-reveal>{t('nav.services')}</h2>
       <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="90">
         {others.map((s) => <ServiceCard service={s} locale={locale} index={SERVICES.indexOf(s)} total={SERVICES.length} />)}
       </div>

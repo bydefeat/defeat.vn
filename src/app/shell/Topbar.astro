@@ -1,0 +1,32 @@
+---
+/**
+ * Topbar thông tin (desktop). Nằm NGOÀI header sticky → cuộn đi tự nhiên, không làm header đổi chiều cao
+ * (tránh giật layout khi cuộn).
+ */
+import { SITE } from '@config/site';
+import type { Locale } from '@i18n/config';
+import { useTranslations } from '@i18n/utils';
+import Icon from '@shared/components/Icon.astro';
+
+interface Props { locale: Locale }
+const t = useTranslations(Astro.props.locale);
+---
+
+<div class="hidden bg-neutral text-neutral-content md:block">
+  <div class="container-x flex h-9 items-center justify-between text-[13px] text-neutral-content/70">
+    <p class="flex items-center gap-2.5">
+      <span class="inline-block size-1.5 bg-primary" aria-hidden="true"></span>
+      <span class="text-neutral-content/90">{t('header.status')}</span>
+      <span class="text-neutral-content/25" aria-hidden="true">—</span>
+      <span>{t('header.response')}</span>
+    </p>
+    <div class="flex items-center gap-6">
+      <a href={`mailto:${SITE.email}`} class="inline-flex items-center gap-2 transition-colors hover:text-neutral-content">
+        <Icon name="mail" class="size-3.5" />{SITE.email}
+      </a>
+      <a href={`tel:${SITE.phone.replace(/\s/g, '')}`} class="inline-flex items-center gap-2 transition-colors hover:text-neutral-content">
+        <Icon name="phone" class="size-3.5" />{SITE.phone}
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 ---
-/** Tiêu đề section: eyebrow mono (decode) + tiêu đề + mô tả, có reveal. */
+/** Tiêu đề section: eyebrow + tiêu đề + mô tả, hiện bằng dither dissolve. */
 interface Props {
   eyebrow?: string;
   /** Số thứ tự section, vd. "01". */
@@ -18,12 +18,12 @@ const { eyebrow, index, title, description, align = 'left', id, as: Tag = 'h2', 
   {
     eyebrow && (
       <p class="eyebrow">
-        {index && <span class="text-base-content/40 [.on-dark_&]:text-neutral-content/40">{index} /</span>}
-        <span data-scramble>{eyebrow}</span>
+        {index && <span class:list={['num', tone === 'dark' ? 'text-neutral-content/40' : 'text-base-content/35']}>{index}</span>}
+        {eyebrow}
       </p>
     )
   }
-  <Tag id={id} class="display mt-4 text-3xl leading-[1.08] sm:text-5xl">{title}</Tag>
-  {description && <p class:list={['mt-5 text-lg text-pretty', tone === 'dark' ? 'text-neutral-content/70' : 'text-base-content/65']}>{description}</p>}
+  <Tag id={id} class="t-h2 mt-4">{title}</Tag>
+  {description && <p class:list={['t-lead mt-5', tone === 'dark' ? 'text-neutral-content/70' : 'text-base-content/65']}>{description}</p>}
   <slot />
 </div>

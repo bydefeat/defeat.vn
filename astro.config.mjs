@@ -37,23 +37,24 @@ export default defineConfig({
 
   fonts: [
     {
+      // Chữ nội dung: Inter — tối ưu đọc màn hình, hỗ trợ đầy đủ tiếng Việt.
       provider: fontProviders.google(),
-      name: 'Be Vietnam Pro',
-      cssVariable: '--font-be-vietnam',
-      weights: [400, 500, 600, 700, 800],
+      name: 'Inter',
+      cssVariable: '--font-inter',
+      weights: [400, 500, 600],
       styles: ['normal'],
       subsets: ['vietnamese', 'latin'],
       fallbacks: ['system-ui', 'sans-serif'],
     },
     {
-      // Font mono cho nhãn, eyebrow, số liệu — chất "terminal/dither".
+      // Chữ tiêu đề: Inter Tight — cùng họ với Inter, khoảng chữ chặt cho tiêu đề lớn.
       provider: fontProviders.google(),
-      name: 'JetBrains Mono',
-      cssVariable: '--font-jetbrains',
-      weights: [400, 600],
+      name: 'Inter Tight',
+      cssVariable: '--font-inter-tight',
+      weights: [500, 600, 700],
       styles: ['normal'],
       subsets: ['vietnamese', 'latin'],
-      fallbacks: ['ui-monospace', 'monospace'],
+      fallbacks: ['system-ui', 'sans-serif'],
     },
   ],
 

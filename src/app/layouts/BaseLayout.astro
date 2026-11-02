@@ -9,6 +9,7 @@ import { SITE } from '@config/site';
 import { LOCALE_META } from '@i18n/config';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
 import Seo, { type SeoProps } from '@shared/seo/Seo.astro';
+import Topbar from '../shell/Topbar.astro';
 import Header from '../shell/Header.astro';
 import Footer from '../shell/Footer.astro';
 
@@ -31,8 +32,8 @@ const t = useTranslations(locale);
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — ${t('nav.news')}`} href={localizePath('/rss.xml', locale)} />
-    <Font cssVariable="--font-be-vietnam" preload={[{ weight: 400 }, { weight: 800 }]} />
-    <Font cssVariable="--font-jetbrains" />
+    <Font cssVariable="--font-inter" preload={[{ weight: 400, subset: 'latin' }, { weight: 400, subset: 'vietnamese' }]} />
+    <Font cssVariable="--font-inter-tight" preload={[{ weight: 700, subset: 'latin' }]} />
     <Seo {...props} locale={locale} />
     <slot name="head" />
   </head>
@@ -40,6 +41,7 @@ const t = useTranslations(locale);
     <a href="#main" class="btn btn-primary btn-sm sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]">
       {t('common.skipToContent')}
     </a>
+    <Topbar locale={locale} />
     <Header locale={locale} path={props.path} availableLocales={props.availableLocales} />
     <main id="main" class="flex-1">
       <slot />

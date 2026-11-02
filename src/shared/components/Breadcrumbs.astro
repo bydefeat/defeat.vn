@@ -1,5 +1,5 @@
 ---
-/** Breadcrumb hiển thị (mono). JSON-LD BreadcrumbList do trang truyền vào Seo. */
+/** Breadcrumb hiển thị. JSON-LD BreadcrumbList do trang truyền vào Seo. */
 import { resolveLocale, useTranslations } from '@i18n/utils';
 
 export interface Crumb { name: string; href: string }
@@ -9,15 +9,15 @@ const { items } = Astro.props;
 const t = useTranslations(resolveLocale(Astro.currentLocale));
 ---
 
-<nav class="label-mono text-current/55" aria-label={t('common.breadcrumb')}>
+<nav class="text-[13px]" aria-label={t('common.breadcrumb')}>
   <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
     {
       items.map((item, i) =>
         i === items.length - 1 ? (
-          <li aria-current="page" class="max-w-[40ch] truncate opacity-100">{item.name}</li>
+          <li aria-current="page" class="max-w-[42ch] truncate font-medium">{item.name}</li>
         ) : (
           <li class="flex items-center gap-2">
-            <a href={item.href} class="opacity-60 transition-opacity hover:text-primary hover:opacity-100">{item.name}</a>
+            <a href={item.href} class="opacity-60 transition-opacity hover:opacity-100">{item.name}</a>
             <span class="text-primary" aria-hidden="true">/</span>
           </li>
         ),

@@ -50,11 +50,11 @@ const crumbs = [
     <div class="container-x grid gap-12 lg:grid-cols-3">
       <SectionHeading title={text.missionTitle} description={text.mission} />
       <div class="lg:col-span-2">
-        <h2 class="display text-3xl" data-reveal>{text.valuesTitle}</h2>
+        <h2 class="t-h2" data-reveal>{text.valuesTitle}</h2>
         <ul class="mt-8 grid gap-4 sm:grid-cols-3" data-reveal-group="100">
           {text.values.map((v) => (
             <li class="card-fx border border-base-300 bg-base-100 p-7" data-reveal>
-              <h3 class="font-semibold text-primary">{v.title}</h3>
+              <h3 class="t-h3 text-primary">{v.title}</h3>
               <p class="mt-2 text-sm text-base-content/70">{v.desc}</p>
             </li>
           ))}
