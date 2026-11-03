@@ -2,6 +2,7 @@
 import BaseLayout from '@app/layouts/BaseLayout.astro';
 import { organizationLd, websiteLd } from '@shared/seo/jsonld';
 import { resolveLocale } from '@i18n/utils';
+import { isShown } from '@config/site';
 import Hero from './sections/Hero.astro';
 import TechSection from './sections/TechSection.astro';
 import BenefitsSection from './sections/BenefitsSection.astro';
@@ -28,6 +29,6 @@ const faqLd = {
   <StepsSection locale={locale} />
   <FeaturesSection locale={locale} />
   <ShowcaseSection locale={locale} />
-  <NewsSection locale={locale} />
+  {isShown('news') && <NewsSection locale={locale} />}
   <FaqSection locale={locale} />
 </BaseLayout>

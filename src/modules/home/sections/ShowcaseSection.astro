@@ -6,14 +6,17 @@ import ProductCard from '@modules/products/components/ProductCard.astro';
 import CaseStudyCard from '@modules/case-studies/components/CaseStudyCard.astro';
 import { getProducts } from '@modules/products/api';
 import { getCaseStudies } from '@modules/case-studies/api';
+import { isShown } from '@config/site';
 import { landing } from '../landing';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-const text = landing[locale].showcase;
+const showCases = isShown('caseStudies');
+const { showcase } = landing[locale];
+const text = showCases ? showcase : { title: showcase.productsTitle, desc: showcase.productsDesc };
 const products = await getProducts(locale, { featured: true, limit: 3 });
-const cases = await getCaseStudies(locale, { featured: true, limit: 2 });
+const cases = showCases ? await getCaseStudies(locale, { featured: true, limit: 2 }) : [];
 ---
 
 {
@@ -34,7 +37,7 @@ const cases = await getCaseStudies(locale, { featured: true, limit: 2 });
         )}
         <div class="mt-6 flex flex-wrap justify-center gap-3">
           <a href={localizePath('/products', locale)} class="btn btn-line btn-sm">{t('nav.products')} <Icon name="arrowRight" class="arrow size-4" /></a>
-          <a href={localizePath('/case-studies', locale)} class="btn btn-line btn-sm">{t('nav.caseStudies')} <Icon name="arrowRight" class="arrow size-4" /></a>
+          {showCases && <a href={localizePath('/case-studies', locale)} class="btn btn-line btn-sm">{t('nav.caseStudies')} <Icon name="arrowRight" class="arrow size-4" /></a>}
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 ---
 import '@/styles/global.css';
 import { Font } from 'astro:assets';
-import { SITE } from '@config/site';
+import { SITE, isShown } from '@config/site';
 import { LOCALE_META } from '@i18n/config';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
 import Seo, { type SeoProps } from '@shared/seo/Seo.astro';
@@ -43,7 +43,7 @@ const fallback = props.contentLocale && props.contentLocale !== locale ? props.c
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — ${t('nav.news')}`} href={localizePath('/rss.xml', locale)} />
+    {isShown('news') && <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — ${t('nav.news')}`} href={localizePath('/rss.xml', locale)} />}
     <Font cssVariable="--font-inter" preload />
     <Seo {...props} locale={locale} />
     <slot name="head" />

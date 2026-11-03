@@ -144,3 +144,10 @@ npm run preview   # chạy bản build trên runtime Cloudflare (workerd)
 ```
 
 Deploy: `npx wrangler deploy` (cấu hình ở `wrangler.jsonc`; adapter sinh `dist/server/wrangler.json`).
+
+## Mục tạm ẩn
+
+Dự án, Tin tức, Về chúng tôi (kèm RSS) đang ẩn: cờ `HIDDEN` trong `src/config/site.ts` bỏ chúng khỏi menu, footer,
+trang chủ; route được đổi tên có tiền tố `_` (`src/pages/_about.astro`, `_news/`, `_case-studies/`, `_rss.xml.ts`,
+cả trong `src/pages/en/`) nên không được build → truy cập trả 404, không có trong sitemap.
+Hiện lại: đặt cờ về `false` và bỏ tiền tố `_` ở các route trên.

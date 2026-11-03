@@ -17,7 +17,7 @@ interface Landing {
   features: { illo: Illo; accent: Accent; service: string; eyebrow: string; title: string; desc: string; points: string[] }[];
   highlights: { fx: 'consult' | 'source' | 'security' | 'support'; title: string; desc: string }[];
   highlightsUi: { nda: string; milestones: [string, string, string] };
-  showcase: { title: string; desc: string };
+  showcase: { title: string; desc: string; productsTitle: string; productsDesc: string };
 }
 
 export const landing: Record<Locale, Landing> = {
@@ -76,7 +76,7 @@ export const landing: Record<Locale, Landing> = {
       { fx: 'support', title: 'Hỗ trợ dài hạn', desc: 'Bảo hành và đồng hành sau bàn giao' },
     ],
     highlightsUi: { nda: 'NDA', milestones: ['Bàn giao', 'Bảo hành', 'Nâng cấp'] },
-    showcase: { title: 'Sản phẩm & dự án.', desc: 'Giải pháp đóng gói sẵn và các dự án DEFEAT đã triển khai.' },
+    showcase: { title: 'Sản phẩm & dự án.', desc: 'Giải pháp đóng gói sẵn và các dự án DEFEAT đã triển khai.', productsTitle: 'Sản phẩm & mã nguồn.', productsDesc: 'Giải pháp đóng gói sẵn, sẵn sàng triển khai.' },
   },
   en: {
     logosTitle: 'Technologies we master',
@@ -133,6 +133,6 @@ export const landing: Record<Locale, Landing> = {
       { fx: 'support', title: 'Long-term support', desc: 'Warranty and support after launch' },
     ],
     highlightsUi: { nda: 'NDA', milestones: ['Handover', 'Warranty', 'Upgrades'] },
-    showcase: { title: 'Products & projects.', desc: 'Packaged solutions and projects delivered by DEFEAT.' },
+    showcase: { title: 'Products & projects.', desc: 'Packaged solutions and projects delivered by DEFEAT.', productsTitle: 'Products & source code.', productsDesc: 'Packaged solutions, ready to deploy.' },
   },
 };

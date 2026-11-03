@@ -26,10 +26,20 @@ export const SITE = {
 
 export type NavKey = 'services' | 'products' | 'caseStudies' | 'news' | 'about' | 'contact';
 
-export const MAIN_NAV: ReadonlyArray<{ key: NavKey; path: string }> = [
+/**
+ * Mục đang tạm ẩn: không hiện ở menu, footer, trang chủ. Trang tương ứng cũng tắt (trả 404) bằng cách
+ * đổi tên file route có tiền tố "_" trong src/pages (Astro bỏ qua). Hiện lại: đặt false + bỏ "_" ở các route:
+ * about.astro, news/, case-studies/, rss.xml.ts (cả bản trong src/pages/en/).
+ */
+export const HIDDEN: Readonly<Partial<Record<NavKey, boolean>>> = { caseStudies: true, news: true, about: true };
+export const isShown = (key: NavKey) => !HIDDEN[key];
+
+const ALL_NAV: ReadonlyArray<{ key: NavKey; path: string }> = [
   { key: 'services', path: '/services' },
   { key: 'products', path: '/products' },
   { key: 'caseStudies', path: '/case-studies' },
   { key: 'news', path: '/news' },
   { key: 'about', path: '/about' },
 ];
+
+export const MAIN_NAV = ALL_NAV.filter((item) => isShown(item.key));
