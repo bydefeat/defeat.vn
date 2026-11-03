@@ -1,17 +1,15 @@
 /**
- * Điểm vào hệ thống motion (BaseLayout nạp một lần cho mọi trang).
+ * Script giao diện dùng chung (BaseLayout nạp một lần cho mọi trang).
  * Mỗi module độc lập, tự bỏ qua nếu trang không có phần tử tương ứng.
  */
-import { initReveal } from './reveal';
 import { initHeader } from './header';
-import { initPointer } from './pointer';
-import { initDitherCanvases } from './dither-canvas';
+import { initReveal } from './reveal';
+import { initBrandColors } from './brand';
 
 function boot() {
   initHeader();
-  initPointer();
+  initBrandColors();
   initReveal();
-  initDitherCanvases();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });

@@ -21,11 +21,11 @@ const crumbs = [
   <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-3">
-      <div class="border border-base-300 bg-base-100 p-5 sm:p-10 lg:col-span-2" data-reveal="scan">
+      <div class="border border-base-300 bg-base-100 p-5 sm:p-10 lg:col-span-2" data-reveal>
         <ContactForm client:visible labels={text.form} locale={locale} />
       </div>
       <aside class="space-y-10" data-reveal-group="120">
-        <div data-reveal="slide">
+        <div data-reveal>
           <h2 class="t-label text-base-content/50">{text.infoTitle}</h2>
           <ul class="mt-3 space-y-1 text-[15px]">
             <li class="flex items-center gap-3"><Icon name="mail" class="size-5 text-primary" /><a class="inline-flex min-h-11 items-center hover:text-primary" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
@@ -33,11 +33,11 @@ const crumbs = [
             <li class="flex min-h-11 items-center gap-3"><Icon name="mapPin" class="size-5 text-primary" /><span>{SITE.address.locality}, Việt Nam</span></li>
           </ul>
         </div>
-        <ol class="space-y-6 border-l-2 border-primary/30 pl-6" data-reveal="slide">
+        <ol class="space-y-6 border-l-2 border-primary/30 pl-6" data-reveal>
           {
             text.steps.map((s, i) => (
               <li>
-                <p class="num text-sm font-semibold text-primary">0{i + 1}</p>
+                <p class="text-sm font-semibold text-primary">0{i + 1}</p>
                 <p class="font-semibold">{s.title}</p>
                 <p class="text-sm text-base-content/70">{s.desc}</p>
               </li>

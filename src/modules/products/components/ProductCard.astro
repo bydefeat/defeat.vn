@@ -14,31 +14,27 @@ const { data } = product;
 const href = localizePath(productPath(product), locale);
 ---
 
-<article class="group flex h-full flex-col border border-base-300 bg-base-100" data-category={data.category} data-reveal="scan">
-  <div class="relative aspect-[16/10] overflow-hidden">
+<article class="card-base card-hover" data-category={data.category} data-reveal>
+  <div class="aspect-[16/9] overflow-hidden">
     {
       data.cover ? (
-        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[400, 800]} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="media media-zoom size-full object-cover" />
+        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[400, 800]} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="card-img size-full object-cover" />
       ) : (
-        <div class="cover-dither flex size-full items-center justify-center">
-          <span class="relative z-10 flex size-16 items-center justify-center border border-white/15 bg-neutral/60 text-neutral-content backdrop-blur-sm">
-            <Icon name="box" class="size-7" />
-          </span>
-        </div>
+        <div class="cover-placeholder size-full"><Icon name="box" class="size-10" /></div>
       )
     }
-    <span class="t-label absolute left-4 top-4 z-10 bg-primary px-2 py-1 text-primary-content">{text.categories[data.category]}</span>
   </div>
-  <div class="flex flex-1 flex-col p-6">
-    <H class="t-h3 transition-colors group-hover:text-primary">
+  <div class="flex flex-1 flex-col p-5">
+    <span class="pill self-start">{text.categories[data.category]}</span>
+    <H class="card-title t-h3 mt-3">
       <a href={href} class="after:absolute after:inset-0">{data.title}</a>
     </H>
-    <p class="mt-2 flex-1 text-[15px] text-base-content/65">{data.summary}</p>
+    <p class="mt-2 flex-1 text-[15px] text-muted">{data.summary}</p>
     {
       data.techStack.length > 0 && (
-        <ul class="mt-5 flex flex-wrap gap-1.5" aria-label={t('common.techStack')}>
+        <ul class="mt-4 flex flex-wrap gap-1.5" aria-label={t('common.techStack')}>
           {data.techStack.slice(0, 4).map((tech) => (
-            <li class="border border-base-300 px-2 py-0.5 text-xs font-medium text-base-content/65">{tech}</li>
+            <li class="rounded border border-base-300 px-2 py-0.5 text-xs text-muted">{tech}</li>
           ))}
         </ul>
       )

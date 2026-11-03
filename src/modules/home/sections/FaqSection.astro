@@ -1,5 +1,5 @@
 ---
-/** FAQ dùng <details> gốc (không JS), mở/đóng có animation chiều cao. JSON-LD FAQPage do HomePage thêm. */
+/** FAQ: <details> gốc (không JS). JSON-LD FAQPage do HomePage thêm. */
 import SectionHeading from '@shared/components/SectionHeading.astro';
 import type { Locale } from '@i18n/config';
 import { homeText } from '../i18n';
@@ -7,24 +7,20 @@ interface Props { locale: Locale }
 const { faq } = homeText[Astro.props.locale];
 ---
 
-<section class="section border-t border-base-300" aria-labelledby="home-faq">
-  <div class="container-x grid gap-10 lg:grid-cols-12 lg:gap-14">
+<section class="section bg-base-200" aria-labelledby="home-faq">
+  <div class="container-x grid gap-10 lg:grid-cols-12 lg:gap-16">
     <div class="lg:col-span-4">
-      <SectionHeading id="home-faq" index="06" eyebrow={faq.eyebrow} title={faq.title} />
+      <SectionHeading id="home-faq" eyebrow={faq.eyebrow} title={faq.title} />
     </div>
-    <div class="border-t border-base-300 lg:col-span-8" data-reveal-group="80">
+    <div class="space-y-3 lg:col-span-8" data-reveal-group="60">
       {
         faq.items.map((item, i) => (
-          <details class="faq-item group border-b border-base-300" open={i === 0} data-reveal="slide">
-            <summary class="flex cursor-pointer list-none items-start gap-4 py-5 sm:gap-6 sm:py-6">
-              <span class="num mt-0.5 w-6 shrink-0 text-sm font-semibold text-base-content/35 group-open:text-primary">{String(i + 1).padStart(2, '0')}</span>
-              <span class="t-h3 flex-1 transition-colors group-hover:text-primary">{item.q}</span>
-              <span class="relative mt-0.5 flex size-8 shrink-0 items-center justify-center border border-base-300 transition-colors group-open:border-primary group-open:bg-primary group-open:text-primary-content" aria-hidden="true">
-                <span class="absolute h-0.5 w-3 bg-current"></span>
-                <span class="bar-v absolute h-3 w-0.5 bg-current"></span>
-              </span>
+          <details class="faq-item group rounded-box border border-base-300 bg-base-100" open={i === 0} data-reveal>
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-semibold transition-colors hover:text-primary sm:px-6">
+              {item.q}
+              <svg class="chev size-5 shrink-0 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
             </summary>
-            <div class="pb-6 pl-10 pr-2 text-[15px] text-base-content/70 sm:pl-12 sm:pr-14"><p>{item.a}</p></div>
+            <div class="px-5 pb-5 text-[15px] text-muted sm:px-6"><p>{item.a}</p></div>
           </details>
         ))
       }

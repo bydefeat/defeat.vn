@@ -24,7 +24,7 @@ const price = await getLivePrice(slug, locale);
     price?.amountVnd ? (
       <>
         <p class="text-sm text-base-content/60">{t('pricing.from')}</p>
-        <p class="num mt-1 text-3xl font-semibold text-primary">{formatVnd(price.amountVnd, locale)}</p>
+        <p class="mt-1 text-3xl font-extrabold text-primary">{formatVnd(price.amountVnd, locale)}</p>
       </>
     ) : (
       <p class="text-lg font-semibold">{t('pricing.contact')}</p>

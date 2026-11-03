@@ -1,35 +1,38 @@
 ---
 import { Image } from 'astro:assets';
+import Icon from '@shared/components/Icon.astro';
 import type { Locale } from '@i18n/config';
-import { formatDate, localizePath } from '@i18n/utils';
+import { formatDate, localizePath, useTranslations } from '@i18n/utils';
 import { newsPath, type NewsEntry } from '../api';
 
 interface Props { post: NewsEntry; locale: Locale; headingLevel?: 'h2' | 'h3' }
 const { post, locale, headingLevel: H = 'h3' } = Astro.props;
+const t = useTranslations(locale);
 const { data } = post;
 const href = localizePath(newsPath(post), locale);
 ---
 
-<article class="group relative flex h-full flex-col" data-reveal="blinds">
-  <div class="relative aspect-[16/10] overflow-hidden">
+<article class="card-base card-hover" data-reveal>
+  <div class="aspect-[16/9] overflow-hidden">
     {
       data.cover ? (
-        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[400, 800]} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="media media-zoom size-full object-cover" />
+        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[400, 800]} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="card-img size-full object-cover" />
       ) : (
-        <div class="cover-dither flex size-full items-end p-5">
-          <span class="relative z-10 line-clamp-2 font-display text-lg font-semibold text-neutral-content">{data.title}</span>
-        </div>
+        <div class="cover-placeholder size-full"><Icon name="clipboard" class="size-10" /></div>
       )
     }
   </div>
-  <div class="flex flex-1 flex-col">
-    <div class="mt-5 flex items-center gap-2 text-[13px] text-base-content/55">
+  <div class="flex flex-1 flex-col p-5">
+    <div class="flex items-center gap-2 text-[13px] text-muted">
       <time datetime={data.pubDate.toISOString()}>{formatDate(data.pubDate, locale)}</time>
-      {data.tags[0] && <><span class="text-primary" aria-hidden="true">/</span><span class="text-primary">{data.tags[0]}</span></>}
+      {data.tags[0] && <><span aria-hidden="true">·</span><span class="font-semibold text-accent">{data.tags[0]}</span></>}
     </div>
-    <H class="t-h3 mt-2">
-      <a href={href} class="after:absolute after:inset-0"><span class="link-dither">{data.title}</span></a>
+    <H class="card-title t-h3 mt-2">
+      <a href={href} class="after:absolute after:inset-0">{data.title}</a>
     </H>
-    <p class="mt-2 line-clamp-2 text-sm text-base-content/65">{data.description}</p>
+    <p class="mt-2 line-clamp-3 flex-1 text-[15px] text-muted">{data.description}</p>
+    <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
+      {t('cta.readMore')} <Icon name="arrowRight" class="size-4" />
+    </span>
   </div>
 </article>

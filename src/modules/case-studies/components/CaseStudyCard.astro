@@ -12,38 +12,36 @@ const { data } = item;
 const href = localizePath(caseStudyPath(item), locale);
 ---
 
-<article class="fx-shadow group grid h-full border border-base-300 bg-base-100 md:grid-cols-5" data-reveal="shutter">
-  <div class="relative aspect-[16/10] overflow-hidden md:col-span-2 md:aspect-auto">
+<article class="card-base card-hover md:!flex-row" data-reveal>
+  <div class="aspect-[16/9] overflow-hidden md:aspect-auto md:w-2/5 md:shrink-0">
     {
       data.cover ? (
-        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[480, 800]} sizes="(min-width: 768px) 40vw, 100vw" class="media media-zoom size-full object-cover" />
+        <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[480, 800]} sizes="(min-width: 768px) 40vw, 100vw" class="card-img size-full object-cover" />
       ) : (
-        <div class="cover-dither flex size-full min-h-48 items-end p-5">
-          <span class="t-label relative z-10 text-neutral-content">{data.industry}</span>
-        </div>
+        <div class="cover-placeholder size-full min-h-44"><Icon name="layers" class="size-10" /></div>
       )
     }
   </div>
-  <div class="flex flex-col p-6 sm:p-7 md:col-span-3">
-    <p class="t-label text-primary">{data.industry}</p>
-    <H class="t-h3 mt-3 text-xl">
+  <div class="flex flex-1 flex-col p-6">
+    <span class="pill self-start">{data.industry}</span>
+    <H class="card-title t-h3 mt-3 text-xl">
       <a href={href} class="after:absolute after:inset-0">{data.title}</a>
     </H>
-    <p class="mt-3 flex-1 text-[15px] text-base-content/65">{data.summary}</p>
+    <p class="mt-2 flex-1 text-[15px] text-muted">{data.summary}</p>
     {
       data.results.length > 0 && (
-        <dl class="mt-6 grid grid-cols-2 gap-px border border-base-300 bg-base-300 sm:grid-cols-3">
+        <dl class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {data.results.slice(0, 3).map((r) => (
-            <div class="flex flex-col-reverse bg-base-100 p-3">
-              <dt class="text-xs text-base-content/55">{r.label}</dt>
-              <dd class="num text-2xl font-semibold text-primary">{r.value}</dd>
+            <div class="flex flex-col-reverse rounded-lg bg-base-200 p-3">
+              <dt class="text-xs text-muted">{r.label}</dt>
+              <dd class="text-xl font-extrabold text-primary">{r.value}</dd>
             </div>
           ))}
         </dl>
       )
     }
-    <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-base-content/70 transition-colors group-hover:text-primary">
-      {t('cta.viewDetail')} <Icon name="arrowRight" class="size-4 transition-transform duration-500 group-hover:translate-x-1.5" />
+    <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
+      {t('cta.viewDetail')} <Icon name="arrowRight" class="size-4" />
     </span>
   </div>
 </article>

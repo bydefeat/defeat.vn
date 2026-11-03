@@ -1,41 +1,29 @@
 ---
-/**
- * Công nghệ: lưới logo SVG dither (nguồn thesvg.org, xử lý bởi scripts/generate-tech-logos.mjs).
- * Motion: mỗi logo được "dựng" lần lượt qua 4 lớp dither (thưa → đặc), so le theo ô.
- * Hover: các lớp đổi sang màu thương hiệu theo thứ tự (quét màu theo lớp dither).
- */
+/** Dải logo công nghệ (SVG từ thesvg.org): xám, rê chuột chuyển sang màu thương hiệu. */
 import type { Locale } from '@i18n/config';
 import { homeText } from '../i18n';
-import { TECH_LOGOS, TECH_GRID } from '../data/tech-logos';
+import { TECH_LOGOS } from '../data/tech-logos';
 interface Props { locale: Locale }
 const text = homeText[Astro.props.locale].tech;
 ---
 
-<section class="on-dark relative overflow-hidden bg-neutral pb-28 pt-28 text-neutral-content sm:pb-36 sm:pt-36" aria-labelledby="home-tech">
-  <span class="dither-edge dither-edge-top text-base-100" aria-hidden="true"></span>
-  <span class="dither-edge dither-edge-bottom text-base-100" aria-hidden="true"></span>
-  <div class="container-x relative">
-    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between" data-reveal="rise">
-      <div class="max-w-2xl">
-        <p class="eyebrow">{text.eyebrow}</p>
-        <h2 id="home-tech" class="t-h2 mt-4">{text.title}</h2>
-        <p class="t-lead mt-4 text-neutral-content/65">{text.desc}</p>
-      </div>
-      <p class="text-sm text-neutral-content/45"><span class="num text-2xl font-semibold text-neutral-content">{TECH_LOGOS.length}</span> {text.count}</p>
+<section class="section border-y border-base-300 bg-base-200" aria-labelledby="home-tech">
+  <div class="container-x">
+    <div class="mx-auto max-w-2xl text-center" data-reveal>
+      <h2 id="home-tech" class="t-h2">{text.title}</h2>
+      <span class="accent-bar mx-auto" aria-hidden="true"></span>
+      <p class="t-lead mt-5 text-muted">{text.desc}</p>
     </div>
-
-    <ul class="mt-12 grid grid-cols-4 border-l border-t border-white/10 lg:grid-cols-8" data-reveal-group="55">
+    <ul class="mt-12 grid grid-cols-4 gap-3 sm:gap-4 lg:grid-cols-8" data-reveal-group="30">
       {
         TECH_LOGOS.map((logo) => (
-          <li class="tech-tile group relative flex aspect-square flex-col items-center justify-center gap-2 border-b border-r border-white/10 p-2 sm:gap-3 sm:p-4 text-neutral-content/80 transition-colors duration-300 hover:bg-white/[0.03]" data-brand={logo.color} data-reveal="still">
-            <svg viewBox={`0 0 ${TECH_GRID} ${TECH_GRID}`} class="size-9 sm:size-12 lg:size-14" shape-rendering="crispEdges" role="img" aria-label={logo.name}>
-              {logo.layers.map((d) => <path class="tech-layer" d={d} />)}
-            </svg>
-            <span class="text-center text-[10px] font-medium leading-tight sm:text-xs text-neutral-content/55 transition-colors group-hover:text-neutral-content">{logo.name}</span>
+          <li class="tech-item flex flex-col items-center justify-center gap-2.5 rounded-box border border-base-300 bg-base-100 px-2 py-5 transition-shadow hover:shadow-[0_10px_24px_-14px_rgba(19,32,51,0.25)]" data-brand={logo.color} data-reveal>
+            <svg viewBox={logo.viewBox} class="tech-logo size-8 sm:size-9" fill="currentColor" fill-rule={logo.fillRule} role="img" aria-label={logo.name} set:html={logo.body} />
+            <span class="text-center text-[11px] font-medium leading-tight text-muted sm:text-xs">{logo.name}</span>
           </li>
         ))
       }
     </ul>
-    <p class="mt-4 text-xs text-neutral-content/35">{text.note}</p>
+    <p class="mt-5 text-center text-xs text-muted/70">{text.note}</p>
   </div>
 </section>

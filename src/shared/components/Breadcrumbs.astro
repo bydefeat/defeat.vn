@@ -9,16 +9,16 @@ const { items } = Astro.props;
 const t = useTranslations(resolveLocale(Astro.currentLocale));
 ---
 
-<nav class="text-[13px]" aria-label={t('common.breadcrumb')}>
+<nav class="text-[13px] text-muted" aria-label={t('common.breadcrumb')}>
   <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
     {
       items.map((item, i) =>
         i === items.length - 1 ? (
-          <li aria-current="page" class="max-w-[42ch] truncate font-medium">{item.name}</li>
+          <li aria-current="page" class="max-w-[42ch] truncate font-medium text-base-content">{item.name}</li>
         ) : (
           <li class="flex items-center gap-2">
-            <a href={item.href} class="opacity-60 transition-opacity hover:opacity-100">{item.name}</a>
-            <span class="text-primary" aria-hidden="true">/</span>
+            <a href={item.href} class="transition-colors hover:text-primary">{item.name}</a>
+            <span aria-hidden="true">/</span>
           </li>
         ),
       )

@@ -1,8 +1,8 @@
 ---
-/** Tiêu đề section: eyebrow + tiêu đề + mô tả, hiện bằng dither dissolve. */
+/** Tiêu đề section: nhãn nhỏ (tuỳ chọn) + tiêu đề + gạch đỏ + mô tả. */
 interface Props {
   eyebrow?: string;
-  /** Số thứ tự section, vd. "01". */
+  /** Giữ để tương thích, không hiển thị. */
   index?: string;
   title: string;
   description?: string;
@@ -11,19 +11,14 @@ interface Props {
   as?: 'h1' | 'h2';
   tone?: 'light' | 'dark';
 }
-const { eyebrow, index, title, description, align = 'left', id, as: Tag = 'h2', tone = 'light' } = Astro.props;
+const { eyebrow, title, description, align = 'left', id, as: Tag = 'h2', tone = 'light' } = Astro.props;
+const center = align === 'center';
 ---
 
-<div class:list={['max-w-3xl', align === 'center' && 'mx-auto text-center']} data-reveal-group="110">
-  {
-    eyebrow && (
-      <p class="eyebrow" data-reveal="draw">
-        {index && <span class:list={['num', tone === 'dark' ? 'text-neutral-content/40' : 'text-base-content/35']}>{index}</span>}
-        {eyebrow}
-      </p>
-    )
-  }
-  <Tag id={id} class="t-h2 mt-4" data-reveal="rise">{title}</Tag>
-  {description && <p class:list={['t-lead mt-5', tone === 'dark' ? 'text-neutral-content/70' : 'text-base-content/65']} data-reveal="dissolve">{description}</p>}
+<div class:list={['max-w-3xl', center && 'mx-auto text-center']} data-reveal>
+  {eyebrow && <p class="t-label text-primary">{eyebrow}</p>}
+  <Tag id={id} class:list={['t-h2', eyebrow && 'mt-2']}>{title}</Tag>
+  <span class:list={['accent-bar', center && 'mx-auto']} aria-hidden="true"></span>
+  {description && <p class:list={['t-lead mt-5', tone === 'dark' ? 'text-neutral-content/75' : 'text-muted']}>{description}</p>}
   <slot />
 </div>

@@ -8,10 +8,10 @@ src/
 ├─ i18n/                     # Cấu hình ngôn ngữ, chuỗi giao diện dùng chung, helper URL
 ├─ app/                      # App shell: ghép các module thành khung trang
 │  ├─ layouts/BaseLayout.astro
-│  └─ shell/                 # Header (mega menu), Footer, CtaBand
+│  └─ shell/                 # Topbar, Header (dropdown), Footer, CtaBand
 ├─ shared/                   # Dùng chung, KHÔNG phụ thuộc module nghiệp vụ
 │  ├─ components/            # PageHero, SectionHeading, Breadcrumbs, Icon...
-│  ├─ motion/                # Hệ thống motion (xem mục Motion)
+│  ├─ motion/                # Script giao diện (xem mục Motion)
 │  ├─ seo/                   # Seo.astro (meta/OG/hreflang), jsonld.ts (schema.org)
 │  └─ lib/                   # Helper thuần
 ├─ modules/                  # Mỗi module = một miền nghiệp vụ, tự chứa
@@ -52,59 +52,28 @@ Làm mới giá khi dữ liệu thay đổi: gọi `context.cache.invalidate({ t
 
 **Quy ước endpoint:** mọi endpoint HTTP đặt dưới `/ingest/v1/` (`src/pages/ingest/v1/`), không dùng `/api/`. Phiên bản mới (breaking change) → `/ingest/v2/`.
 
-## 3. Giao diện & Motion (dither style)
+## 3. Giao diện & Motion
 
-**Assets:** logo PNG gốc ở `public/brand/`. Texture dither (Bayer 8x8) sinh bằng `node scripts/generate-textures.mjs`
-→ `public/textures/` và **`src/styles/textures.css`** (nhúng data URI: mask không bao giờ chờ tải ảnh → không nháy).
-Logo công nghệ dither: `node scripts/generate-tech-logos.mjs` (nguồn SVG: thesvg.org, `scripts/assets/tech/`).
+**Phong cách:** corporate, sạch, sáng (tham khảo bố cục các website doanh nghiệp phần mềm như nencer.vn / nencer.com).
+- Màu: nền trắng / xám-xanh nhạt (`base-200` #f4f7fb), chữ navy (#132033), chữ phụ `text-muted` (#5b6b80),
+  nhấn đỏ thương hiệu (`primary` #e82024), liên kết xanh (`accent` #0a68ac), dải CTA navy (`secondary`).
+- Font: **Inter** (variable 400–800, subset latin + vietnamese, preload, `font-display: fallback`).
+- Thang chữ: `t-display`, `t-h1`, `t-h2`, `t-h3`, `t-lead`, `t-label`.
+- Thành phần: `card-base` + `card-hover` (nhấc nhẹ + bóng khi rê chuột), `icon-chip`, `pill`, `accent-bar`
+  (gạch đỏ dưới tiêu đề), `cover-placeholder` (ảnh tạm khi chưa có ảnh).
+- Logo công nghệ: SVG đơn sắc từ thesvg.org (`scripts/assets/tech/`), sinh dữ liệu bằng
+  `node scripts/generate-tech-logos.mjs`; hiển thị xám, rê chuột chuyển sang màu thương hiệu.
+- Logo DEFEAT: PNG trong `public/brand/`.
 
-**Font:** Inter (nội dung) + Inter Tight (tiêu đề), variable, subset latin + vietnamese, preload đủ 4 file,
-`font-display: fallback` → font đã cache hiển thị ngay, không đổi font giữa chừng khi chuyển trang/ngôn ngữ.
-Thang chữ: `t-display`, `t-h1`, `t-h2`, `t-h3`, `t-lead`, `t-label`, `num` (line-height ≥ 1.1 cho dấu tiếng Việt).
+**Motion (tối giản, mượt):**
+- Fade-up nhẹ khi cuộn tới (`data-reveal`, so le bằng `data-reveal-group="ms"`), chỉ dùng `transform` + `opacity`.
+- Chỉ phần tử nằm dưới màn hình lúc tải mới bị ẩn chờ cuộn → không nháy khi tải/chuyển trang.
+- Hover: card nhấc nhẹ, đổi màu tiêu đề, phóng ảnh 3%; nút; dropdown fade.
+- Không có hiệu ứng chuyển trang (điều hướng tự nhiên của trình duyệt), không canvas, không animation lúc tải.
+- Không JS / `prefers-reduced-motion` → mọi nội dung hiển thị ngay.
 
-**Chuyển trang (View Transitions, CSS):** trang cũ giữ nguyên và tối dần (không lộ nền trắng), trang mới quét xuống
-bằng mask dither; header không cross-fade (chỉ trượt vị trí). Không dùng `<ClientRouter />` vì CSP.
-
-**Từ vựng chuyển động — mỗi loại nội dung một kiểu (`data-reveal="…"`):**
-
-| Kiểu | Dùng cho | Mô tả |
-|---|---|---|
-| `draw` | eyebrow | vạch kẻ vẽ ra, chữ trượt theo |
-| `rise` | tiêu đề section | lộ từ trên xuống như in |
-| `dissolve` | đoạn mô tả, nội dung bài | hiện qua 8 mức dither |
-| `stair` | card dịch vụ | mở theo bậc từ góc trên-trái |
-| `scan` | card sản phẩm, form, aside | quét lên từ dưới theo dòng |
-| `shutter` | card dự án | mở như cửa chớp từ giữa |
-| `blinds` | card tin tức | hiện qua nan rèm ngang |
-| `block` | lý do chọn, giá trị | khối đỏ quét qua rồi lộ nội dung |
-| `slide` | FAQ, cột footer, bước quy trình | trượt ngang + lộ từ trái |
-| `wipe` | tiêu đề CTA, tiêu đề bài | quét ngang bằng mask dither |
-| `pop` | nút | bật lên theo nấc pixel |
-| `still` | logo công nghệ | dựng lần lượt 4 lớp dither |
-| `[data-odometer]` | số liệu | cột số lăn như đồng hồ cơ |
-
-Hero/đầu trang dùng các lớp tải-trang tương ứng: `ld-draw`, `ld-wipe`, `ld-rise`, `ld-dissolve`, `ld-pop`, `ld-slide` (+ `ld-d1…d5`).
-Theo cuộn (CSS scroll-driven): thanh tiến trình đọc, đường timeline quy trình, số bước "bật đèn".
-
-**Hover — mỗi loại card một kiểu:** dịch vụ (khung góc + ô icon đổ dither), sản phẩm (dải dither dâng lên ảnh),
-dự án (bóng đổ dither trượt ra), tin tức (gạch chân dither tiêu đề), lý do chọn (thanh đỏ mép trái), logo công nghệ
-(đổi màu thương hiệu theo từng lớp), nút viền (nền đổ dither), nút chính (bóng pixel).
-
-**JS (`src/shared/motion/`):**
-
-| Module | Việc |
-|---|---|
-| `reveal.ts` | Ẩn (data-pending) CHỈ phần tử nằm dưới màn hình lúc tải, hiện khi cuộn tới; so le theo `data-reveal-group`; kích hoạt odometer |
-| `header.ts` | Ẩn/hiện khi cuộn, mega menu (aria-expanded, Esc, click ngoài), menu mobile, khôi phục trạng thái khi Back (bfcache) |
-| `pointer.ts` | Nút nam châm `data-magnetic`, biến màu thương hiệu `data-brand` |
-| `dither-canvas.ts` | Canvas dither tương tác (hero logo, wordmark footer) |
-
-**Nguyên tắc chống nháy:**
-- Phần tử nhìn thấy lúc tải không bao giờ bị ẩn bởi JS; không có "tự hiện sau X giây".
-- Ảnh dự phòng của canvas chỉ hiện khi không có JS.
-- Odometer đặt sẵn ở 0 bằng CSS (không đổi số bằng JS sau khi đã hiển thị).
-- Không JS / `prefers-reduced-motion` → nội dung hiện đầy đủ, không animation.
-- Tương thích CSP: không dùng `style=""` trong HTML; JS chỉ đổi style qua CSSOM.
+**JS (`src/shared/motion/`):** `header.ts` (dropdown, menu mobile, bfcache), `reveal.ts` (fade-up), `brand.ts` (màu logo).
+Tương thích CSP: không dùng `style=""` trong HTML; JS chỉ đổi style qua CSSOM.
 
 ## 4. SEO
 
@@ -120,7 +89,7 @@ dự án (bóng đổ dither trượt ra), tin tức (gạch chân dither tiêu 
 
 - CSP bật (`security.csp`), hash tự động cho script/style. Vì vậy:
   - Code highlight dùng **Prism** (Shiki dùng inline style, không tương thích CSP).
-  - **Không dùng `<ClientRouter />`** (không hỗ trợ khi bật CSP) → chuyển trang bằng CSS `@view-transition`.
+  - **Không dùng `<ClientRouter />`** (không hỗ trợ khi bật CSP); site điều hướng bình thường, không hiệu ứng chuyển trang.
 - Form: kiểm tra Zod phía server, honeypot chống bot, bắt buộc đồng ý liên hệ.
 - Secret qua `astro:env` (`RESEND_API_KEY`...). Xem `.env.example`.
 

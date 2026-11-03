@@ -12,7 +12,7 @@ Astro 7.4 + TypeScript 6 (Node 26 LTS, Vite 8)
 ├─ UI:        Tailwind CSS 4.3 + daisyUI 5 (theme "defeat") — dùng thẳng trong .astro
 ├─ Island:    React 19 (+ React Aria Components khi cần component tương tác phức tạp)
 ├─ Content:   MDX + Content Layer (glob loader, Zod 4) (+ Keystatic nếu người không phải dev đăng bài)
-├─ Font:      Astro Fonts API (stable) — Be Vietnam Pro
+├─ Font:      Astro Fonts API (stable) — Inter (variable, latin + vietnamese)
 ├─ Bảo mật:   Astro CSP (stable) + Cloudflare Turnstile
 ├─ i18n:      vi / en (built-in Astro)
 ├─ Chuyển trang: View Transitions (CSS gốc) + Prefetch → ClientRouter khi cần
@@ -139,7 +139,7 @@ Astro 7.4 + TypeScript 6 (Node 26 LTS, Vite 8)
   export default defineConfig({
     fonts: [{
       provider: fontProviders.google(),
-      name: 'Be Vietnam Pro',
+      name: 'Inter',
       cssVariable: '--font-sans',
       weights: [400, 500, 600, 700, 800],
       subsets: ['vietnamese', 'latin'],
@@ -223,7 +223,7 @@ Astro 7.4 + TypeScript 6 (Node 26 LTS, Vite 8)
 
 ## 4. Nhận diện thương hiệu
 - Màu chính: đỏ `#E82024` (lấy từ logo).
-- Font: **Be Vietnam Pro** (qua Fonts API, subset `vietnamese`). Font hiển thị có thể dùng loại vuông vức cho hợp logo, nhưng phải kiểm tra dấu tiếng Việt.
+- Font: **Inter** (qua Fonts API, variable 400–800, subset `vietnamese` + `latin`). Giao diện: phong cách corporate sáng — xem `docs/ARCHITECTURE.md` mục 3.
 - Cần bổ sung: logo dạng **SVG**, bản cho nền tối / đơn sắc, favicon.
 
 ## 5. Lộ trình

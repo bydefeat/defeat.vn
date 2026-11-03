@@ -37,24 +37,13 @@ export default defineConfig({
 
   fonts: [
     {
-      // Chữ nội dung: Inter — tối ưu đọc màn hình, hỗ trợ đầy đủ tiếng Việt.
+      // Inter — font giao diện doanh nghiệp, đọc tốt trên màn hình, hỗ trợ đầy đủ tiếng Việt.
       provider: fontProviders.google(),
       name: 'Inter',
       cssVariable: '--font-inter',
       // Dải weight → 1 file variable cho mỗi subset.
-      weights: ['400 600'],
-      // 'fallback': chặn tối đa ~100ms rồi mới dùng font dự phòng → font đã cache hiển thị ngay, không "nháy" đổi font.
-      display: 'fallback',
-      styles: ['normal'],
-      subsets: ['vietnamese', 'latin'],
-      fallbacks: ['system-ui', 'sans-serif'],
-    },
-    {
-      // Chữ tiêu đề: Inter Tight — cùng họ với Inter, khoảng chữ chặt cho tiêu đề lớn.
-      provider: fontProviders.google(),
-      name: 'Inter Tight',
-      cssVariable: '--font-inter-tight',
-      weights: ['600 700'],
+      weights: ['400 800'],
+      // 'fallback': chặn tối đa ~100ms → font đã cache hiển thị ngay, không đổi font giữa chừng.
       display: 'fallback',
       styles: ['normal'],
       subsets: ['vietnamese', 'latin'],

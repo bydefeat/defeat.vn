@@ -5,28 +5,21 @@ import { localizePath, useTranslations } from '@i18n/utils';
 import type { Service } from '../data';
 
 interface Props { service: Service; locale: Locale; index?: number; total?: number; headingLevel?: 'h2' | 'h3' }
-const { service, locale, index, total, headingLevel: H = 'h3' } = Astro.props;
+const { service, locale, index, headingLevel: H = 'h3' } = Astro.props;
 const t = useTranslations(locale);
 const href = localizePath(`/services/${service.slug}`, locale);
 ---
 
-<article class="fx-corners group flex h-full flex-col border border-base-300 bg-base-100 p-6 transition-colors duration-300 hover:border-base-content/25 sm:p-7" data-reveal="stair">
+<article class="card-base card-hover p-6" data-reveal>
   <div class="flex items-start justify-between">
-    <div class="fx-icon flex size-12 items-center justify-center bg-neutral text-primary transition-colors duration-300">
-      <Icon name={service.icon} />
-    </div>
-    {index !== undefined && (
-      <span class="num text-sm font-semibold text-base-content/30">
-        {String(index + 1).padStart(2, '0')}{total ? ` / ${String(total).padStart(2, '0')}` : ''}
-      </span>
-    )}
+    <span class="icon-chip"><Icon name={service.icon} class="size-5" /></span>
+    {index !== undefined && <span class="rounded bg-base-200 px-2 py-0.5 text-xs font-bold text-muted">{String(index + 1).padStart(2, '0')}</span>}
   </div>
-  <H class="t-h3 mt-7">
+  <H class="card-title t-h3 mt-5">
     <a href={href} class="after:absolute after:inset-0">{service.title[locale]}</a>
   </H>
-  <p class="mt-2.5 flex-1 text-[15px] text-base-content/65">{service.summary[locale]}</p>
-  <span class="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-base-content/70 transition-colors group-hover:text-primary">
-    {t('cta.viewDetail')}
-    <Icon name="arrowRight" class="size-4 transition-transform duration-500 group-hover:translate-x-1.5" />
+  <p class="mt-2 flex-1 text-[15px] text-muted">{service.summary[locale]}</p>
+  <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
+    {t('cta.viewDetail')} <Icon name="arrowRight" class="size-4" />
   </span>
 </article>

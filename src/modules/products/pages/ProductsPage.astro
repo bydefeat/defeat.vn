@@ -26,7 +26,7 @@ const crumbs = [
       {/* Bộ lọc thuần CSS (radio + :has) — không cần JavaScript, nội dung vẫn đầy đủ cho SEO. */}
       {
         usedCategories.length > 1 && (
-          <fieldset class="filter mb-12 gap-2" aria-label={text.filter} data-reveal="slide">
+          <fieldset class="filter mb-10 gap-2" aria-label={text.filter} data-reveal>
             <input class="btn btn-sm filter-reset" type="radio" name="product-cat" value="all" aria-label={text.all} checked />
             {usedCategories.map((c) => (
               <input class="btn btn-sm checked:btn-primary" type="radio" name="product-cat" value={c} aria-label={text.categories[c]} />

@@ -1,10 +1,8 @@
 ---
 /**
- * Header enterprise (sticky):
- *  - Logo · menu chính · mega menu Dịch vụ · đổi ngôn ngữ · CTA.
- *  - Mega menu: mở bằng hover (chuột) HOẶC nút mũi tên riêng (bàn phím/cảm ứng, aria-expanded).
- *  - Menu mobile: panel toàn màn hình (<details>), dịch vụ dạng danh sách con, ngôn ngữ, CTA, liên hệ.
- *  - Thanh tiến trình cuộn ở mép dưới (CSS scroll-driven).
+ * Header (sticky): logo · menu chính (dropdown Dịch vụ) · đổi ngôn ngữ · CTA.
+ * Dropdown mở bằng hover (chuột) hoặc nút mũi tên (bàn phím/cảm ứng, aria-expanded).
+ * Menu mobile: panel (<details>), dịch vụ dạng danh sách con, ngôn ngữ, CTA.
  * Hành vi: src/shared/motion/header.ts
  */
 import { MAIN_NAV, SITE } from '@config/site';
@@ -24,78 +22,57 @@ const t = useTranslations(locale);
 const href = (p: string) => localizePath(p, locale);
 const isActive = (navPath: string) => path === navPath || path.startsWith(navPath + '/');
 const langHref = (l: Locale) => localizePath(availableLocales.includes(l) ? path : '/', l);
-const navLink = 'link-dither inline-flex h-10 items-center text-[15px] font-medium transition-colors hover:text-base-content';
 ---
 
-<header class="site-header sticky top-0 z-50" data-site-header>
-  <!-- Nền tách lớp, đặc. Không dùng backdrop-filter: view-transition-name khiến header thành backdrop root nên blur không có tác dụng. -->
-  <div class="header-bg pointer-events-none absolute inset-0 -z-10 bg-base-100" aria-hidden="true"></div>
-
-  <nav class="container-x relative flex h-[var(--header-h)] items-center gap-6 xl:gap-10" aria-label="Main">
+<header class="site-header sticky top-0 z-50 border-b border-base-300 bg-base-100" data-site-header>
+  <nav class="container-x relative flex h-[var(--header-h)] items-center gap-8" aria-label="Main">
     <a href={href('/')} class="flex shrink-0 items-center py-2" aria-label={`DEFEAT — ${t('nav.home')}`}>
       <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" class="h-6 w-auto lg:h-7" fetchpriority="high" />
     </a>
 
     <!-- Desktop -->
-    <ul class="hidden flex-1 items-center gap-6 lg:flex xl:gap-8">
+    <ul class="hidden flex-1 items-center gap-7 lg:flex">
       {
         MAIN_NAV.map((item) =>
           item.key === 'services' ? (
-            <li class="nav-item flex items-center gap-0.5" data-mega>
-              <a
-                href={href(item.path)}
-                class:list={[navLink, isActive(item.path) ? 'text-base-content' : 'text-base-content/70']}
-                aria-current={isActive(item.path) ? 'page' : undefined}
-              >
+            <li class="nav-item relative flex items-center" data-mega>
+              <a href={href(item.path)} class="nav-link" aria-current={isActive(item.path) ? 'page' : undefined}>
                 {t(`nav.${item.key}`)}
               </a>
               <button
                 type="button"
-                class="flex size-7 items-center justify-center text-base-content/60 transition-colors hover:text-base-content"
+                class="flex size-7 items-center justify-center text-base-content/60 hover:text-primary"
                 aria-expanded="false"
-                aria-controls="mega-services"
+                aria-controls="dropdown-services"
                 aria-label={t('header.openServices')}
                 data-mega-toggle
               >
-                <svg class="chev size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                <svg class="chev size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
               </button>
-              <div class="mega w-[min(880px,calc(100%-4rem))]" id="mega-services">
-                <div class="grid grid-cols-12 overflow-hidden border border-base-300 bg-base-100 shadow-[0_24px_48px_-24px_rgba(10,10,11,0.25)]">
-                  <div class="relative col-span-4 overflow-hidden bg-neutral p-7 text-neutral-content">
-                    <span class="dither dither-13 pointer-events-none absolute inset-0 text-primary/50 [mask-size:16px]" aria-hidden="true"></span>
-                    <div class="relative flex h-full flex-col">
-                      <p class="eyebrow">{t('nav.services')}</p>
-                      <p class="t-h3 mt-4 text-neutral-content">{t('header.servicesIntro')}</p>
-                      <a href={href('/services')} class="btn btn-primary btn-sm mt-auto self-start">
-                        {t('header.allServices')} <Icon name="arrowRight" class="arrow size-4" />
-                      </a>
-                    </div>
-                  </div>
-                  <ul class="col-span-8 grid grid-cols-2 gap-px bg-base-300">
+              <div class="dropdown-panel w-[680px]" id="dropdown-services">
+                <div class="rounded-box border border-base-300 bg-base-100 p-3 shadow-[0_16px_40px_-16px_rgba(19,32,51,0.25)]">
+                  <ul class="grid grid-cols-2 gap-1">
                     {SERVICES.map((s) => (
                       <li>
-                        <a href={href(`/services/${s.slug}`)} class="group/item flex h-full items-start gap-3.5 bg-base-100 p-4 transition-colors hover:bg-base-200 focus-visible:bg-base-200">
-                          <span class="flex size-9 shrink-0 items-center justify-center bg-base-200 text-base-content transition-colors group-hover/item:bg-primary group-hover/item:text-primary-content">
-                            <Icon name={s.icon} class="size-[18px]" />
-                          </span>
+                        <a href={href(`/services/${s.slug}`)} class="group/item flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-base-200">
+                          <span class="icon-chip size-9"><Icon name={s.icon} class="size-[18px]" /></span>
                           <span>
-                            <span class="block text-sm font-semibold leading-snug">{s.title[locale]}</span>
-                            <span class="mt-1 line-clamp-2 block text-[13px] leading-relaxed text-base-content/60">{s.summary[locale]}</span>
+                            <span class="block text-sm font-semibold group-hover/item:text-primary">{s.title[locale]}</span>
+                            <span class="mt-0.5 line-clamp-2 block text-[13px] leading-snug text-muted">{s.summary[locale]}</span>
                           </span>
                         </a>
                       </li>
                     ))}
                   </ul>
+                  <a href={href('/services')} class="mt-2 flex items-center justify-between rounded-lg bg-base-200 px-4 py-3 text-sm font-semibold transition-colors hover:text-primary">
+                    {t('header.allServices')} <Icon name="arrowRight" class="size-4" />
+                  </a>
                 </div>
               </div>
             </li>
           ) : (
             <li>
-              <a
-                href={href(item.path)}
-                class:list={[navLink, isActive(item.path) ? 'text-base-content' : 'text-base-content/70']}
-                aria-current={isActive(item.path) ? 'page' : undefined}
-              >
+              <a href={href(item.path)} class="nav-link" aria-current={isActive(item.path) ? 'page' : undefined}>
                 {t(`nav.${item.key}`)}
               </a>
             </li>
@@ -104,35 +81,35 @@ const navLink = 'link-dither inline-flex h-10 items-center text-[15px] font-medi
       }
     </ul>
 
-    <div class="ml-auto hidden items-center gap-5 lg:flex">
-      <div class="flex items-center border border-base-300 p-0.5 text-xs font-semibold" role="group" aria-label={t('common.language')}>
+    <div class="ml-auto hidden items-center gap-4 lg:flex">
+      <div class="flex items-center gap-1 text-[13px] font-semibold" role="group" aria-label={t('common.language')}>
+        <Icon name="globe" class="mr-1 size-4 text-muted" />
         {
-          LOCALES.map((l) => (
-            <a
-              href={langHref(l)}
-              hreflang={LOCALE_META[l].hreflang}
-              lang={LOCALE_META[l].hreflang}
-              title={LOCALE_META[l].label}
-              class:list={['flex h-7 min-w-9 items-center justify-center px-2 transition-colors', l === locale ? 'bg-base-content text-base-100' : 'text-base-content/60 hover:text-base-content']}
-              aria-current={l === locale ? 'true' : undefined}
-            >
-              {l.toUpperCase()}
-            </a>
+          LOCALES.map((l, i) => (
+            <>
+              {i > 0 && <span class="text-base-300" aria-hidden="true">|</span>}
+              <a
+                href={langHref(l)}
+                hreflang={LOCALE_META[l].hreflang}
+                lang={LOCALE_META[l].hreflang}
+                title={LOCALE_META[l].label}
+                class:list={['px-1 py-1 transition-colors', l === locale ? 'text-primary' : 'text-muted hover:text-base-content']}
+                aria-current={l === locale ? 'true' : undefined}
+              >
+                {l.toUpperCase()}
+              </a>
+            </>
           ))
         }
       </div>
-      <a href={href('/contact')} class="btn btn-primary" data-magnetic="0.15">
-        {t('cta.quote')} <Icon name="arrowRight" class="arrow size-4" />
-      </a>
+      <a href={href('/contact')} class="btn btn-primary">{t('cta.quote')}</a>
     </div>
 
     <!-- Mobile -->
     <details class="mobile-menu ml-auto lg:hidden" data-mobile-menu>
-      <summary class="-mr-2 flex size-11 cursor-pointer list-none items-center justify-center" aria-label={t('nav.menu')}>
-        <span class="relative block h-3 w-6" aria-hidden="true">
-          <span class="absolute left-0 top-0 h-0.5 w-6 bg-current transition-transform duration-300 [.mobile-menu[open]_&]:translate-y-[5px] [.mobile-menu[open]_&]:rotate-45"></span>
-          <span class="absolute bottom-0 left-0 h-0.5 w-6 bg-current transition-transform duration-300 [.mobile-menu[open]_&]:-translate-y-[5px] [.mobile-menu[open]_&]:-rotate-45"></span>
-        </span>
+      <summary class="-mr-2 flex size-11 cursor-pointer list-none items-center justify-center rounded-lg" aria-label={t('nav.menu')}>
+        <svg class="size-6 [.mobile-menu[open]_&]:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        <svg class="hidden size-6 [.mobile-menu[open]_&]:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
       </summary>
       <div class="mobile-panel absolute inset-x-0 top-full h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain border-t border-base-300 bg-base-100">
         <div class="container-x flex min-h-full flex-col pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2">
@@ -140,23 +117,23 @@ const navLink = 'link-dither inline-flex h-10 items-center text-[15px] font-medi
             {
               MAIN_NAV.map((item) =>
                 item.key === 'services' ? (
-                  <li class="m-item border-b border-base-300">
+                  <li class="border-b border-base-300">
                     <details class="m-sub">
-                      <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between text-lg font-semibold">
+                      <summary class="flex min-h-13 cursor-pointer list-none items-center justify-between text-base font-semibold">
                         {t(`nav.${item.key}`)}
-                        <svg class="chev size-5 text-base-content/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                        <svg class="chev size-5 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
                       </summary>
-                      <ul class="grid gap-1 pb-4">
+                      <ul class="grid gap-0.5 pb-3">
                         {SERVICES.map((s) => (
                           <li>
-                            <a href={href(`/services/${s.slug}`)} class="flex min-h-11 items-center gap-3 px-1 text-[15px] text-base-content/75">
+                            <a href={href(`/services/${s.slug}`)} class="flex min-h-11 items-center gap-3 rounded-lg px-2 text-[15px] text-base-content/80 active:bg-base-200">
                               <Icon name={s.icon} class="size-4 text-primary" />
                               {s.title[locale]}
                             </a>
                           </li>
                         ))}
                         <li>
-                          <a href={href('/services')} class="flex min-h-11 items-center gap-2 px-1 text-[15px] font-semibold text-primary">
+                          <a href={href('/services')} class="flex min-h-11 items-center gap-2 px-2 text-[15px] font-semibold text-primary">
                             {t('header.allServices')} <Icon name="arrowRight" class="size-4" />
                           </a>
                         </li>
@@ -164,10 +141,10 @@ const navLink = 'link-dither inline-flex h-10 items-center text-[15px] font-medi
                     </details>
                   </li>
                 ) : (
-                  <li class="m-item border-b border-base-300">
+                  <li class="border-b border-base-300">
                     <a
                       href={href(item.path)}
-                      class:list={['flex min-h-14 items-center text-lg font-semibold', isActive(item.path) && 'text-primary']}
+                      class:list={['flex min-h-13 items-center text-base font-semibold', isActive(item.path) && 'text-primary']}
                       aria-current={isActive(item.path) ? 'page' : undefined}
                     >
                       {t(`nav.${item.key}`)}
@@ -176,35 +153,31 @@ const navLink = 'link-dither inline-flex h-10 items-center text-[15px] font-medi
                 ),
               )
             }
-            <li class="m-item border-b border-base-300">
-              <a href={href('/contact')} class="flex min-h-14 items-center text-lg font-semibold">{t('nav.contact')}</a>
+            <li class="border-b border-base-300">
+              <a href={href('/contact')} class="flex min-h-13 items-center text-base font-semibold">{t('nav.contact')}</a>
             </li>
           </ul>
 
-          <div class="m-item mt-auto space-y-5 pt-8">
-            <a href={href('/contact')} class="btn btn-primary btn-block btn-lg">
-              {t('cta.quote')} <Icon name="arrowRight" class="size-5" />
-            </a>
+          <div class="mt-auto space-y-4 pt-8">
+            <a href={href('/contact')} class="btn btn-primary btn-block btn-lg">{t('cta.quote')}</a>
             <div class="flex items-center justify-between gap-4 text-sm">
-              <div class="flex items-center border border-base-300 p-0.5 text-xs font-semibold" role="group" aria-label={t('common.language')}>
+              <div class="flex items-center rounded-lg border border-base-300 p-0.5 text-xs font-semibold" role="group" aria-label={t('common.language')}>
                 {LOCALES.map((l) => (
                   <a
                     href={langHref(l)}
                     hreflang={LOCALE_META[l].hreflang}
-                    class:list={['flex h-9 min-w-11 items-center justify-center px-3', l === locale ? 'bg-base-content text-base-100' : 'text-base-content/60']}
+                    class:list={['flex h-9 min-w-11 items-center justify-center rounded-md px-3', l === locale ? 'bg-primary text-primary-content' : 'text-muted']}
                     aria-current={l === locale ? 'true' : undefined}
                   >
                     {l.toUpperCase()}
                   </a>
                 ))}
               </div>
-              <a href={`mailto:${SITE.email}`} class="text-base-content/70">{SITE.email}</a>
+              <a href={`mailto:${SITE.email}`} class="text-muted">{SITE.email}</a>
             </div>
           </div>
         </div>
       </div>
     </details>
   </nav>
-
-  <div class="scroll-progress absolute inset-x-0 bottom-0 h-0.5 bg-primary" aria-hidden="true"></div>
 </header>

@@ -1,5 +1,5 @@
 ---
-/** Hero trang con: nền tối, lưới kỹ thuật, dither tĩnh, breadcrumb, h1 hiện bằng dither wipe. */
+/** Đầu trang con: nền xám-xanh nhạt, breadcrumb, nhãn, h1, mô tả. */
 import Breadcrumbs, { type Crumb } from './Breadcrumbs.astro';
 
 interface Props {
@@ -11,17 +11,12 @@ interface Props {
 const { eyebrow, title, description, crumbs } = Astro.props;
 ---
 
-<section class="on-dark relative overflow-hidden bg-neutral text-neutral-content">
-  <div class="grid-lines pointer-events-none absolute inset-0" aria-hidden="true"></div>
-  <div class="pointer-events-none absolute inset-y-0 right-0 w-3/4 [mask-image:linear-gradient(to_left,#000_10%,transparent)] sm:w-2/3" aria-hidden="true">
-    <span class="dither dither-13 absolute inset-0 text-primary/55"></span>
+<section class="border-b border-base-300 bg-base-200">
+  <div class="container-x py-10 sm:py-14">
+    <Breadcrumbs items={crumbs} />
+    {eyebrow && <p class="t-label mt-8 text-primary">{eyebrow}</p>}
+    <h1 class:list={['t-h1 max-w-4xl', eyebrow ? 'mt-2' : 'mt-8']}>{title}</h1>
+    {description && <p class="t-lead mt-4 max-w-3xl text-muted">{description}</p>}
+    <slot />
   </div>
-  <div class="container-x relative pb-28 pt-12 sm:pb-36 sm:pt-16">
-    <div class="ld-slide"><Breadcrumbs items={crumbs} /></div>
-    {eyebrow && <p class="eyebrow ld-draw ld-d1 mt-10">{eyebrow}</p>}
-    <h1 class="t-h1 ld-rise ld-d2 mt-4 max-w-4xl">{title}</h1>
-    {description && <p class="t-lead ld-dissolve ld-d3 mt-6 max-w-3xl text-neutral-content/70">{description}</p>}
-    <div class="ld-pop ld-d4"><slot /></div>
-  </div>
-  <span class="dither-edge dither-edge-bottom text-base-100" aria-hidden="true"></span>
 </section>

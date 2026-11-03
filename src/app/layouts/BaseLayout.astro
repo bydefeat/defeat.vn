@@ -1,6 +1,6 @@
 ---
 /**
- * Layout gốc (app shell): <html>, <head> (SEO, font, icon), header, footer, hệ thống motion.
+ * Layout gốc (app shell): <html>, <head> (SEO, font, icon), topbar, header, footer, script giao diện.
  * Mọi trang đều đi qua layout này.
  */
 import '@/styles/global.css';
@@ -34,7 +34,6 @@ const t = useTranslations(locale);
     <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — ${t('nav.news')}`} href={localizePath('/rss.xml', locale)} />
     <!-- Preload đủ cả subset latin + vietnamese: chuyển ngôn ngữ không phải tải font mới giữa chừng. -->
     <Font cssVariable="--font-inter" preload />
-    <Font cssVariable="--font-inter-tight" preload />
     <Seo {...props} locale={locale} />
     <slot name="head" />
   </head>

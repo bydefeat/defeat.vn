@@ -1,10 +1,5 @@
 ---
-/**
- * Footer enterprise + motion:
- *  - Khối liên hệ lớn, các cột liên kết (xuất hiện so le).
- *  - Wordmark DEFEAT dither bằng canvas, phản ứng theo con trỏ (fallback: PNG dither tĩnh).
- *  - Thanh dưới: bản quyền, pháp lý, nút lên đầu trang.
- */
+/** Footer: thông tin công ty, các cột liên kết, thanh bản quyền. Nền sáng. */
 import { SITE } from '@config/site';
 import type { Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
@@ -49,27 +44,24 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
 
 {!hideCtaBand && <CtaBand locale={locale} />}
 
-<footer class="on-dark relative overflow-hidden bg-neutral text-neutral-content">
-  <div class="grid-lines pointer-events-none absolute inset-0 text-neutral-content" aria-hidden="true"></div>
-
-  <div class="container-x relative grid gap-12 pb-10 pt-16 sm:pt-20 lg:grid-cols-12 lg:gap-14">
-    <div class="lg:col-span-5" data-reveal="dissolve">
-      <p class="eyebrow">{t('footer.ready')}</p>
-      <a href={`mailto:${SITE.email}`} class="group mt-5 inline-flex max-w-full items-center gap-3 break-all font-display text-[clamp(1.625rem,1.2rem+1.8vw,2.5rem)] font-semibold leading-tight tracking-tight">
-        <span class="link-dither">{SITE.email}</span>
-        <Icon name="arrowRight" class="size-6 shrink-0 text-primary transition-transform duration-500 group-hover:translate-x-1.5" />
+<footer class="border-t border-base-300 bg-base-200">
+  <div class="container-x grid gap-10 py-14 lg:grid-cols-12">
+    <div class="lg:col-span-4">
+      <a href={href('/')} class="inline-flex" aria-label="DEFEAT">
+        <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" loading="lazy" class="h-7 w-auto" />
       </a>
-      <p class="mt-6 max-w-sm text-sm text-neutral-content/60">{t('footer.tagline')}</p>
-      <address class="mt-6 space-y-1.5 text-sm not-italic text-neutral-content/70">
-        <div><a class="link-dither hover:text-primary" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></div>
-        <div>{SITE.address.locality}, Việt Nam</div>
-      </address>
+      <p class="mt-4 max-w-sm text-sm text-muted">{t('footer.tagline')}</p>
+      <ul class="mt-6 space-y-2 text-sm">
+        <li class="flex items-center gap-2.5"><Icon name="mapPin" class="size-4 text-primary" /><span>{SITE.address.locality}, Việt Nam</span></li>
+        <li class="flex items-center gap-2.5"><Icon name="phone" class="size-4 text-primary" /><a class="hover:text-primary" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></li>
+        <li class="flex items-center gap-2.5"><Icon name="mail" class="size-4 text-primary" /><a class="hover:text-primary" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+      </ul>
       {
         socials.length > 0 && (
           <ul class="mt-6 flex gap-2" aria-label={t('footer.followUs')}>
             {socials.map(([name, url]) => (
               <li>
-                <a href={url} rel="noopener" target="_blank" class="btn btn-sm btn-outline btn-dither tone-dark border-white/25 capitalize text-neutral-content">
+                <a href={url} rel="noopener" target="_blank" class="btn btn-sm btn-outline border-base-300 bg-base-100 capitalize hover:border-primary hover:bg-primary hover:text-primary-content">
                   {name}
                 </a>
               </li>
@@ -79,18 +71,15 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
       }
     </div>
 
-    <div class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:col-span-7" data-reveal-group="90">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:col-span-8">
       {
         columns.map((col) => (
-          <nav aria-label={col.title} class="first:col-span-2 sm:first:col-span-1" data-reveal="slide">
-            <h2 class="t-label text-neutral-content/45">{col.title}</h2>
-            <ul class="mt-4 space-y-1 text-[15px]">
+          <nav aria-label={col.title} class="first:col-span-2 sm:first:col-span-1">
+            <h2 class="text-sm font-bold">{col.title}</h2>
+            <ul class="mt-4 space-y-2.5 text-sm">
               {col.links.map((l) => (
                 <li>
-                  <a class="group inline-flex min-h-9 items-center text-neutral-content/75 transition-colors hover:text-neutral-content" href={l.href}>
-                    <span class="mr-0 h-px w-0 bg-primary transition-all duration-300 group-hover:mr-2 group-hover:w-3" aria-hidden="true" />
-                    {l.label}
-                  </a>
+                  <a class="text-muted transition-colors hover:text-primary" href={l.href}>{l.label}</a>
                 </li>
               ))}
             </ul>
@@ -100,25 +89,14 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
     </div>
   </div>
 
-  <!-- Wordmark dither -->
-  <div class="relative aspect-[1354/300] w-full select-none" aria-hidden="true">
-    <img src="/brand/defeat-text_dither.png" alt="" width="1200" height="248" loading="lazy" class="canvas-fallback pixelated absolute inset-x-[2%] bottom-[4%] w-[96%] opacity-40" />
-    <canvas data-dither="wordmark" data-src="/brand/defeat-text.png" class="pixelated absolute inset-0 size-full"></canvas>
-  </div>
-
-  <div class="relative border-t border-white/10">
-    <div class="container-x flex flex-col gap-4 py-6 text-[13px] text-neutral-content/55 md:flex-row md:items-center md:justify-between">
+  <div class="border-t border-base-300">
+    <div class="container-x flex flex-col gap-3 py-5 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between">
       <p>© {year} {SITE.legalName}. {t('footer.rights')}</p>
-      <ul class="flex gap-6">
-        <li><a class="transition-colors hover:text-neutral-content" href={href('/privacy')}>{t('footer.privacy')}</a></li>
-        <li><a class="transition-colors hover:text-neutral-content" href={href('/terms')}>{t('footer.terms')}</a></li>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2">
+        <li><a class="hover:text-primary" href={href('/privacy')}>{t('footer.privacy')}</a></li>
+        <li><a class="hover:text-primary" href={href('/terms')}>{t('footer.terms')}</a></li>
+        <li><a class="inline-flex items-center gap-1 hover:text-primary" href="#top">{t('footer.backToTop')} <Icon name="arrowUp" class="size-3.5" /></a></li>
       </ul>
-      <a href="#top" class="group inline-flex items-center gap-3 transition-colors hover:text-neutral-content">
-        {t('footer.backToTop')}
-        <span class="flex size-9 items-center justify-center border border-white/20 transition-colors duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-content">
-          <Icon name="arrowUp" class="size-4 transition-transform duration-300 group-hover:-translate-y-0.5" />
-        </span>
-      </a>
     </div>
   </div>
 </footer>

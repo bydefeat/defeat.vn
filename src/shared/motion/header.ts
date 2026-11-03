@@ -1,9 +1,10 @@
 /**
- * Header:
- *  - data-scrolled: nền đặc + viền khi đã cuộn.
- *  - data-hidden: ẩn khi cuộn xuống, hiện khi cuộn lên (không ẩn khi menu/mega đang mở).
- *  - Mega menu: nút [data-mega-toggle] mở/đóng (aria-expanded), Esc / click ra ngoài để đóng.
- *  - Menu mobile (<details>): khoá cuộn trang, Esc để đóng, đóng khi chuyển sang desktop.
+ * Header (sticky, luôn hiển thị):
+ *  - data-scrolled: thêm đường viền + bóng nhẹ khi đã cuộn.
+ *  - Dropdown "Dịch vụ": mở bằng hover (chuột) hoặc nút mũi tên [data-mega-toggle] (bàn phím/cảm ứng, aria-expanded);
+ *    Esc / click ra ngoài để đóng.
+ *  - Menu mobile (<details>): khoá cuộn trang, Esc để đóng, tự đóng khi chuyển sang desktop.
+ *  - Quay lại từ bfcache (nút Back): đóng mọi menu, mở khoá cuộn.
  */
 export function initHeader() {
   const header = document.querySelector<HTMLElement>('[data-site-header]');
@@ -32,15 +33,9 @@ export function initHeader() {
     if (!header.contains(e.target as Node)) closeAllMega();
   });
 
-  let lastY = window.scrollY;
   let ticking = false;
   const update = () => {
-    const y = window.scrollY;
-    header.dataset.scrolled = String(y > 8);
-    const busy = menu?.open || megaItems.some((i) => i.dataset.open === 'true') || header.matches(':hover');
-    if (!busy && y > lastY + 6 && y > 240) header.dataset.hidden = 'true';
-    else if (y < lastY - 6 || y <= 240) header.dataset.hidden = 'false';
-    lastY = y;
+    header.dataset.scrolled = String(window.scrollY > 4);
     ticking = false;
   };
   update();
@@ -54,24 +49,17 @@ export function initHeader() {
     },
     { passive: true },
   );
-  header.addEventListener('focusin', () => (header.dataset.hidden = 'false'));
 
-  menu?.addEventListener('toggle', () => {
-    document.documentElement.classList.toggle('menu-open', menu.open);
-    if (menu.open) header.dataset.hidden = 'false';
-  });
+  menu?.addEventListener('toggle', () => document.documentElement.classList.toggle('menu-open', menu.open));
   window.matchMedia('(min-width: 1024px)').addEventListener('change', (mq) => {
     if (mq.matches && menu?.open) menu.open = false;
   });
-  // Quay lại trang từ bfcache (nút Back): đóng mọi menu, mở khoá cuộn, hiện header.
   window.addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
     if (menu) menu.open = false;
     document.documentElement.classList.remove('menu-open');
     closeAllMega();
-    header.dataset.hidden = 'false';
   });
-
   window.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (menu?.open) {

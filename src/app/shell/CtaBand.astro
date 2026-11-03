@@ -1,5 +1,5 @@
 ---
-/** Dải CTA trước footer: nền đỏ + dither trôi, tiêu đề lớn, nút nam châm. */
+/** Dải CTA trước footer: nền navy, tiêu đề + mô tả + 2 nút. */
 import type { Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
 import Icon from '@shared/components/Icon.astro';
@@ -9,20 +9,17 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 
-<section class="on-red relative overflow-hidden bg-primary text-primary-content" aria-labelledby="cta-band-title">
-  <span class="dither dither-lg pointer-events-none absolute inset-0 text-neutral/20" aria-hidden="true"></span>
-  <span class="dither-edge dither-edge-top text-base-100" aria-hidden="true"></span>
-  <div class="container-x relative grid items-end gap-8 pb-16 pt-28 sm:pb-20 sm:pt-36 lg:grid-cols-12 lg:gap-10">
-    <div class="lg:col-span-8" data-reveal-group="120">
-      <p class="t-label text-primary-content/80" data-reveal="slide">{t('cta.contact')}</p>
-      <h2 id="cta-band-title" class="t-h1 mt-4" data-reveal="wipe">{t('ctaBand.title')}</h2>
-      <p class="t-lead mt-5 max-w-2xl text-primary-content/85" data-reveal="dissolve">{t('ctaBand.desc')}</p>
+<section class="bg-secondary text-secondary-content" aria-labelledby="cta-band-title">
+  <div class="container-x flex flex-col gap-8 py-14 sm:py-16 lg:flex-row lg:items-center lg:justify-between" data-reveal>
+    <div class="max-w-2xl">
+      <h2 id="cta-band-title" class="t-h2">{t('ctaBand.title')}</h2>
+      <p class="mt-3 text-secondary-content/75">{t('ctaBand.desc')}</p>
     </div>
-    <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:col-span-4 lg:justify-end" data-reveal-group="120">
-      <a href={localizePath('/contact', locale)} class="btn btn-neutral btn-lg" data-magnetic="0.2" data-reveal="pop">
+    <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
+      <a href={localizePath('/contact', locale)} class="btn btn-primary btn-lg">
         {t('cta.quote')} <Icon name="arrowRight" class="arrow size-5" />
       </a>
-      <a href={localizePath('/services', locale)} class="btn btn-lg btn-outline btn-dither tone-red border-primary-content/60 text-primary-content" data-reveal="pop">
+      <a href={localizePath('/services', locale)} class="btn btn-lg btn-outline border-white/40 text-secondary-content hover:border-white hover:bg-white hover:text-secondary">
         {t('nav.services')}
       </a>
     </div>
