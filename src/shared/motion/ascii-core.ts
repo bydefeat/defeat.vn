@@ -1,8 +1,3 @@
-/**
- * Lõi vẽ ASCII art (dùng chung cho Web Worker và luồng chính).
- * Trường ký tự ` .:-=+*#%@` theo sóng nhiễu trôi chậm + logo mờ + vùng "nở" màu nhấn quanh con trỏ.
- * Ký tự vẽ sẵn vào glyph atlas (2 màu) rồi sao chép bằng drawImage.
- */
 export const RAMP = ' .:-=+*#%@';
 export const CELL_W = 10;
 export const CELL_H = 17;
@@ -70,7 +65,7 @@ export class AsciiCore {
       for (let x = 0; x < cols; x++) {
         const nx = x / cols;
         let v = 0.5 + 0.25 * Math.sin(nx * 9 + t * 0.6) * rowWave + 0.25 * Math.sin((nx + ny) * 12 - t * 0.9);
-        const edge = Math.min(1, Math.abs(nx - 0.5) * 2.4); // nhạt ở giữa để chữ CTA dễ đọc
+        const edge = Math.min(1, Math.abs(nx - 0.5) * 2.4);
         v *= 0.25 + 0.75 * edge;
         if (this.logo) v = Math.max(v, this.logo[y * cols + x]! * 0.5);
         const px = x * CELL_W;

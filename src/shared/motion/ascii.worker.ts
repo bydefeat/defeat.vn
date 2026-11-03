@@ -1,5 +1,4 @@
 /// <reference lib="webworker" />
-/** Web Worker vẽ nền ASCII trên OffscreenCanvas → luồng chính rảnh hoàn toàn. */
 import { AsciiCore } from './ascii-core';
 
 let core: AsciiCore | null = null;

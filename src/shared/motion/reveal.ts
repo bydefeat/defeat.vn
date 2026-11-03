@@ -1,8 +1,3 @@
-/**
- * Fade-up nhẹ khi cuộn tới (CSS: transform + opacity).
- * Chống nháy: CHỈ phần tử nằm dưới màn hình lúc tải mới bị ẩn (data-pending); phần đã thấy giữ nguyên.
- * [data-reveal-group="ms"]: các con được so le qua biến --reveal-delay.
- */
 import { prefersReducedMotion } from './env';
 
 export function initReveal() {
@@ -30,7 +25,7 @@ export function initReveal() {
   );
   for (const el of items) {
     const r = el.getBoundingClientRect();
-    if (r.top < vh && r.bottom > 0) continue; // đã thấy lúc tải → không ẩn
+    if (r.top < vh && r.bottom > 0) continue;
     el.dataset.pending = '';
     io.observe(el);
   }

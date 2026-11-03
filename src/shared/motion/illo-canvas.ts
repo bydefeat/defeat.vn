@@ -1,23 +1,11 @@
-/**
- * Renderer canvas cho minh hoạ nét chấm (cơ chế giống các template Framer kiểu "Jet"):
- *  - SVG gốc (đã render sẵn trong HTML, dùng làm fallback khi không có JS) được raster hoá thành 2 lớp:
- *    nét vẽ (lines) và vệt hạt (dots), ở độ phân giải thấp rồi phóng to bằng image-rendering: pixelated
- *    → nét chấm thành hạt pixel sắc nét.
- *  - Lớp nền halftone: chấm toả tia từ tâm, chỉ hiện khi rê chuột.
- *  - Rê chuột vào vùng [data-illo-hover]: nét + hạt chuyển dần sang màu nhấn (--acc), hạt lấp lánh,
- *    halftone hiện lên. Rời chuột: trở về màu mực.
- *  - Chỉ chạy requestAnimationFrame khi đang chuyển đổi/đang rê chuột; đứng yên thì không tốn CPU.
- *  - Đổi theme sáng/tối → vẽ lại với màu mới.
- */
-const SCALE = 1.5; // 1 pixel canvas = 1.5px CSS → hạt pixel to, sắc (giống phong cách Jet)
-const HALF = 0.62; // tỉ lệ độ phân giải lớp halftone
+const SCALE = 1.5;
+const HALF = 0.62;
 
 type RGB = [number, number, number];
 
 function parseColor(css: string, probe: HTMLElement): RGB {
   probe.style.color = css;
   const m = getComputedStyle(probe).color.match(/[\d.]+/g) ?? ['0', '0', '0'];
-  // oklab/oklch có thể trả về dạng khác → dựa vào canvas để chuẩn hoá
   if (!/^rgb/.test(getComputedStyle(probe).color)) {
     const c = document.createElement('canvas').getContext('2d')!;
     c.fillStyle = getComputedStyle(probe).color;
@@ -35,7 +23,6 @@ async function rasterize(svg: SVGSVGElement, keep: 'lines' | 'dots', w: number, 
   clone.setAttribute('height', String(h));
   clone.setAttribute('color', '#ffffff');
   if (keep === 'lines') {
-    // Nét liền mảnh ~1px ở độ phân giải canvas; kết cấu chấm được tạo ở bước vẽ (xen kẽ pixel).
     const lines = clone.querySelector<SVGGElement>('.illo-lines');
     const scale = w / svg.viewBox.baseVal.width;
     lines?.setAttribute('stroke-dasharray', 'none');
@@ -79,7 +66,7 @@ class IlloCanvas {
   private hctx = this.halo.getContext('2d')!;
   private mimg!: ImageData;
   private himg!: ImageData;
-  private t = 0; // tiến độ hover 0..1
+  private t = 0;
   private target = 0;
   private raf = 0;
   private last = 0;
@@ -175,11 +162,9 @@ class IlloCanvas {
       const x = i % w;
       const y = (i / w) | 0;
       const d = dots[i]!;
-      // Kết cấu nét: pixel xen kẽ đậm/nhạt → đường "chấm pixel" như bản in
       const l = lines[i]! * (((x + y) & 1) === 0 ? 1 : 0.38);
       let a = l * (0.62 + 0.38 * t);
       if (d > 0.02) {
-        // hạt: lấp lánh khi rê chuột
         const tw = 0.55 + 0.45 * Math.sin(time * 3.2 + phase[i]!);
         a = Math.max(a, Math.min(1, d * 1.6) * (0.55 * (1 - t) + tw * t));
       }
@@ -191,7 +176,6 @@ class IlloCanvas {
     }
     this.mctx.putImageData(this.mimg, 0, 0);
 
-    // Lớp halftone toả tia (chỉ khi đang hover)
     const hp = this.himg.data;
     if (t > 0.01) {
       const { hw, hh } = this;
@@ -220,7 +204,6 @@ export function initIlloCanvases() {
     const svg = host.querySelector<SVGSVGElement>('svg');
     if (!svg) continue;
     new IlloCanvas(host, svg).init().catch(() => {
-      /* lỗi raster → giữ SVG fallback */
     });
   }
 }

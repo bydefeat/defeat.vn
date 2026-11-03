@@ -1,6 +1,5 @@
 import type { Locale } from '@i18n/config';
 
-/** Nội dung trang chủ. TODO: thay số liệu ở `stats` bằng số liệu thật của DEFEAT. */
 export const homeText: Record<Locale, {
   seoTitle: string; seoDesc: string;
   hero: { eyebrow: string; title: string; highlight: string; desc: string; primary: string; secondary: string; bullets: string[] };

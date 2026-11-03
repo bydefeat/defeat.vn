@@ -1,10 +1,4 @@
 ---
-/**
- * Minh hoạ isometric nét chấm (tranh gốc DEFEAT, sinh bởi scripts/generate-illustrations.mjs).
- * - Không JS: hiển thị SVG nhúng trực tiếp (nét dùng currentColor, tự đổi theo theme).
- * - Có JS: src/shared/motion/illo-canvas.ts raster hoá thành canvas pixel, có hiệu ứng hover
- *   (đổi sang màu nhấn, hạt lấp lánh, halftone toả tia). Vùng kích hoạt hover: phần tử cha [data-illo-hover].
- */
 const files = import.meta.glob<string>('/src/assets/illustrations/*.svg', { query: '?raw', import: 'default', eager: true });
 type Accent = 'red' | 'teal' | 'violet' | 'sky' | 'yellow';
 interface Props { name: string; class?: string; label?: string; accent?: Accent }

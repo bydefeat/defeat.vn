@@ -1,8 +1,3 @@
-/**
- * Chuyển chế độ sáng/tối.
- * - Theme ban đầu được đặt bởi script inline trong <head> (trước khi vẽ → không nháy sai màu).
- * - Nút [data-theme-toggle] đổi theme, lưu localStorage, chuyển màu mượt bằng View Transition (type "theme").
- */
 const KEY = 'defeat-theme';
 
 function apply(theme: 'dark' | 'light') {
@@ -22,7 +17,6 @@ export function initTheme() {
       try {
         localStorage.setItem(KEY, next);
       } catch {
-        /* chế độ riêng tư: bỏ qua */
       }
       const doc = document as Document & {
         startViewTransition?: (o: { update: () => void; types: string[] }) => unknown;
@@ -33,7 +27,6 @@ export function initTheme() {
           doc.startViewTransition({ update: () => apply(next), types: ['theme'] });
           return;
         } catch {
-          /* trình duyệt cũ không nhận object → đổi thẳng */
         }
       }
       apply(next);

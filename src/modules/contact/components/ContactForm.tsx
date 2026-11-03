@@ -1,7 +1,3 @@
-/**
- * CSR ISLAND — form báo giá. Hydrate bằng `client:visible`.
- * Vẫn là <form> HTML chuẩn có `action`, nên khi JS chưa tải xong vẫn gửi được (progressive enhancement).
- */
 import { useState, type SubmitEvent } from 'react';
 import { actions, isInputError } from 'astro:actions';
 import type { ContactFormLabels } from '../i18n';

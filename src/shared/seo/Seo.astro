@@ -1,8 +1,4 @@
 ---
-/**
- * Toàn bộ thẻ SEO trong <head>: title, description, canonical, hreflang,
- * Open Graph, Twitter Card, robots và JSON-LD.
- */
 import { SITE } from '@config/site';
 import { LOCALES, LOCALE_META, DEFAULT_LOCALE, type Locale } from '@i18n/config';
 import { localizePath } from '@i18n/utils';
@@ -12,13 +8,9 @@ export interface SeoProps {
   title: string;
   description: string;
   locale: Locale;
-  /** Đường dẫn KHÔNG gồm prefix ngôn ngữ, vd. "/news/abc". */
   path: string;
-  /** Ngôn ngữ có bản dịch của trang này. Mặc định: tất cả. */
   availableLocales?: readonly Locale[];
-  /** Ngôn ngữ có bản viết thật (hreflang). Mặc định = availableLocales. */
   translations?: readonly Locale[];
-  /** Ngôn ngữ thật của nội dung. Khác `locale` (trang dùng bản dự phòng) → canonical trỏ về bản gốc. */
   contentLocale?: Locale;
   image?: string;
   imageAlt?: string;

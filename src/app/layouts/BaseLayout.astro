@@ -1,8 +1,4 @@
 ---
-/**
- * Layout gốc (app shell): <html>, <head> (SEO, font, icon, theme), header, footer, script giao diện.
- * Mọi trang đều đi qua layout này.
- */
 import '@/styles/global.css';
 import { Font } from 'astro:assets';
 import { SITE } from '@config/site';
@@ -17,9 +13,7 @@ type Props = Omit<SeoProps, 'locale'> & { hideCtaBand?: boolean };
 const props = Astro.props as Props;
 const locale = resolveLocale(Astro.currentLocale);
 const t = useTranslations(locale);
-// Trang đang hiển thị bản dự phòng (chưa có bản dịch) → gắn lang đúng cho nội dung.
 const fallback = props.contentLocale && props.contentLocale !== locale ? props.contentLocale : undefined;
-
 ---
 
 <!doctype html>
@@ -29,7 +23,6 @@ const fallback = props.contentLocale && props.contentLocale !== locale ? props.c
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="color-scheme" content="dark light" />
-    <!-- Theme: đặt TRƯỚC khi vẽ để không nháy sai màu. Mặc định tối; nhớ lựa chọn của người dùng. -->
     <script is:inline>
       (function () {
         var t;
@@ -41,7 +34,6 @@ const fallback = props.contentLocale && props.contentLocale !== locale ? props.c
       })();
     </script>
     <meta name="generator" content={Astro.generator} />
-    <!-- Back/Forward → type "back" cho chuyển trang (pagereveal phải đăng ký sớm, trong <head>). -->
     <script is:inline>
       addEventListener('pagereveal', function (e) {
         var a = window.navigation && navigation.activation;
@@ -52,7 +44,6 @@ const fallback = props.contentLocale && props.contentLocale !== locale ? props.c
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — ${t('nav.news')}`} href={localizePath('/rss.xml', locale)} />
-    <!-- Preload đủ cả subset latin + vietnamese: chuyển ngôn ngữ không phải tải font mới giữa chừng. -->
     <Font cssVariable="--font-inter" preload />
     <Seo {...props} locale={locale} />
     <slot name="head" />

@@ -1,11 +1,3 @@
-/**
- * Nền ASCII art động cho khối CTA ([data-ascii-field]).
- *  - Vẽ trong Web Worker (OffscreenCanvas) khi trình duyệt hỗ trợ → không chiếm luồng chính;
- *    nếu không hỗ trợ: vẽ trên luồng chính ở 12fps.
- *  - Logo (data-ascii-src, PNG có alpha) raster sẵn trên luồng chính rồi gửi sang worker.
- *  - Màu lấy từ CSS (--ascii-ink, --ascii-hot) → theo theme; chỉ chạy khi khối trên màn hình;
- *    prefers-reduced-motion → 1 khung tĩnh.
- */
 import { AsciiCore, CELL_H, CELL_W } from './ascii-core';
 
 export function initAsciiFields() {

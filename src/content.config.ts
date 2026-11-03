@@ -1,6 +1,3 @@
-/**
- * Đăng ký collections. Schema nằm trong từng module (src/modules/<module>/schema.ts).
- */
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { newsSchema } from '@modules/news/schema';

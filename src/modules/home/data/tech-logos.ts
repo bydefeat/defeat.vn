@@ -1,4 +1,3 @@
-/* Tự sinh bởi scripts/generate-tech-logos.mjs — KHÔNG sửa tay. Nguồn SVG: https://thesvg.org */
 export interface TechLogo { slug: string; name: string; color: string; viewBox: string; fillRule?: 'evenodd'; body: string }
 export const TECH_LOGOS: TechLogo[] = [
  {

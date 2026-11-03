@@ -1,5 +1,4 @@
 ---
-/** Đầu trang con: khung nét đứt, vệt sáng nhẹ, breadcrumb, nhãn, h1, mô tả. */
 import Breadcrumbs, { type Crumb } from './Breadcrumbs.astro';
 import UntranslatedNote from './UntranslatedNote.astro';
 
@@ -8,7 +7,6 @@ interface Props {
   title: string;
   description?: string;
   crumbs: Crumb[];
-  /** Nội dung là bản gốc chưa dịch → hiện nhãn báo. */
   untranslated?: boolean;
 }
 const { eyebrow, title, description, crumbs, untranslated = false } = Astro.props;

@@ -7,14 +7,12 @@ export type NewsEntry = CollectionEntry<'news'>;
 
 const isPublished = (e: NewsEntry) => import.meta.env.DEV || !e.data.draft;
 
-/** Bài viết theo ngôn ngữ, mới nhất trước. */
 export async function getNews(locale: Locale, limit?: number): Promise<NewsEntry[]> {
   const all = pickLocalized(await getCollection('news', isPublished), locale);
   const sorted = all.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
   return limit ? sorted.slice(0, limit) : sorted;
 }
 
-/** Ngôn ngữ có bản viết thật cho slug (dùng cho hreflang). */
 export async function getNewsLocales(slug: string): Promise<Locale[]> {
   const all = await getCollection('news', isPublished);
   return all.map((e) => splitId(e.id)).filter((s) => s.slug === slug).map((s) => s.locale);
@@ -23,7 +21,6 @@ export async function getNewsLocales(slug: string): Promise<Locale[]> {
 export const newsSlug = (e: NewsEntry) => splitId(e.id).slug;
 export const newsPath = (e: NewsEntry) => `/news/${newsSlug(e)}`;
 
-/** getStaticPaths cho trang chi tiết (SSG). */
 export async function newsStaticPaths(locale: Locale) {
   const posts = await getNews(locale);
   return Promise.all(

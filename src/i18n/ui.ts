@@ -1,6 +1,5 @@
 import type { Locale } from './config';
 
-/** Chuỗi giao diện dùng chung (header, footer, nút, nhãn). Nội dung riêng từng module nằm trong module đó. */
 const vi = {
   'nav.services': 'Dịch vụ',
   'nav.products': 'Sản phẩm',

@@ -2,7 +2,6 @@ import { SITE } from '@config/site';
 import type { Locale } from '@i18n/config';
 import { LOCALE_META } from '@i18n/config';
 
-/** Các builder JSON-LD (schema.org). Trả về object thuần, Seo.astro sẽ serialize. */
 export type JsonLd = Record<string, unknown>;
 
 const abs = (path: string) => new URL(path, SITE.url).toString();

@@ -1,11 +1,3 @@
-/**
- * Header (sticky, luôn hiển thị):
- *  - data-scrolled: thêm đường viền + bóng nhẹ khi đã cuộn.
- *  - Dropdown "Dịch vụ": mở bằng hover (chuột) hoặc nút mũi tên [data-mega-toggle] (bàn phím/cảm ứng, aria-expanded);
- *    Esc / click ra ngoài để đóng.
- *  - Menu mobile (<details>): khoá cuộn trang, Esc để đóng, tự đóng khi chuyển sang desktop.
- *  - Quay lại từ bfcache (nút Back): đóng mọi menu, mở khoá cuộn.
- */
 export function initHeader() {
   const header = document.querySelector<HTMLElement>('[data-site-header]');
   if (!header) return;

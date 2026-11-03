@@ -1,16 +1,3 @@
-/**
- * Sinh minh hoạ isometric nét chấm — tranh gốc của DEFEAT.
- * Chạy: node scripts/generate-illustrations.mjs  →  src/assets/illustrations/*.svg
- *
- * Bộ máy 3D tối giản nhưng đúng hình học:
- *  - Phép chiếu isometric trực giao: X = (x − y)·cos30°, Y = (x + y)·sin30° − z. Hướng nhìn V = (1,1,1).
- *  - Loại bỏ mặt khuất (back-face culling): chỉ vẽ mặt có pháp tuyến hướng về người xem (n·V > 0).
- *  - Sắp thứ tự theo VẬT THỂ (xa → gần), trong vật thể theo độ sâu mặt; mặt tô màu nền để che nét phía sau.
- *  - Chi tiết (decal) gắn vào đúng mặt của khối, vẽ ngay sau mặt đó → không đè lên vật ở phía trước.
- *  - Hình cầu: viền ngoài là đường tròn chuẩn; vĩ/kinh tuyến chỉ vẽ phần nửa trước.
- *  - Hình trụ: thân + nắp, đường viền bên tính đúng điểm tiếp tuyến.
- * Kết xuất: <g class="illo-dots"> (vệt hạt, phía sau) + <g class="illo-lines"> (path class f = có tô nền, n = chỉ nét).
- */
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 const OUT = new URL('../src/assets/illustrations/', import.meta.url);
@@ -19,7 +6,7 @@ mkdirSync(OUT, { recursive: true });
 const C = Math.cos(Math.PI / 6);
 const S = 0.5;
 const P = ([x, y, z]) => [(x - y) * C, (x + y) * S - z];
-const SPH = Math.sqrt(1.5); // hệ số phóng của phép chiếu (bán kính viền cầu trên màn hình)
+const SPH = Math.sqrt(1.5);
 const V = [1, 1, 1];
 const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
@@ -30,7 +17,6 @@ const f1 = (n) => Math.round(n * 10) / 10;
 const X = [1, 0, 0], Y = [0, 1, 0], Z = [0, 0, 1];
 
 function normal(pts) {
-  // Newell
   let n = [0, 0, 0];
   for (let i = 0; i < pts.length; i++) {
     const a = pts[i], b = pts[(i + 1) % pts.length];
@@ -47,7 +33,6 @@ function rng(seed) {
   return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32);
 }
 
-/** Mặt phẳng gắn chi tiết: origin + u·U + v·W (toạ độ cục bộ). */
 class Surface {
   constructor(obj, origin, U, W, key) { Object.assign(this, { obj, origin, U, W, key }); }
   at(u, v) { return add(this.origin, add(mul(this.U, u), mul(this.W, v))); }
@@ -59,7 +44,6 @@ class Surface {
     for (let j = 0; j <= m; j++) this.line([[u0, v0 + ((v1 - v0) * j) / m], [u1, v0 + ((v1 - v0) * j) / m]]);
     return this;
   }
-  /** Lưới phím/ô: n×m ô vuông nhỏ có khe. */
   keys(u0, v0, u1, v1, n, m, gap = 1.5) {
     const du = (u1 - u0) / n, dv = (v1 - v0) / m;
     for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) this.rect(u0 + i * du + gap / 2, v0 + j * dv + gap / 2, u0 + (i + 1) * du - gap / 2, v0 + (j + 1) * dv - gap / 2);
@@ -70,15 +54,13 @@ class Surface {
 class Obj {
   constructor(scene, key) { this.scene = scene; this.key = key; this.items = []; }
   item(pts, { fill = true, closed = true, key } = {}) { this.items.push({ pts, fill, closed, key: key ?? depth(centroid(pts)) }); return this; }
-  /** Mặt đa giác 3D có cull. Trả về Surface nếu mặt nhìn thấy (để gắn chi tiết). */
   face(pts, U, W, origin, center) {
-    if (center && dot(normal(pts), sub(centroid(pts), center)) < 0) pts = [...pts].reverse(); // pháp tuyến hướng ra ngoài
+    if (center && dot(normal(pts), sub(centroid(pts), center)) < 0) pts = [...pts].reverse();
     if (dot(normal(pts), V) <= 1e-6) return null;
     const k = depth(centroid(pts));
     this.item(pts, { key: k });
     return new Surface(this, origin ?? pts[0], U, W, k);
   }
-  /** Hộp: trả về { top, front (+y), side (+x) } các mặt để gắn chi tiết. */
   box(x, y, z, w, d, h) {
     const p = (a, b, c) => [x + a * w, y + b * d, z + c * h];
     const ctr = p(0.5, 0.5, 0.5);
@@ -87,7 +69,6 @@ class Obj {
     const top = this.face([p(0, 0, 1), p(0, 1, 1), p(1, 1, 1), p(1, 0, 1)], X, Y, p(0, 0, 1), ctr);
     return { front, side, top };
   }
-  /** Lăng trụ: đa giác 2D trong mặt (U,W) tại origin, đùn theo N một đoạn d. Trả về mặt trước (phía +N). */
   prism(poly, origin, U, W, N, d) {
     const back = poly.map(([u, v]) => add(origin, add(mul(U, u), mul(W, v))));
     const frontPts = back.map((q) => add(q, mul(N, d)));
@@ -100,9 +81,8 @@ class Obj {
     this.face(orient(back), U, W, back[0]);
     return this.face(orient(frontPts), U, W, add(origin, mul(N, d)));
   }
-  /** Trụ đứng (trục z) tâm đáy (cx,cy,z), bán kính r, cao h. Trả về Surface nắp trên. */
   cylinder(cx, cy, z, r, h, bands = []) {
-    const a0 = -Math.PI / 4, a1 = (3 * Math.PI) / 4; // điểm tiếp tuyến viền bên (hướng ±(1,−1))
+    const a0 = -Math.PI / 4, a1 = (3 * Math.PI) / 4;
     const front = (zz) => ring([cx, cy, zz], X, Y, r, 32, a0, a1);
     const body = [...front(z), ...front(z + h).reverse()];
     const k = depth([cx, cy, z + h / 2]);
@@ -111,7 +91,6 @@ class Obj {
     this.item(ring([cx, cy, z + h], X, Y, r, 48).slice(0, 48), { key: k + 0.001 });
     return new Surface(this, [cx, cy, z + h], X, Y, k + 0.001);
   }
-  /** Cầu tâm c bán kính r: viền tròn chuẩn + vĩ tuyến/kinh tuyến (chỉ nửa trước). */
   sphere(c, r, { lats = [-0.5, 0, 0.5], meridians = 3 } = {}) {
     const [sx, sy] = P(c);
     const R = r * SPH;
@@ -140,7 +119,6 @@ class Scene {
   constructor() { this.objs = []; this.dots = []; this.top = []; }
   obj(anchor) { const o = new Obj(this, depth(anchor)); this.objs.push(o); return o; }
   ground() { const o = new Obj(this, -1e9); this.objs.push(o); return o; }
-  /** Lấp lánh 4 cánh (toạ độ 3D), vẽ trên cùng. */
   sparkle(p3, r = 10) {
     const [cx, cy] = P(p3), k = r * 0.2;
     this.top.push({ pts2: [[cx, cy - r], [cx + k, cy - k], [cx + r, cy], [cx + k, cy + k], [cx, cy + r], [cx - k, cy + k], [cx - r, cy], [cx - k, cy - k]], fill: true, closed: true });
@@ -151,11 +129,10 @@ class Scene {
     for (let i = 0; i < n; i++) { const a = a0 + (i / n) * Math.PI * 2; this.top.push({ pts2: [[cx + Math.cos(a) * r0, cy + Math.sin(a) * r0], [cx + Math.cos(a) * r1, cy + Math.sin(a) * r1]], fill: false, closed: false }); }
     return this;
   }
-  /** Vệt hạt mịn dọc đường thẳng (màn hình) — lớp sau cùng. */
   streak(x1, y1, x2, y2, width, count, seed) {
     const r = rng(seed), dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy), nx = -dy / len, ny = dx / len;
     for (let i = 0; i < count; i++) {
-      const t = r(), g = (r() + r() + r() - 1.5) / 1.5; // phân bố dày ở giữa vệt
+      const t = r(), g = (r() + r() + r() - 1.5) / 1.5;
       this.dots.push([x1 + dx * t + nx * g * width * (0.25 + t * 0.75), y1 + dy * t + ny * g * width * (0.25 + t * 0.75), 0.3 + r() * 0.35]);
     }
     return this;
@@ -180,7 +157,6 @@ class Scene {
   }
 }
 
-/** Vệt hạt theo hướng chéo (trái-dưới → phải-trên) quanh một tâm màn hình. */
 function streaks(s, cx, cy, seed, spread = 1) {
   s.streak(cx - 260 * spread, cy + 40, cx - 40, cy - 70, 26, 900, seed);
   s.streak(cx + 60, cy + 60, cx + 290 * spread, cy - 70, 22, 700, seed + 1);
@@ -188,7 +164,6 @@ function streaks(s, cx, cy, seed, spread = 1) {
 
 const out = {};
 
-/* 1. Laptop mở với trình soạn code — Phần mềm theo yêu cầu */
 {
   const s = new Scene();
   const o = s.obj([70, 50, 0]);
@@ -208,7 +183,6 @@ const out = {};
   out['custom-software'] = s;
 }
 
-/* 2. Khiên có ổ khoá trên bệ trụ — Bảo mật */
 {
   const s = new Scene();
   const ped = s.obj([60, 60, 0]);
@@ -230,7 +204,6 @@ const out = {};
   out['security'] = s;
 }
 
-/* 3. Tủ máy chủ + cơ sở dữ liệu trên sàn lưới — Vận hành ổn định */
 {
   const s = new Scene();
   const g = s.ground();
@@ -253,7 +226,6 @@ const out = {};
   out['infrastructure'] = s;
 }
 
-/* 4. Biểu đồ cột tăng trưởng với mũi tên đi lên + đồng xu — Tối ưu chi phí */
 {
   const s = new Scene();
   const g = s.ground();
@@ -277,7 +249,6 @@ const out = {};
   out['growth'] = s;
 }
 
-/* 5. Hai cửa sổ trình duyệt + con trỏ — Website & Web App */
 {
   const s = new Scene();
   const g = s.ground();
@@ -304,7 +275,6 @@ const out = {};
   out['web'] = s;
 }
 
-/* 6. Điện thoại + bong bóng chat + chuông thông báo — Ứng dụng di động */
 {
   const s = new Scene();
   const g = s.ground();
@@ -330,7 +300,6 @@ const out = {};
   out['mobile'] = s;
 }
 
-/* 7. Màn hình quản trị trên chân đế + biểu đồ tròn — Phần mềm quản lý */
 {
   const s = new Scene();
   const g = s.ground();
@@ -356,7 +325,6 @@ const out = {};
   out['dashboard'] = s;
 }
 
-/* 8. Địa cầu + vệ tinh trên quỹ đạo nghiêng, đặt trên bệ — Cloud & DevOps */
 {
   const s = new Scene();
   const ped = s.obj([60, 60, 0]);
@@ -366,7 +334,6 @@ const out = {};
   const c = [60, 60, 80];
   const globe = s.obj(c);
   globe.sphere(c, 50, { lats: [-0.6, -0.3, 0, 0.3, 0.6], meridians: 4 });
-  // Quỹ đạo: phần sau cầu vẽ trước cầu (bị che), phần trước vẽ sau cầu.
   const orbit = ring(c, [0.7071, -0.7071, 0], [0.5, 0.5, 0.7071], 78, 120);
   const back = s.obj(sub(c, [40, 40, 40]));
   const fr = s.obj(add(c, [40, 40, 40]));

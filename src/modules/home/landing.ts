@@ -1,11 +1,6 @@
 import type { Locale } from '@i18n/config';
 import type { IconName } from '@shared/components/Icon.astro';
 
-/**
- * Nội dung các section trang chủ (lợi ích, các bước, tính năng, điểm nổi bật).
- * `illo`: tên minh hoạ trong src/assets/illustrations (sinh bởi scripts/generate-illustrations.mjs).
- * `accent`: màu nhấn của từng tính năng (biến --acc-*).
- */
 export type Illo = 'custom-software' | 'security' | 'infrastructure' | 'growth' | 'web' | 'mobile' | 'dashboard' | 'cloud';
 export type Accent = 'red' | 'teal' | 'violet' | 'sky' | 'yellow';
 

@@ -2,9 +2,6 @@ import { defineAction, ActionError } from 'astro:actions';
 import { z } from 'astro/zod';
 import { RESEND_API_KEY, CONTACT_TO_EMAIL, CONTACT_FROM_EMAIL } from 'astro:env/server';
 
-/**
- * Action xử lý form liên hệ. Actions luôn chạy on-demand (SSR) dù trang chứa form là SSG.
- */
 export const contactInput = z.object({
   name: z.string().trim().min(2).max(100),
   email: z.email().max(200),
@@ -15,7 +12,6 @@ export const contactInput = z.object({
   message: z.string().trim().min(10).max(5000),
   locale: z.enum(['vi', 'en']).default('vi'),
   consent: z.literal('on'),
-  /** Honeypot chống bot: người thật không nhìn thấy nên luôn để trống. */
   website: z.string().max(0).optional(),
 });
 

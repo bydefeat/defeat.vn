@@ -13,7 +13,6 @@ export const productSchema = ({ image }: SchemaContext) =>
     techStack: z.array(z.string()).default([]),
     features: z.array(z.string()).default([]),
     demoUrl: z.url().optional(),
-    /** Giá niêm yết (VND) dùng cho SEO/JSON-LD; giá hiển thị thật lấy runtime qua server island. */
     listPriceVnd: z.number().int().positive().optional(),
     featured: z.boolean().default(false),
     order: z.number().default(100),

@@ -1,9 +1,4 @@
 ---
-/**
- * Header (sticky, tối giản): logo · menu (dropdown Dịch vụ) · ngôn ngữ · nút sáng/tối · CTA dạng viên thuốc.
- * Dropdown mở bằng hover (chuột) hoặc nút mũi tên (bàn phím/cảm ứng, aria-expanded).
- * Hành vi: src/shared/motion/header.ts, theme.ts
- */
 import { MAIN_NAV, SITE } from '@config/site';
 import { LOCALES, LOCALE_META, type Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
@@ -30,7 +25,6 @@ const themeLabel = locale === 'vi' ? 'Chuyển chế độ sáng/tối' : 'Toggl
       <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" class="h-6 w-auto" fetchpriority="high" />
     </a>
 
-    <!-- Desktop -->
     <ul class="hidden flex-1 items-center justify-center gap-7 lg:flex">
       {
         MAIN_NAV.map((item) =>
@@ -106,7 +100,6 @@ const themeLabel = locale === 'vi' ? 'Chuyển chế độ sáng/tối' : 'Toggl
       </button>
       <a href={href('/contact')} class="btn btn-invert btn-sm hidden h-9 px-4 lg:inline-flex">{t('cta.quote')}</a>
 
-      <!-- Mobile -->
       <details class="mobile-menu lg:hidden" data-mobile-menu>
         <summary class="-mr-2 flex size-11 cursor-pointer list-none items-center justify-center rounded-full" aria-label={t('nav.menu')}>
           <svg class="size-6 [.mobile-menu[open]_&]:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg>

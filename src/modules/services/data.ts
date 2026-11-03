@@ -1,9 +1,6 @@
 import type { IconName } from '@shared/components/Icon.astro';
 import type { Locale } from '@i18n/config';
 
-/**
- * Danh mục dịch vụ. Dữ liệu ít thay đổi và cần chặt chẽ kiểu → để trong TS thay vì MDX.
- */
 type L10n = Record<Locale, string>;
 export interface Service {
   slug: string;
@@ -96,5 +93,4 @@ export const SERVICES: Service[] = [
 
 export const getService = (slug: string) => SERVICES.find((s) => s.slug === slug);
 
-/** getStaticPaths cho trang chi tiết dịch vụ (SSG). */
 export const serviceStaticPaths = () => SERVICES.map((service) => ({ params: { slug: service.slug }, props: { service } }));

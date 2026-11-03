@@ -3,10 +3,6 @@
   themes: false;
 }
 
-/* ==========================================================================
-   THEMES — tối (mặc định) & sáng. Chuyển bằng data-theme trên <html> (script trong <head>, không nháy).
-   Phong cách: nền đen/trắng tuyệt đối, khung nét đứt, nền chấm, tranh isometric nét chấm.
-   ========================================================================== */
 @plugin "daisyui/theme" {
   name: "defeat-dark";
   default: true;
@@ -75,7 +71,6 @@
   --noise: 0;
 }
 
-/* Biến riêng theo theme: màu chữ phụ, đường kẻ, màu nhấn từng tính năng */
 [data-theme="defeat-dark"] {
   --muted: #8b8b93;
   --line: rgb(255 255 255 / 0.14);
@@ -117,9 +112,6 @@
   --header-h: 4rem;
 }
 
-/* ==========================================================================
-   TYPE SCALE — tiêu đề weight 500, khoảng chữ chặt; line-height đủ cho dấu tiếng Việt.
-   ========================================================================== */
 @utility t-display {
   font-size: clamp(2.5rem, 1.4rem + 4.6vw, 4.75rem);
   font-weight: 500;
@@ -156,13 +148,11 @@
   text-transform: uppercase;
 }
 
-/* Khung nét đứt & lưới (là utility để dùng được với biến thể md:, max-md:…) */
 @utility frame { border: 1px dashed var(--line); }
 @utility frame-t { border-top: 1px dashed var(--line); }
 @utility frame-b { border-bottom: 1px dashed var(--line); }
 @utility frame-l { border-left: 1px dashed var(--line); }
 @utility frame-r { border-right: 1px dashed var(--line); }
-/* Lưới ô ngăn bằng nét đứt: container có viền trái/trên, mỗi ô có viền phải/dưới */
 @utility cells {
   border-left: 1px dashed var(--line);
   border-top: 1px dashed var(--line);
@@ -174,12 +164,6 @@
   background-position: center;
 }
 
-/* ==========================================================================
-   PAGE TRANSITIONS — "một mặt giấy liên tục" (cross-document View Transitions, CSS, tương thích CSP)
-   - Khung (header, footer, nền) ĐỨNG YÊN; chỉ vùng nội dung mờ ra / hiện vào tại chỗ.
-   - Biến hình: vạch menu (nav-indicator), dải đầu trang (page-hero), tiêu đề card → trang chi tiết (page-title).
-   - Back/Forward: nội dung hiện từ trên xuống. Đổi theme: chuyển màu mượt (type "theme").
-   ========================================================================== */
 @view-transition {
   navigation: auto;
 }
@@ -205,7 +189,6 @@ html:active-view-transition-type(back)::view-transition-new(page-content) { anim
 ::view-transition-new(page-hero) { animation: vt-fade-in 360ms var(--ease) 90ms both; }
 ::view-transition-group(page-title) { z-index: 10; animation-duration: 520ms; animation-timing-function: var(--ease); }
 
-/* Đổi theme (same-document): mọi thứ chuyển màu cùng lúc, mượt */
 html:active-view-transition-type(theme)::view-transition-old(*),
 html:active-view-transition-type(theme)::view-transition-new(*) { display: block; animation-duration: 380ms; animation-timing-function: ease; }
 html:active-view-transition-type(theme)::view-transition-old(*) { animation-name: vt-fade-out; }
@@ -222,9 +205,6 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   @view-transition { navigation: none; }
 }
 
-/* ==========================================================================
-   BASE
-   ========================================================================== */
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -241,7 +221,6 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   ::selection { background: var(--color-primary); color: var(--color-primary-content); }
   :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
   html.menu-open { overflow: hidden; }
-  /* Ẩn thanh cuộn (vẫn cuộn bình thường bằng chuột, bàn phím, cảm ứng) */
   html, body, * { scrollbar-width: none; -ms-overflow-style: none; }
   *::-webkit-scrollbar { display: none; width: 0; height: 0; }
 }
@@ -250,7 +229,6 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   .container-x { @apply mx-auto w-full max-w-[1200px] px-5 sm:px-6; }
   .section { @apply py-14 sm:py-20; }
 
-  /* Minh hoạ isometric nét chấm (SVG fallback + canvas pixel khi có JS) */
   .illo { width: 100%; height: auto; color: var(--illo-ink); }
   .illo .f { fill: var(--illo-bg, var(--color-base-100)); }
   .illo .n { fill: none; }
@@ -267,7 +245,6 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   .acc-sky { --acc: var(--acc-sky); }
   .acc-yellow { --acc: var(--acc-yellow); }
 
-  /* Ô có minh hoạ: nền sáng nhẹ khi rê chuột; mô tả trượt hiện (thiết bị có chuột) */
   [data-illo-hover] { transition: background-color 0.35s var(--ease); }
   @media (hover: hover) {
     [data-illo-hover]:hover { background-color: var(--color-base-200); }
@@ -276,14 +253,11 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
     [data-illo-hover]:hover .reveal-desc, [data-illo-hover]:focus-within .reveal-desc { grid-template-rows: 1fr; opacity: 1; }
   }
 
-  /* Nhãn màu theo tính năng */
   .eyebrow { @apply t-label; color: var(--eb, var(--color-primary)); }
 
-  /* ---------- Buttons (dạng viên thuốc) ---------- */
   .btn .arrow { transition: transform 0.25s var(--ease); }
   .btn:hover .arrow { transform: translateX(3px); }
 
-  /* ---------- Card ---------- */
   .card-base {
     @apply relative flex h-full flex-col overflow-hidden rounded-box bg-base-100;
     border: 1px dashed var(--line);
@@ -302,12 +276,10 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   .pill { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide; border: 1px solid var(--line-strong); color: var(--muted); }
   .accent-bar { display: none; }
 
-  /* ---------- Logo công nghệ ---------- */
   .tech-logo { color: var(--muted); transition: color 0.25s; }
   .tech-logo .tech-cut { fill: var(--color-base-100); }
   @media (hover: hover) { .tech-item:hover .tech-logo { color: var(--brand, var(--color-base-content)); } }
 
-  /* ---------- Hero: vệt sáng chéo ---------- */
   .beams { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
   .beams::before, .beams::after {
     content: "";
@@ -323,17 +295,14 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
     mask-image: none;
   }
 
-  /* CTA: nền ASCII art (canvas) — màu theo theme */
   .ascii-field { --ascii-ink: color-mix(in oklab, var(--color-base-content) 22%, transparent); --ascii-hot: var(--color-primary); }
   .ascii-field .ascii-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-  /* Lớp mờ ở giữa giúp chữ CTA nổi rõ trên nền ký tự */
   .ascii-field::after {
     content: ""; position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(ellipse 42% 55% at 50% 50%, var(--color-base-100) 30%, transparent 100%);
     opacity: 0.85;
   }
 
-  /* ---------- Prose ---------- */
   .prose-defeat { @apply max-w-none text-base-content/85; line-height: 1.8; }
   .prose-defeat h2 { @apply mt-10 mb-4 text-2xl font-medium text-base-content first:mt-0; letter-spacing: -0.02em; }
   .prose-defeat h3 { @apply mt-8 mb-3 text-xl font-medium text-base-content; }
@@ -346,7 +315,6 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   .prose-defeat pre code { @apply bg-transparent p-0; }
   .prose-defeat blockquote { @apply my-6 border-l-2 border-primary py-1 pl-4 text-muted; }
 
-  /* ---------- Header ---------- */
   .site-header { transition: border-color 0.25s; border-bottom: 1px solid transparent; }
   .site-header[data-scrolled="true"] { border-bottom-color: var(--line); }
   .nav-link { @apply relative inline-flex h-10 items-center text-sm text-muted transition-colors hover:text-base-content; }
@@ -376,15 +344,11 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   .m-sub .chev { transition: transform 0.2s; }
   .m-sub[open] .chev { transform: rotate(180deg); }
 
-  /* ---------- FAQ ---------- */
   .faq-item summary::-webkit-details-marker { display: none; }
   .faq-item .plus-v { transition: transform 0.25s var(--ease); }
   .faq-item[open] .plus-v { transform: scaleY(0); }
 }
 
-/* ==========================================================================
-   MOTION — fade-up nhẹ khi cuộn tới (transform + opacity, GPU). Phần thấy lúc tải không bị ẩn.
-   ========================================================================== */
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal][data-pending] { opacity: 0; transform: translateY(16px); }
   [data-reveal] { transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); transition-delay: var(--reveal-delay, 0ms); }
@@ -408,7 +372,6 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
 
 @keyframes fade-down { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 
-/* Prism — code highlight (tương thích CSP) */
 @layer components {
   pre[class*="language-"] { @apply bg-base-200 text-base-content; border: 1px dashed var(--line); }
   .token.comment, .token.prolog, .token.doctype, .token.cdata { color: var(--muted); }
@@ -419,7 +382,6 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   .token.regex, .token.important, .token.variable { color: var(--acc-violet); }
 }
 
-/* Nút dạng viên thuốc — đặt NGOÀI layer để thắng style .btn của daisyUI (nằm trong layer utilities). */
 .btn { --radius-field: 9999px; font-weight: 500; transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s; }
 .btn-invert { --btn-color: var(--color-base-content); --btn-fg: var(--color-base-100); --btn-border: var(--color-base-content); }
 .btn-invert:hover { opacity: 0.86; }
