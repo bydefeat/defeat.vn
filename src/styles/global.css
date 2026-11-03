@@ -304,6 +304,7 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
 
   /* ---------- Logo công nghệ ---------- */
   .tech-logo { color: var(--muted); transition: color 0.25s; }
+  .tech-logo .tech-cut { fill: var(--color-base-100); }
   @media (hover: hover) { .tech-item:hover .tech-logo { color: var(--brand, var(--color-base-content)); } }
 
   /* ---------- Hero: vệt sáng chéo ---------- */
