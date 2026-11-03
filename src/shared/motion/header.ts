@@ -21,6 +21,16 @@ export function initHeader() {
       if (!item.contains(e.relatedTarget as Node | null)) setMega(item, false);
     });
   }
+  for (const root of header.querySelectorAll<HTMLElement>('[data-preview-root]')) {
+    const previews = root.querySelectorAll<HTMLElement>('[data-preview]');
+    const show = (i: string) => previews.forEach((p) => { p.hidden = p.dataset.preview !== i; });
+    for (const target of root.querySelectorAll<HTMLElement>('[data-preview-target]')) {
+      const i = target.dataset.previewTarget!;
+      target.addEventListener('mouseenter', () => show(i));
+      target.addEventListener('focus', () => show(i));
+    }
+  }
+
   document.addEventListener('click', (e) => {
     if (!header.contains(e.target as Node)) closeAllMega();
   });

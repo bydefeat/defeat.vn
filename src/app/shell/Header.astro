@@ -4,6 +4,10 @@ import { LOCALES, LOCALE_META, type Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
 import Icon from '@shared/components/Icon.astro';
 import { SERVICES } from '@modules/services/data';
+import { Image } from 'astro:assets';
+import { getProducts, productPath } from '@modules/products/api';
+import { productsText } from '@modules/products/i18n';
+import { formatVnd } from '@modules/products/pricing';
 
 interface Props {
   locale: Locale;
@@ -17,6 +21,8 @@ const href = (p: string) => localizePath(p, locale);
 const isActive = (navPath: string) => path === navPath || path.startsWith(navPath + '/');
 const langHref = (l: Locale) => localizePath(availableLocales.includes(l) ? path : '/', l);
 const themeLabel = locale === 'vi' ? 'Chuyển chế độ sáng/tối' : 'Toggle light/dark mode';
+const products = await getProducts(locale);
+const categories = productsText[locale].categories;
 ---
 
 <header class="site-header sticky top-0 z-50 bg-base-100" data-site-header>
@@ -25,11 +31,11 @@ const themeLabel = locale === 'vi' ? 'Chuyển chế độ sáng/tối' : 'Toggl
       <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" class="h-6 w-auto" fetchpriority="high" />
     </a>
 
-    <ul class="hidden flex-1 items-center justify-center gap-7 lg:flex">
+    <ul class="hidden flex-1 items-stretch justify-center gap-7 self-stretch lg:flex">
       {
         MAIN_NAV.map((item) =>
-          item.key === 'services' ? (
-            <li class="nav-item relative flex items-center" data-mega>
+          item.key === 'services' || item.key === 'products' ? (
+            <li class="nav-item flex items-center" data-mega>
               <a href={href(item.path)} class="nav-link" aria-current={isActive(item.path) ? 'page' : undefined}>
                 {t(`nav.${item.key}`)}
                 {isActive(item.path) && <span class="nav-indicator" aria-hidden="true" />}
@@ -38,35 +44,105 @@ const themeLabel = locale === 'vi' ? 'Chuyển chế độ sáng/tối' : 'Toggl
                 type="button"
                 class="flex size-6 items-center justify-center text-muted hover:text-base-content"
                 aria-expanded="false"
-                aria-controls="dropdown-services"
-                aria-label={t('header.openServices')}
+                aria-controls={`dropdown-${item.key}`}
+                aria-label={t(item.key === 'services' ? 'header.openServices' : 'header.openProducts')}
                 data-mega-toggle
               >
                 <svg class="chev size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
               </button>
-              <div class="dropdown-panel w-[640px] -translate-x-1/4" id="dropdown-services">
-                <div class="frame rounded-box bg-base-100 p-2 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.5)]">
-                  <ul class="grid grid-cols-2 gap-1">
-                    {SERVICES.map((s) => (
-                      <li>
-                        <a href={href(`/services/${s.slug}`)} class="group/item flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-base-200">
-                          <span class="icon-chip size-9"><Icon name={s.icon} class="size-4" /></span>
-                          <span>
-                            <span class="block text-sm font-medium">{s.title[locale]}</span>
-                            <span class="mt-0.5 line-clamp-2 block text-[13px] leading-snug text-muted">{s.summary[locale]}</span>
-                          </span>
+              <div class="dropdown-panel inset-x-0" id={`dropdown-${item.key}`}>
+                <div class="mega frame rounded-box bg-base-100">
+                  {item.key === 'services' ? (
+                    <div class="grid grid-cols-12">
+                      <div class="col-span-8 p-3">
+                        <p class="px-3 pt-2 pb-3 text-[13px] text-muted">{t('header.servicesIntro')}</p>
+                        <ul class="grid grid-cols-2 gap-1 xl:grid-cols-3">
+                          {SERVICES.map((s) => (
+                            <li>
+                              <a href={href(`/services/${s.slug}`)} class="mega-item">
+                                <span class="mega-chip"><Icon name={s.icon} class="size-[18px]" /></span>
+                                <span class="min-w-0">
+                                  <span class="mega-title">{s.title[locale]}<Icon name="arrowRight" class="mega-arrow" /></span>
+                                  <span class="mt-0.5 line-clamp-2 block text-[13px] leading-snug text-muted">{s.summary[locale]}</span>
+                                </span>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div class="mega-aside col-span-4">
+                        <div class="flex h-full flex-col justify-between gap-6 p-6">
+                          <div>
+                            <p class="eyebrow">DEFEAT</p>
+                            <p class="mt-3 text-xl font-medium leading-snug">{t('header.promoTitle')}</p>
+                            <p class="mt-2 text-sm text-muted">{t('header.promoDesc')}</p>
+                          </div>
+                          <div class="flex flex-col gap-2">
+                            <a href={href('/contact')} class="btn btn-invert btn-sm h-10">{t('cta.quote')} <Icon name="arrowRight" class="size-4" /></a>
+                            <a href={href('/services')} class="btn btn-line btn-sm h-10">{t('header.allServices')}</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div class="grid grid-cols-12" data-preview-root>
+                      <div class="col-span-7 flex flex-col p-3">
+                        <p class="px-3 pt-2 pb-3 text-[13px] text-muted">{t('header.productsIntro')}</p>
+                        <ul class="grid gap-1">
+                          {products.map((p, i) => (
+                            <li>
+                              <a href={href(productPath(p))} class="mega-item group/item" data-preview-target={i}>
+                                {p.data.icon ? (
+                                  <Image src={p.data.icon} alt="" width={56} height={56} densities={[1, 2]} class="size-14 shrink-0 rounded-2xl object-cover transition-transform duration-300 group-hover/item:scale-105" />
+                                ) : (
+                                  <span class="mega-chip size-14"><Icon name="box" class="size-6" /></span>
+                                )}
+                                <span class="min-w-0 flex-1">
+                                  <span class="flex flex-wrap items-center gap-2">
+                                    <span class="mega-title">{p.data.title}<Icon name="arrowRight" class="mega-arrow" /></span>
+                                    <span class="pill">{categories[p.data.category]}</span>
+                                  </span>
+                                  <span class="mt-1 line-clamp-2 block text-[13px] leading-snug text-muted">{p.data.summary}</span>
+                                  {p.data.listPriceVnd && <span class="mt-1.5 block text-[13px] font-medium">{t('header.priceFrom')} <span class="text-primary">{formatVnd(p.data.listPriceVnd, locale)}</span></span>}
+                                </span>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                        <ul class="mx-3 mt-auto grid grid-cols-3 gap-2 pt-4">
+                          {(['header.perk1', 'header.perk2', 'header.perk3'] as const).map((k) => (
+                            <li class="frame flex items-center gap-2 rounded-lg px-3 py-2.5 text-[13px]"><Icon name="check" class="size-4 shrink-0 text-primary" />{t(k)}</li>
+                          ))}
+                        </ul>
+                        <a href={href('/products')} class="flex items-center justify-between rounded-lg px-3 pt-3 pb-2 text-sm text-muted transition-colors hover:text-base-content">
+                          {t('header.allProducts')} <Icon name="arrowRight" class="size-4" />
                         </a>
-                      </li>
-                    ))}
-                  </ul>
-                  <a href={href('/services')} class="mt-1 flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-muted transition-colors hover:bg-base-200 hover:text-base-content">
-                    {t('header.allServices')} <Icon name="arrowRight" class="size-4" />
-                  </a>
+                      </div>
+                      <div class="mega-aside col-span-5 p-4">
+                        {products.map((p, i) => (
+                          <a href={href(productPath(p))} class="mega-preview group/pv block" data-preview={i} hidden={i !== 0} tabindex="-1" aria-hidden="true">
+                            {p.data.cover ? (
+                              <Image src={p.data.cover} alt="" widths={[480, 960]} sizes="480px" class="aspect-[16/9] w-full rounded-xl object-cover" />
+                            ) : (
+                              <span class="cover-placeholder block aspect-[16/9] w-full rounded-xl" />
+                            )}
+                            <span class="mt-4 block px-1 font-medium">{p.data.title}</span>
+                            <span class="mt-2 flex flex-wrap gap-1.5 px-1">
+                              {p.data.techStack.slice(0, 4).map((s) => <span class="rounded frame px-2 py-0.5 text-[11px] text-muted">{s}</span>)}
+                            </span>
+                            <span class="mt-3 inline-flex items-center gap-1.5 px-1 text-sm font-medium text-primary">
+                              {t('cta.viewDetail')}<Icon name="arrowRight" class="size-4 transition-transform group-hover/pv:translate-x-0.5" />
+                            </span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </li>
           ) : (
-            <li>
+            <li class="flex items-center">
               <a href={href(item.path)} class="nav-link" aria-current={isActive(item.path) ? 'page' : undefined}>
                 {t(`nav.${item.key}`)}
                 {isActive(item.path) && <span class="nav-indicator" aria-hidden="true" />}
@@ -76,6 +152,7 @@ const themeLabel = locale === 'vi' ? 'Chuyển chế độ sáng/tối' : 'Toggl
         )
       }
     </ul>
+    <div class="mega-scrim" aria-hidden="true"></div>
 
     <div class="ml-auto flex items-center gap-2 lg:ml-0">
       <div class="hidden items-center text-xs font-medium sm:flex" role="group" aria-label={t('common.language')}>
@@ -129,6 +206,33 @@ const themeLabel = locale === 'vi' ? 'Chuyển chế độ sáng/tối' : 'Toggl
                           <li>
                             <a href={href('/services')} class="flex min-h-11 items-center gap-2 px-2 text-[15px] text-base-content">
                               {t('header.allServices')} <Icon name="arrowRight" class="size-4" />
+                            </a>
+                          </li>
+                        </ul>
+                      </details>
+                    </li>
+                  ) : item.key === 'products' ? (
+                    <li class="frame-b">
+                      <details class="m-sub">
+                        <summary class="flex min-h-13 cursor-pointer list-none items-center justify-between text-lg">
+                          {t(`nav.${item.key}`)}
+                          <svg class="chev size-5 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                        </summary>
+                        <ul class="grid gap-1 pb-3">
+                          {products.map((p) => (
+                            <li>
+                              <a href={href(productPath(p))} class="flex items-center gap-3 rounded-lg px-2 py-2 active:bg-base-200">
+                                {p.data.icon ? <Image src={p.data.icon} alt="" width={40} height={40} densities={[1, 2]} class="size-10 shrink-0 rounded-xl" /> : <Icon name="box" class="size-5" />}
+                                <span class="min-w-0">
+                                  <span class="block text-[15px]">{p.data.title}</span>
+                                  {p.data.listPriceVnd && <span class="block text-[13px] text-muted">{t('header.priceFrom')} {formatVnd(p.data.listPriceVnd, locale)}</span>}
+                                </span>
+                              </a>
+                            </li>
+                          ))}
+                          <li>
+                            <a href={href('/products')} class="flex min-h-11 items-center gap-2 px-2 text-[15px] text-base-content">
+                              {t('header.allProducts')} <Icon name="arrowRight" class="size-4" />
                             </a>
                           </li>
                         </ul>

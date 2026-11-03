@@ -33,15 +33,32 @@ import quanTri from '../../../assets/products/defeat-softcard-v1/quan-tri.webp';
 
 **DEFEAT Softcard** is a complete source code package for running a prepaid card business: **card-to-cash exchange**, **digital code sales**, **mobile and game top-ups**, plus member wallets, bank deposits/withdrawals and an API for resellers. Every transaction runs automatically 24/7, from the customer's request and provider selection to crediting the wallet or delivering the code.
 
-It is built from scratch on Next.js 16 and PostgreSQL, with separate customer, partner API and admin areas.
+It is built from scratch on Next.js 16 and PostgreSQL, with separate customer, partner API and admin areas. You own the code and run it on your own server, with no third-party lock-in.
+
+<div class="not-prose my-8 grid gap-3 sm:grid-cols-2">
+  <div class="frame rounded-box p-5"><div class="text-sm font-semibold text-primary">3 services, 1 system</div><div class="mt-1 text-[15px] text-muted">Exchange, code sales and top-ups share one wallet, customer base and reporting.</div></div>
+  <div class="frame rounded-box p-5"><div class="text-sm font-semibold text-primary">Automated 24/7</div><div class="mt-1 text-[15px] text-muted">Scheduled jobs check pending cards, sync fees, match bank transfers and pay commissions.</div></div>
+  <div class="frame rounded-box p-5"><div class="text-sm font-semibold text-primary">Multi-provider</div><div class="mt-1 text-[15px] text-muted">Route by fee, by ratio or round-robin, with automatic failover when a provider errors.</div></div>
+  <div class="frame rounded-box p-5"><div class="text-sm font-semibold text-primary">Reseller-ready</div><div class="mt-1 text-[15px] text-muted">Partner API, interactive docs and a Sandbox so resellers can integrate on their own.</div></div>
+</div>
+
+## Supported cards and services
+
+The catalog is configured in the admin: enable or disable each telco, issuer and denomination.
+
+- **Mobile cards:** Viettel, Vinaphone, Mobifone, Vietnamobile.
+- **Game cards:** Garena, Zing, Vcoin, Gate, Appota, Funcard, SohaCoin, Kul, Carot...
+- **Software:** licence keys such as Kaspersky and other digital products.
+- **Denominations:** standard 10,000đ – 1,000,000đ, game cards up to 5,000,000đ, plus a small-denomination set.
 
 ## Core capabilities
 
 ### Card exchange
 
-- Accepts Viettel, Vinaphone, Mobifone, Vietnamobile, Zing, Garena, Vcoin, Scoin and more, one card or many at once.
+- Submit one card or many at once, on the web or via API.
 - Public fee table by **member tier** and denomination.
 - Handles wrong denominations, invalid and pending cards; re-checks stuck cards and resubmits when a provider loses them.
+- Flags and rejects suspicious transactions, locks connections that keep sending invalid cards.
 - Profit reports by channel, telco and provider.
 
 <Image src={doiThe} alt="Card exchange page with fee table by member tier" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
@@ -49,8 +66,9 @@ It is built from scratch on Next.js 16 and PostgreSQL, with separate customer, p
 ### Digital code store
 
 - Catalog of mobile, game and software codes by issuer and denomination.
-- Multi-item cart, per-product discounts, pay by wallet balance or bank transfer.
+- Multi-item cart, quick quantity picks, per-product discounts, pay by wallet balance or bank transfer.
 - Delivers from **imported stock** (Excel) or buys instantly from providers; automatic refunds on failed orders.
+- Bank-transfer orders are delivered as soon as the payment is matched.
 
 <Image src={muaThe} alt="Catalog of mobile, game and software codes" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
 
@@ -60,23 +78,27 @@ It is built from scratch on Next.js 16 and PostgreSQL, with separate customer, p
 
 - Prepaid/postpaid mobile and game top-ups with product-specific forms.
 - Single, bulk and quick orders with clear statuses for customers.
+- Categories, products and package options managed in the admin.
 
 ### Providers and routing
 
 - Multiple providers per service with scheduled fee syncing.
-- **Cheapest-fee routing** or a fixed priority chain; automatic failover to the next provider.
-- Fees, margins and limits per channel and customer group.
+- Four routing strategies: **in order**, **by ratio**, **cheapest first**, **round-robin**.
+- Automatic failover to the next provider; when none is left, reject or hand over to manual processing.
+- Fees, margins and limits per channel and customer group, with optional automatic margins based on provider fees.
 
 ### Wallets, payments and reconciliation
 
 - Member wallets: deposits, withdrawals, internal transfers, transfer fees, balance history.
 - **Local bank** (VCB, MB, ACB, TCB...) and **e-wallet** (MoMo, ZaloPay, ViettelPay) gateways.
-- **Automatic bank matching** of incoming transfers to invoices and card orders, delivering codes as soon as payment lands.
+- **Automatic bank matching** of incoming transfers to invoices and card orders by reference; expired invoices are cancelled automatically.
+- Daily limits for code purchases, deposits, withdrawals and transfers.
 - Referral commissions paid out automatically after a holding period.
 
 ### Partner and developer API
 
 - Customers create their own API connections: services, Callback URL, GET/POST, IP allowlist.
+- New connections can be enabled automatically after a set delay once they qualify (Callback and IP set).
 - API docs with navigation, examples and error codes, plus a **Sandbox** with sample cards for every case, testable in the browser.
 
 <Image src={ketNoiApi} alt="Self-service API connection page" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
@@ -86,19 +108,47 @@ It is built from scratch on Next.js 16 and PostgreSQL, with separate customer, p
 ### Security
 
 - Two-factor confirmation: email OTP, Google Authenticator or a secondary password for sensitive actions.
-- Secret admin path, role-based access control, IP allow/deny lists, login logs.
-- Unusual-activity alerts, rate limits, automatic lockout of connections spamming invalid cards.
+- Sign in with Google, Facebook, GitHub, Microsoft... and user identity verification.
+- Secret admin path, role-based access control, time-limited IP allow/deny lists, login logs.
+- Correct client IP behind Cloudflare, preventing spoofed IPs from bypassing limits.
 
 <Image src={baoMat} alt="Account security page with email OTP, Google Authenticator and secondary password" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
 
 ### Admin and AI Agent
 
 - Dashboard with today's and this month's revenue and profit per service, plus a pending-task queue.
-- Statistics for exchange, sales, top-ups, wallets and top customers; Excel export.
-- Content management: news, pages, banners, menus, SEO, languages, email templates.
-- **AI Agent access over MCP**: add the site to Claude, ChatGPT and others, sign in once and give instructions in plain language, with permissions bound to the assigned role.
+- **AI Agent access over MCP**: add the site to Claude, ChatGPT and others, sign in once and give instructions in plain language. Agent permissions follow the assigned role and every action is logged.
 
 <Image src={quanTri} alt="Admin dashboard: revenue, profit by service and pending tasks" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+## Inside the admin
+
+<div class="not-prose my-6 grid gap-3 sm:grid-cols-2">
+  <div class="frame rounded-box p-5"><div class="font-semibold">Services</div><div class="mt-1 text-sm text-muted">Exchange channels and telcos, providers, fee tables; products, code stock, sales orders; top-up categories, products and routing.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Users</div><div class="mt-1 text-sm text-muted">Accounts, groups, roles, administrators, identity verification, alerts, login logs.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Wallets and payments</div><div class="mt-1 text-sm text-muted">Deposit/withdrawal requests, balance history, transfer fees, bank accounts, bank history, invoices, payment gateways.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Partners</div><div class="mt-1 text-sm text-muted">Customer API connections, referral commissions, AI Agent connections.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Content</div><div class="mt-1 text-sm text-muted">News, pages, banners, sliders, menus, content blocks, files, SEO, languages.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Reports</div><div class="mt-1 text-sm text-muted">Summary, exchange, sales, top-ups, stock, wallets, top customers; Excel export.</div></div>
+  <div class="frame rounded-box p-5 sm:col-span-2"><div class="font-semibold">System</div><div class="mt-1 text-sm text-muted">Email and templates (Gmail, Outlook, Zoho, SendGrid, Amazon SES...), social sign-in, limits, scheduled jobs, IP firewall, cache, old data cleanup.</div></div>
+</div>
+
+## For your customers
+
+- Exchange, buy codes and top up right on the home page.
+- Account: profile, password, two-factor security, payout bank accounts.
+- Wallet: deposit, withdraw, transfer, transaction history.
+- Exchange, purchase and top-up history; referral commissions; API connections.
+
+## Automation
+
+Scheduled jobs with a log for every run and a manual run button:
+
+- Update provider fees and re-order provider chains by fee.
+- Check pending cards, resubmit or mark them invalid.
+- Sync bank transactions, deliver codes for paid orders, cancel expired invoices.
+- Auto-enable qualifying new API connections.
+- Pay out referral commissions.
 
 ## From request to completed transaction
 
@@ -107,13 +157,43 @@ It is built from scratch on Next.js 16 and PostgreSQL, with separate customer, p
 3. **Route**: pick a provider by fee and health, fail over on errors.
 4. **Complete and reconcile**: credit the wallet or deliver the code, send the callback, record profit.
 
-## Architecture
+## What you get
 
-- **Platform:** Next.js 16, React 19, TypeScript, PostgreSQL with Drizzle ORM, Valkey for cache and queues.
-- **Channels:** retail web customers, resellers via API, admins and AI Agents via MCP.
-- **Automation:** scheduled jobs for fee sync, pending-card checks, bank sync and commission payouts, each run logged.
-- **Languages:** Vietnamese and English.
-- **Deployment:** dedicated server behind Cloudflare and nginx, with correct client IP handling.
+- The full application source code, database and architecture/deployment docs.
+- Installation on your server, with domain, email and payment gateway setup.
+- Admin onboarding: adding providers, adjusting fees, managing code stock.
+- Your logo, brand colours and page content.
+
+## Deployment requirements
+
+- A dedicated server (VPS) running Node.js, PostgreSQL and Valkey (Redis-compatible).
+- A domain behind Cloudflare, with nginx as the reverse proxy.
+- An SMTP account for email and accounts with your card providers.
+
+## FAQ
+
+<div class="not-prose frame my-6 rounded-box">
+  <details class="faq-item group" open>
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">Can I run it without programming skills?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">Yes. Day-to-day work (fees, providers, withdrawal approvals, content) is done in the admin. DEFEAT installs the system and walks you through it at handover.</div>
+  </details>
+  <details class="faq-item group frame-t">
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">Which card providers can it connect to?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">Providers using the common card exchange API (submit card, check status, fetch fees). Add several providers and the system splits orders between them.</div>
+  </details>
+  <details class="faq-item group frame-t">
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">Can I change the design and branding?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">Logo, banners, menus, pages, languages and SEO are edited in the admin. Deeper design changes or custom features are quoted on request.</div>
+  </details>
+  <details class="faq-item group frame-t">
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">Does it run on shared hosting?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">No. It needs a dedicated server running Node.js, PostgreSQL and Valkey. DEFEAT advises on a server size that fits your traffic.</div>
+  </details>
+  <details class="faq-item group frame-t">
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">How do I pay?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">By bank transfer to DEFEAT's official account, see <a class="text-primary underline underline-offset-4" href="/en/payment">Payment information</a>.</div>
+  </details>
+</div>
 
 ## Ideal for
 

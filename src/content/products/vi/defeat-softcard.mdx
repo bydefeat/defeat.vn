@@ -33,15 +33,32 @@ import quanTri from '../../../assets/products/defeat-softcard-v1/quan-tri.webp';
 
 **DEFEAT Softcard** là bộ mã nguồn vận hành website thẻ cào trọn gói: **đổi thẻ cào sang tiền**, **bán mã thẻ**, **nạp cước điện thoại và nạp game**, kèm ví thành viên, nạp/rút qua ngân hàng và API cho đại lý. Mọi giao dịch chạy tự động 24/7, từ lúc khách gửi yêu cầu, chọn nhà cung cấp, đến khi cộng tiền hoặc giao thẻ.
 
-Hệ thống được viết mới hoàn toàn trên Next.js 16 và PostgreSQL, tách rõ khu khách hàng, khu đối tác API và khu quản trị.
+Hệ thống được viết mới hoàn toàn trên Next.js 16 và PostgreSQL, tách rõ khu khách hàng, khu đối tác API và khu quản trị. Bạn sở hữu mã nguồn, tự vận hành trên máy chủ của mình, không phụ thuộc bên thứ ba.
+
+<div class="not-prose my-8 grid gap-3 sm:grid-cols-2">
+  <div class="frame rounded-box p-5"><div class="text-sm font-semibold text-primary">3 dịch vụ, 1 hệ thống</div><div class="mt-1 text-[15px] text-muted">Đổi thẻ, bán thẻ, nạp cước/game dùng chung ví, khách hàng và báo cáo.</div></div>
+  <div class="frame rounded-box p-5"><div class="text-sm font-semibold text-primary">Tự động 24/7</div><div class="mt-1 text-[15px] text-muted">Tác vụ định kỳ hỏi thẻ chờ, đồng bộ phí, khớp ngân hàng, trả hoa hồng.</div></div>
+  <div class="frame rounded-box p-5"><div class="text-sm font-semibold text-primary">Nhiều nhà cung cấp</div><div class="mt-1 text-[15px] text-muted">Định tuyến theo phí, theo tỉ lệ hoặc xoay vòng, tự chuyển khi một bên lỗi.</div></div>
+  <div class="frame rounded-box p-5"><div class="text-sm font-semibold text-primary">Sẵn sàng cho đại lý</div><div class="mt-1 text-[15px] text-muted">API đối tác, tài liệu trực quan và Sandbox để đại lý tự tích hợp.</div></div>
+</div>
+
+## Thẻ và dịch vụ hỗ trợ
+
+Danh mục cấu hình được trong trang quản trị, thêm hoặc tắt từng nhà mạng, nhà phát hành và mệnh giá.
+
+- **Thẻ điện thoại:** Viettel, Vinaphone, Mobifone, Vietnamobile.
+- **Thẻ game:** Garena, Zing, Vcoin, Gate, Appota, Funcard, SohaCoin, Kul, Carot...
+- **Phần mềm:** mã bản quyền như Kaspersky và các sản phẩm số khác.
+- **Mệnh giá:** chuẩn 10.000đ – 1.000.000đ, thẻ game tới 5.000.000đ, có bộ mệnh giá nhỏ riêng.
 
 ## Tính năng cốt lõi
 
 ### Đổi thẻ cào
 
-- Nhận thẻ Viettel, Vinaphone, Mobifone, Vietnamobile, Zing, Garena, Vcoin, Scoin... gửi từng thẻ hoặc nhiều thẻ một lần.
-- Bảng phí theo **nhóm thành viên** (Thành viên, Đồng, Bạc...) và theo từng mệnh giá, hiển thị công khai cho khách.
-- Xử lý sai mệnh giá, thẻ lỗi, thẻ chờ; tự hỏi lại trạng thái thẻ treo và gửi lại khi nhà cung cấp báo không tìm thấy.
+- Gửi từng thẻ hoặc nhiều thẻ một lần, trên web hoặc qua API.
+- Bảng phí theo **nhóm thành viên** (Thành viên, Đồng, Bạc...) và từng mệnh giá, hiển thị công khai cho khách.
+- Xử lý sai mệnh giá, thẻ lỗi, thẻ chờ; tự hỏi lại trạng thái thẻ treo và gửi lại khi nhà cung cấp báo không tìm thấy thẻ.
+- Cảnh báo và từ chối giao dịch có dấu hiệu bất thường, khoá kết nối gửi thẻ sai liên tục.
 - Báo cáo lãi theo kênh, nhà mạng, nhà cung cấp.
 
 <Image src={doiThe} alt="Trang đổi thẻ cào và bảng phí theo nhóm thành viên" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
@@ -49,8 +66,9 @@ Hệ thống được viết mới hoàn toàn trên Next.js 16 và PostgreSQL, 
 ### Bán mã thẻ
 
 - Danh mục thẻ điện thoại, thẻ game và phần mềm theo nhà phát hành và mệnh giá.
-- Giỏ hàng nhiều thẻ, chiết khấu theo sản phẩm, thanh toán bằng số dư ví hoặc chuyển khoản.
+- Giỏ hàng nhiều thẻ, chọn nhanh số lượng, chiết khấu theo sản phẩm, thanh toán bằng số dư ví hoặc chuyển khoản.
 - Lấy thẻ từ **kho thẻ nhập sẵn** (nhập Excel) hoặc mua tức thì từ nhà cung cấp; hoàn tiền tự động khi đơn lỗi.
+- Đơn chuyển khoản được giao thẻ ngay khi hệ thống khớp được tiền vào.
 
 <Image src={muaThe} alt="Danh mục mua thẻ điện thoại, thẻ game và phần mềm" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
 
@@ -60,23 +78,27 @@ Hệ thống được viết mới hoàn toàn trên Next.js 16 và PostgreSQL, 
 
 - Nạp cước điện thoại trả trước, trả sau và nạp game theo form riêng của từng sản phẩm.
 - Đơn lẻ, đơn hàng loạt, nạp nhanh; trạng thái đơn minh bạch cho khách.
+- Danh mục, sản phẩm và tuỳ chọn gói quản lý trong trang quản trị.
 
 ### Nhà cung cấp và định tuyến
 
 - Kết nối nhiều nhà cung cấp cho từng dịch vụ, tự đồng bộ biểu phí định kỳ.
-- **Tự chọn nhà cung cấp phí thấp nhất** hoặc giữ chuỗi ưu tiên; nhà cung cấp lỗi thì tự chuyển sang nhà tiếp theo.
-- Cấu hình phí, lãi và giới hạn theo kênh, theo nhóm khách.
+- Bốn cách chia đơn: **lần lượt theo thứ tự**, **chia theo tỉ lệ**, **phí thấp nhất trước**, **xoay vòng**.
+- Nhà cung cấp lỗi thì tự chuyển sang nhà tiếp theo; hết lựa chọn thì từ chối hoặc chuyển web tự xử lý.
+- Cấu hình phí, lãi và giới hạn theo kênh, theo nhóm khách; có chế độ tự tính lãi theo phí nhà cung cấp.
 
 ### Ví, thanh toán và đối soát
 
 - Ví thành viên: nạp tiền, rút tiền, chuyển tiền nội bộ, phí chuyển tiền, biến động số dư.
 - Cổng **ngân hàng nội địa** (VCB, MB, ACB, TCB...) và **ví điện tử** (MoMo, ZaloPay, ViettelPay).
-- **Tự khớp giao dịch ngân hàng** với hoá đơn nạp và đơn mua thẻ theo nội dung chuyển khoản, giao thẻ ngay khi nhận tiền.
+- **Tự khớp giao dịch ngân hàng** với hoá đơn nạp và đơn mua thẻ theo nội dung chuyển khoản; tự huỷ hoá đơn quá hạn.
+- Giới hạn số tiền theo ngày cho mua thẻ, nạp, rút, chuyển tiền.
 - Hoa hồng giới thiệu (affiliate) tự thanh toán sau thời gian chờ.
 
 ### API đối tác và nhà phát triển
 
 - Khách tự tạo kết nối API: chọn dịch vụ (đổi thẻ, mua thẻ, nạp cước/game), Callback URL, kiểu GET/POST, giới hạn IP.
+- Kết nối mới có thể tự bật sau thời gian cấu hình khi đủ điều kiện (có Callback, có IP).
 - Trang tài liệu API có mục lục, ví dụ, mã lỗi và **Sandbox** với thẻ mẫu cho từng tình huống (đúng, sai mệnh giá, thẻ lỗi, chờ...), thử ngay trên trình duyệt.
 
 <Image src={ketNoiApi} alt="Trang khách tự đăng ký kết nối API" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
@@ -86,19 +108,47 @@ Hệ thống được viết mới hoàn toàn trên Next.js 16 và PostgreSQL, 
 ### Bảo mật
 
 - Xác thực 2 bước: OTP email, Google Authenticator hoặc mật khẩu cấp 2 cho thao tác quan trọng.
-- Đường dẫn quản trị bí mật, phân quyền theo vai trò (RBAC), danh sách IP trắng/đen, nhật ký đăng nhập.
-- Cảnh báo giao dịch bất thường, giới hạn tần suất, khoá kết nối gửi thẻ sai liên tục.
+- Đăng nhập bằng Google, Facebook, GitHub, Microsoft... và xác minh danh tính người dùng.
+- Đường dẫn quản trị bí mật, phân quyền theo vai trò (RBAC), danh sách IP trắng/đen có thời hạn, nhật ký đăng nhập.
+- Nhận đúng IP thật của khách khi chạy sau Cloudflare, chống giả IP để lọt giới hạn.
 
 <Image src={baoMat} alt="Trang bảo mật tài khoản với OTP email, Google Authenticator, mật khẩu cấp 2" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
 
 ### Quản trị và AI Agent
 
 - Bảng quản trị: doanh thu, lãi từng dịch vụ hôm nay và trong tháng, danh sách việc cần xử lý.
-- Thống kê đổi thẻ, bán thẻ, nạp cước, ví, top khách; xuất Excel.
-- Quản lý nội dung: tin tức, trang tĩnh, banner, menu, SEO, đa ngôn ngữ, mẫu email.
-- **Kết nối AI Agent qua chuẩn MCP**: quản trị viên thêm website vào Claude, ChatGPT... đăng nhập một lần rồi ra lệnh bằng lời, quyền của agent theo đúng vai trò được cấp.
+- **Kết nối AI Agent qua chuẩn MCP**: quản trị viên thêm website vào Claude, ChatGPT... đăng nhập một lần rồi ra lệnh bằng lời. Quyền của agent theo đúng vai trò được cấp, mọi thao tác đều ghi nhật ký.
 
 <Image src={quanTri} alt="Bảng quản trị: doanh thu, lãi theo dịch vụ và việc cần xử lý" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+## Trang quản trị có gì
+
+<div class="not-prose my-6 grid gap-3 sm:grid-cols-2">
+  <div class="frame rounded-box p-5"><div class="font-semibold">Dịch vụ</div><div class="mt-1 text-sm text-muted">Kênh và nhà mạng đổi thẻ, nhà cung cấp, biểu phí; sản phẩm, kho thẻ, đơn bán thẻ; danh mục, sản phẩm, định tuyến nạp cước.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Người dùng</div><div class="mt-1 text-sm text-muted">Tài khoản, nhóm, vai trò, quản trị viên, xác minh danh tính, cảnh báo, nhật ký đăng nhập.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Ví và thanh toán</div><div class="mt-1 text-sm text-muted">Yêu cầu nạp/rút, biến động số dư, phí chuyển tiền, tài khoản ngân hàng, lịch sử ngân hàng, hoá đơn, cổng thanh toán.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Đối tác</div><div class="mt-1 text-sm text-muted">Kết nối API của khách, hoa hồng giới thiệu, kết nối AI Agent.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Nội dung</div><div class="mt-1 text-sm text-muted">Tin tức, trang tĩnh, banner, slider, menu, khối nội dung, tệp, SEO, ngôn ngữ.</div></div>
+  <div class="frame rounded-box p-5"><div class="font-semibold">Báo cáo</div><div class="mt-1 text-sm text-muted">Tổng hợp, đổi thẻ, bán thẻ, nạp cước, kho thẻ, ví, top khách; xuất Excel.</div></div>
+  <div class="frame rounded-box p-5 sm:col-span-2"><div class="font-semibold">Hệ thống</div><div class="mt-1 text-sm text-muted">Email và mẫu email (Gmail, Outlook, Zoho, SendGrid, Amazon SES...), đăng nhập mạng xã hội, giới hạn, tác vụ tự động, tường lửa IP, cache, dọn dữ liệu cũ.</div></div>
+</div>
+
+## Trang dành cho khách hàng
+
+- Đổi thẻ, mua thẻ, nạp cước/game ngay trên trang chủ, không cần chuyển trang.
+- Tài khoản: hồ sơ, đổi mật khẩu, bảo mật 2 bước, tài khoản ngân hàng nhận tiền.
+- Ví: nạp tiền, rút tiền, chuyển tiền, lịch sử giao dịch.
+- Lịch sử đổi thẻ, mua thẻ, nạp cước; hoa hồng giới thiệu; kết nối API.
+
+## Tự động hoá
+
+Các tác vụ chạy định kỳ, có nhật ký từng lần chạy và nút chạy tay khi cần:
+
+- Cập nhật biểu phí nhà cung cấp và sắp xếp lại chuỗi theo phí.
+- Hỏi trạng thái thẻ đang chờ, tự gửi lại hoặc chuyển thẻ lỗi.
+- Đồng bộ giao dịch ngân hàng, giao thẻ cho đơn vừa nhận tiền, huỷ hoá đơn quá hạn.
+- Mở API tự động cho kết nối mới đủ điều kiện.
+- Thanh toán hoa hồng giới thiệu.
 
 ## Quy trình một giao dịch
 
@@ -107,13 +157,43 @@ Hệ thống được viết mới hoàn toàn trên Next.js 16 và PostgreSQL, 
 3. **Định tuyến**: chọn nhà cung cấp theo phí và tình trạng, tự chuyển khi lỗi.
 4. **Hoàn tất và đối soát**: cộng ví hoặc giao thẻ, gửi callback, ghi nhận lãi vào báo cáo.
 
-## Kiến trúc
+## Bạn nhận được gì
 
-- **Nền tảng:** Next.js 16, React 19, TypeScript, PostgreSQL với Drizzle ORM, Valkey cho cache và hàng đợi.
-- **Kênh bán:** khách lẻ trên web, đại lý qua API, quản trị viên và AI Agent qua MCP.
-- **Tự động hoá:** tác vụ định kỳ đồng bộ phí, hỏi thẻ chờ, đồng bộ ngân hàng, trả hoa hồng; có nhật ký từng lần chạy.
-- **Ngôn ngữ:** tiếng Việt và tiếng Anh.
-- **Triển khai:** máy chủ riêng sau Cloudflare và nginx, nhận đúng IP thật của khách.
+- Toàn bộ mã nguồn ứng dụng, cơ sở dữ liệu và tài liệu kiến trúc, triển khai.
+- Cài đặt lên máy chủ của bạn, cấu hình tên miền, email và cổng thanh toán.
+- Hướng dẫn vận hành trang quản trị: thêm nhà cung cấp, chỉnh phí, quản lý kho thẻ.
+- Đổi logo, màu thương hiệu, nội dung trang theo đơn vị của bạn.
+
+## Yêu cầu triển khai
+
+- Máy chủ riêng (VPS) chạy Node.js, PostgreSQL và Valkey (tương thích Redis).
+- Tên miền trỏ qua Cloudflare, nginx làm proxy phía trước ứng dụng.
+- Tài khoản email gửi thư (SMTP) và tài khoản nhà cung cấp thẻ của bạn.
+
+## Câu hỏi thường gặp
+
+<div class="not-prose frame my-6 rounded-box">
+  <details class="faq-item group" open>
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">Tôi không biết lập trình có vận hành được không?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">Được. Mọi thao tác hằng ngày (chỉnh phí, thêm nhà cung cấp, duyệt rút tiền, quản lý nội dung) đều làm trên trang quản trị. DEFEAT cài đặt và hướng dẫn khi bàn giao.</div>
+  </details>
+  <details class="faq-item group frame-t">
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">Kết nối được với nhà cung cấp thẻ nào?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">Các nhà cung cấp dùng chuẩn API đổi thẻ phổ biến (gửi thẻ, kiểm tra trạng thái, lấy biểu phí). Bạn thêm nhiều nhà cung cấp và hệ thống tự chia đơn giữa các bên.</div>
+  </details>
+  <details class="faq-item group frame-t">
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">Có đổi được giao diện và thương hiệu không?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">Logo, banner, menu, trang tĩnh, ngôn ngữ và SEO chỉnh trực tiếp trong quản trị. Tuỳ biến sâu về giao diện hoặc thêm tính năng riêng được báo giá theo yêu cầu.</div>
+  </details>
+  <details class="faq-item group frame-t">
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">Chạy trên hosting thường được không?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">Không. Hệ thống cần máy chủ riêng chạy Node.js, PostgreSQL và Valkey. DEFEAT tư vấn cấu hình máy chủ phù hợp với lưu lượng của bạn.</div>
+  </details>
+  <details class="faq-item group frame-t">
+    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-4 transition-colors hover:bg-base-200"><span class="text-[15px] font-medium">Thanh toán như thế nào?</span><span class="relative flex size-4 shrink-0 items-center justify-center text-muted" aria-hidden="true"><span class="absolute h-px w-4 bg-current"></span><span class="plus-v absolute h-4 w-px bg-current"></span></span></summary>
+    <div class="px-5 pb-5 text-[15px] text-muted">Chuyển khoản vào tài khoản chính thức của DEFEAT, xem chi tiết tại <a class="text-primary underline underline-offset-4" href="/payment">Thông tin thanh toán</a>.</div>
+  </details>
+</div>
 
 ## Phù hợp với
 
