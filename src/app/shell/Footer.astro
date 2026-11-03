@@ -29,10 +29,12 @@ const columns = [
       ...(isShown('caseStudies') ? [{ label: t('nav.caseStudies'), href: href('/case-studies') }] : []),
       { label: t('nav.products'), href: href('/products') },
       { label: t('nav.contact'), href: href('/contact') },
+      { label: t('footer.contactInfo'), href: href('/contact-info') },
+      { label: t('footer.payment'), href: href('/payment') },
     ],
   },
   {
-    title: t('footer.resources'),
+    title: t('footer.legal'),
     links: [
       ...(isShown('news') ? [{ label: t('nav.news'), href: href('/news') }, { label: t('footer.rss'), href: href('/rss.xml') }] : []),
       { label: t('footer.privacy'), href: href('/privacy') },
@@ -40,63 +42,149 @@ const columns = [
     ],
   },
 ];
+
+const PLATFORM: Record<string, string> = { telegram: 'Telegram', zalo: 'Zalo', facebook: 'Facebook' };
+const groups = SITE.channels.reduce<{ icon: string; items: (typeof SITE.channels)[number][] }[]>((acc, c) => {
+  const last = acc.at(-1);
+  if (last?.icon === c.icon) last.items.push(c);
+  else acc.push({ icon: c.icon, items: [c] });
+  return acc;
+}, []);
+
+const contacts = [
+  { icon: 'mail' as const, label: SITE.email, href: `mailto:${SITE.email}` },
+  { icon: 'phone' as const, label: SITE.phone, href: `tel:${SITE.phone.replace(/\s/g, '')}` },
+];
+const zalo = SITE.channels.find((c) => c.icon === 'zalo');
 const socials = Object.entries(SITE.social).filter(([, url]) => url);
 const socialLabel: Record<string, string> = { github: 'GitHub', telegram: 'Telegram' };
 ---
 
 {!hideCtaBand && <CtaBand locale={locale} />}
 
-<footer class="container-x pb-10 pt-6">
-  <div class="grid gap-10 pb-12 lg:grid-cols-12">
-    <div class="lg:col-span-5">
-      <a href={href('/')} class="inline-flex" aria-label="DEFEAT">
-        <img src="/brand/defeat_logo.png" alt="DEFEAT" width="961" height="961" loading="lazy" class="size-8" />
-      </a>
-      <p class="mt-4 max-w-xs text-sm text-muted">{t('footer.tagline')}</p>
-      <ul class="mt-5 space-y-1.5 text-sm text-muted">
-        <li><a class="hover:text-base-content" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
-        <li><a class="hover:text-base-content" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></li>
-        <li>{SITE.address.locality}, Việt Nam</li>
-      </ul>
-    </div>
-    <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 lg:col-span-7">
-      {
-        columns.map((col) => (
-          <nav aria-label={col.title} class="first:col-span-2 sm:first:col-span-1">
-            <h2 class="text-sm font-medium">{col.title}</h2>
-            <ul class="mt-4 space-y-2.5 text-sm">
-              {col.links.map((l) => (
-                <li><a class="text-muted transition-colors hover:text-base-content" href={l.href}>{l.label}</a></li>
-              ))}
-            </ul>
-          </nav>
-        ))
-      }
-      <nav aria-label={t('footer.connect')} class="col-span-2 sm:col-span-1">
-        <h2 class="text-sm font-medium">{t('footer.connect')}</h2>
-        <ul class="mt-4 space-y-2.5 text-sm">
-          {SITE.channels.map((c) => (
+<footer class="site-footer relative mt-6 overflow-hidden">
+  <div class="footer-line" aria-hidden="true"></div>
+
+  <div class="container-x relative">
+    <div class="grid gap-12 pt-16 pb-12 lg:grid-cols-12 lg:gap-8">
+      <div class="lg:col-span-4">
+        <a href={href('/')} class="inline-flex" aria-label={`DEFEAT — ${t('nav.home')}`}>
+          <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" loading="lazy" class="h-8 w-auto" />
+        </a>
+        <p class="mt-5 max-w-sm text-[15px] leading-relaxed text-muted">{t('footer.tagline')}</p>
+
+        <ul class="mt-6 space-y-2">
+          {contacts.map((c) => (
             <li>
-              <a class="inline-flex items-center gap-2 text-muted transition-colors hover:text-base-content" href={c.url} rel="noopener" target="_blank" title={c.handle}>
-                <SocialIcon name={c.icon} class="size-4 shrink-0" />{c.label[locale]}
+              <a href={c.href} class="group inline-flex items-center gap-3 text-sm">
+                <span class="footer-chip"><Icon name={c.icon} class="size-4" /></span>
+                <span class="transition-colors group-hover:text-primary">{c.label}</span>
               </a>
             </li>
           ))}
+          {zalo && (
+            <li>
+              <a href={zalo.url} rel="noopener" target="_blank" class="group inline-flex items-center gap-3 text-sm">
+                <span class="footer-chip"><SocialIcon name="zalo" class="size-4" /></span>
+                <span class="transition-colors group-hover:text-primary">Zalo · {zalo.handle}</span>
+              </a>
+            </li>
+          )}
         </ul>
-      </nav>
+      </div>
+
+      <div class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4 lg:col-span-8">
+        {
+          columns.map((col) => (
+            <nav aria-label={col.title}>
+              <h2 class="footer-head">{col.title}</h2>
+              <ul class="mt-5 space-y-3 text-sm">
+                {col.links.map((l) => (
+                  <li><a class="footer-link" href={l.href}>{l.label}</a></li>
+                ))}
+              </ul>
+            </nav>
+          ))
+        }
+        <nav aria-label={t('footer.connect')}>
+          <h2 class="footer-head">{t('footer.connect')}</h2>
+          <ul class="mt-5 space-y-4 text-sm">
+            {groups.map((g) => (
+              <li>
+                {g.items.length > 1 ? (
+                  <>
+                    <p class="inline-flex items-center gap-2 font-medium"><SocialIcon name={g.icon} class="size-4 text-primary" />{PLATFORM[g.icon] ?? g.icon}</p>
+                    <ul class="mt-2 space-y-2 border-l border-dashed border-line pl-3.5 ml-2">
+                      {g.items.map((c) => (
+                        <li><a class="footer-link" href={c.url} rel="noopener" target="_blank" title={c.handle}>{c.label[locale]}</a></li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <a class="footer-link inline-flex items-center gap-2" href={g.items[0]!.url} rel="noopener" target="_blank" title={g.items[0]!.handle}>
+                    <SocialIcon name={g.icon} class="size-4 text-primary" />{PLATFORM[g.icon] ?? g.items[0]!.label[locale]}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <a href={href('/payment')} class="group frame flex flex-col gap-3 rounded-box px-5 py-4 transition-colors hover:bg-base-200/60 sm:flex-row sm:items-center sm:justify-between">
+      <span class="flex items-center gap-3 text-sm">
+        <span class="footer-chip text-primary"><Icon name="shield" class="size-4" /></span>
+        {t('footer.paymentStrip')}
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+        {t('footer.payment')}<Icon name="arrowRight" class="size-4 transition-transform group-hover:translate-x-0.5" />
+      </span>
+    </a>
+
+    <div class="flex flex-col gap-4 py-8 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {SITE.legalName}. {t('footer.rights')} <span class="hidden md:inline">· {t('footer.madeIn')}</span></p>
+      <div class="flex items-center gap-1">
+        {
+          socials.map(([name, url]) => (
+            <a href={url} rel="noopener" target="_blank" aria-label={socialLabel[name] ?? name} title={socialLabel[name] ?? name} class="flex size-9 items-center justify-center rounded-full transition-colors hover:bg-base-200 hover:text-base-content">
+              <SocialIcon name={name} class="size-[18px]" />
+            </a>
+          ))
+        }
+        <span class="mx-2 h-4 w-px bg-line" aria-hidden="true"></span>
+        <a href="#top" class="inline-flex h-9 items-center gap-1.5 rounded-full px-3 transition-colors hover:bg-base-200 hover:text-base-content">
+          {t('footer.backToTop')} <Icon name="arrowUp" class="size-3.5" />
+        </a>
+      </div>
     </div>
   </div>
-  <div class="frame-t flex flex-col gap-4 pt-6 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between">
-    <p>© {year} {SITE.legalName}. {t('footer.rights')}</p>
-    <div class="flex items-center gap-4">
-      {
-        socials.map(([name, url]) => (
-          <a href={url} rel="noopener" target="_blank" aria-label={socialLabel[name] ?? name} title={socialLabel[name] ?? name} class="flex size-9 items-center justify-center rounded-full transition-colors hover:bg-base-200 hover:text-base-content">
-            <SocialIcon name={name} class="size-[18px]" />
-          </a>
-        ))
-      }
-      <a href="#top" class="inline-flex items-center gap-1 hover:text-base-content">{t('footer.backToTop')} <Icon name="arrowUp" class="size-3.5" /></a>
-    </div>
-  </div>
+
+  <div class="footer-mark container-x" aria-hidden="true"><div></div></div>
 </footer>
+
+<style>
+  .footer-line {
+    position: absolute; inset: 0 0 auto; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-primary) 50%, transparent);
+    opacity: 0.55;
+  }
+  .site-footer::before {
+    content: ""; position: absolute; inset: -40% 20% auto; height: 70%; pointer-events: none;
+    background: radial-gradient(ellipse at top, var(--glow), transparent 65%);
+  }
+  .footer-head { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .footer-link { color: color-mix(in oklab, var(--color-base-content) 78%, transparent); transition: color 0.15s; }
+  .footer-link:hover { color: var(--color-primary); }
+  .footer-chip {
+    display: inline-flex; width: 2rem; height: 2rem; flex-shrink: 0; align-items: center; justify-content: center;
+    border-radius: 9999px; border: 1px dashed var(--line-strong);
+  }
+  .footer-mark { pointer-events: none; user-select: none; margin-bottom: -4%; }
+  .footer-mark > div {
+    aspect-ratio: 1354 / 279; width: 100%;
+    background: linear-gradient(to bottom, color-mix(in oklab, var(--color-base-content) 13%, transparent), transparent 85%);
+    mask: url(/brand/defeat-text.png) center / contain no-repeat;
+    -webkit-mask: url(/brand/defeat-text.png) center / contain no-repeat;
+  }
+</style>

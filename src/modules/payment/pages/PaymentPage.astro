@@ -1,0 +1,119 @@
+---
+import BaseLayout from '@app/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import Icon from '@shared/components/Icon.astro';
+import { breadcrumbLd } from '@shared/seo/jsonld';
+import { PAYMENT } from '@config/site';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import { paymentText } from '../i18n';
+import { vietQrPayload } from '../vietqr';
+import { vietQrSvg } from '../qr-svg';
+
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = paymentText[locale];
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: text.title, href: localizePath('/payment', locale) },
+];
+
+---
+
+<BaseLayout title={text.title} description={text.desc} path="/payment" jsonLd={[breadcrumbLd(crumbs)]}>
+  <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container-x grid gap-12 lg:grid-cols-3">
+      <div class="space-y-12 lg:col-span-2">
+        <div data-reveal>
+          <h2 class="t-h3">{text.accountsTitle}</h2>
+          {
+            PAYMENT.accounts.length ? (
+              <ul class="mt-5 grid gap-4">
+                {PAYMENT.accounts.map((a) => (
+                  <li class="frame flex flex-col gap-6 rounded-box p-5 sm:flex-row sm:p-6">
+                    <dl class="grid flex-1 gap-4 text-[15px]">
+                      <div><dt class="text-sm text-muted">{text.bank}</dt><dd class="mt-1 font-medium">{a.bank}</dd></div>
+                      <div>
+                        <dt class="text-sm text-muted">{text.number}</dt>
+                        <dd class="mt-1 flex items-center gap-2">
+                          <span class="text-xl font-semibold tracking-wide tabular-nums">{a.number}</span>
+                          <button type="button" class="btn btn-ghost btn-sm" data-copy={a.number} data-copied={text.copied} aria-label={`${text.copy} ${text.number}`}>
+                            <Icon name="clipboard" class="size-4" /><span>{text.copy}</span>
+                          </button>
+                        </dd>
+                      </div>
+                      <div><dt class="text-sm text-muted">{text.holder}</dt><dd class="mt-1 font-medium uppercase">{a.holder}</dd></div>
+                      {a.branch && <div><dt class="text-sm text-muted">{text.branch}</dt><dd class="mt-1">{a.branch}</dd></div>}
+                    </dl>
+                    <figure class="flex shrink-0 flex-col items-center gap-2.5 sm:w-52">
+                      <div class="size-52 overflow-hidden rounded-box bg-white p-1 [&>svg]:size-full" role="img" aria-label={`VietQR ${a.bank} ${a.number}`} set:html={vietQrSvg(vietQrPayload(a), a.bin)} />
+                      <figcaption class="text-center text-xs text-muted">{text.qr}</figcaption>
+                    </figure>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p class="frame mt-5 rounded-box p-5 text-[15px] text-muted">{text.noAccounts}</p>
+            )
+          }
+        </div>
+
+        <div class="frame rounded-box bg-base-200 p-5 sm:p-6" data-reveal>
+          <h2 class="font-semibold">{text.noteTitle}</h2>
+          <p class="mt-1 text-sm text-muted">{text.noteDesc}</p>
+          <p class="mt-3 flex flex-wrap items-center gap-2">
+            <code class="rounded bg-base-100 px-3 py-1.5 font-mono text-[15px]">{PAYMENT.transferNote}</code>
+          </p>
+        </div>
+
+        <div data-reveal>
+          <h2 class="t-h3">{text.stepsTitle}</h2>
+          <ol class="mt-5 grid gap-4 sm:grid-cols-2">
+            {text.steps.map((s, i) => (
+              <li class="frame rounded-box p-5">
+                <p class="text-sm font-semibold text-primary tabular-nums">0{i + 1}</p>
+                <p class="mt-1 font-semibold">{s.title}</p>
+                <p class="mt-1 text-sm text-muted">{s.desc}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div data-reveal>
+          <h2 class="t-h3">{text.termsTitle}</h2>
+          <ul class="mt-4 space-y-2.5 text-[15px]">
+            {text.terms.map((s) => <li class="flex gap-3"><Icon name="check" class="mt-1 size-4 shrink-0 text-primary" />{s}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start" data-reveal>
+        <div class="rounded-box border border-warning/40 bg-warning/10 p-5">
+          <h2 class="flex items-center gap-2 font-semibold"><Icon name="shield" class="size-5 text-warning" />{text.safetyTitle}</h2>
+          <ul class="mt-3 space-y-2.5 text-sm">
+            {text.safety.map((s) => <li>{s}</li>)}
+          </ul>
+        </div>
+        <div class="frame rounded-box p-5">
+          <p class="font-semibold">{text.help}</p>
+          <a href={localizePath('/contact-info', locale)} class="btn btn-line mt-4 w-full">{text.helpCta}</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+    const label = btn.querySelector('span');
+    const original = label?.textContent ?? '';
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy ?? '');
+        if (label) label.textContent = btn.dataset.copied ?? '';
+        setTimeout(() => { if (label) label.textContent = original; }, 1800);
+      } catch {}
+    });
+  }
+</script>

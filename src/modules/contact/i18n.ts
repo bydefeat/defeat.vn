@@ -57,3 +57,44 @@ export const contactText: Record<Locale, {
     },
   },
 };
+
+export const contactInfoText: Record<Locale, {
+  eyebrow: string; title: string; desc: string;
+  companyTitle: string; legalName: string; taxId: string; address: string; email: string; phone: string; hours: string;
+  channelsTitle: string; needsTitle: string;
+  needs: { title: string; desc: string; cta: string; href: string }[];
+  officialTitle: string; officialDesc: string;
+}> = {
+  vi: {
+    eyebrow: 'Liên hệ',
+    title: 'Thông tin liên hệ',
+    desc: 'Các kênh liên hệ chính thức của DEFEAT. Chúng tôi phản hồi trong 1–2 ngày làm việc.',
+    companyTitle: 'Thông tin doanh nghiệp',
+    legalName: 'Tên đơn vị', taxId: 'Mã số thuế', address: 'Địa chỉ', email: 'Email', phone: 'Điện thoại', hours: 'Giờ làm việc',
+    channelsTitle: 'Nhắn tin trực tiếp & cộng đồng',
+    needsTitle: 'Liên hệ theo nhu cầu',
+    needs: [
+      { title: 'Tư vấn và báo giá', desc: 'Dự án phần mềm, website, ứng dụng hoặc mua mã nguồn.', cta: 'Gửi yêu cầu', href: '/contact' },
+      { title: 'Sản phẩm và mã nguồn', desc: 'Xem tính năng, giá và công nghệ của từng sản phẩm.', cta: 'Xem sản phẩm', href: '/products' },
+      { title: 'Thanh toán', desc: 'Tài khoản nhận tiền chính thức và quy trình thanh toán.', cta: 'Thông tin thanh toán', href: '/payment' },
+    ],
+    officialTitle: 'Kênh chính thức',
+    officialDesc: 'DEFEAT chỉ liên hệ qua các kênh trên trang này. Nếu nhận được tin nhắn đáng ngờ nhân danh DEFEAT, vui lòng xác minh qua email trước khi làm theo.',
+  },
+  en: {
+    eyebrow: 'Contact',
+    title: 'Contact information',
+    desc: 'DEFEAT’s official contact channels. We reply within 1–2 business days.',
+    companyTitle: 'Company details',
+    legalName: 'Company', taxId: 'Tax ID', address: 'Address', email: 'Email', phone: 'Phone', hours: 'Business hours',
+    channelsTitle: 'Direct message & community',
+    needsTitle: 'Contact by topic',
+    needs: [
+      { title: 'Consulting and quotes', desc: 'Software, website or app projects, or buying source code.', cta: 'Send a request', href: '/contact' },
+      { title: 'Products and source code', desc: 'Features, pricing and tech stack for each product.', cta: 'View products', href: '/products' },
+      { title: 'Payment', desc: 'Official receiving accounts and payment process.', cta: 'Payment information', href: '/payment' },
+    ],
+    officialTitle: 'Official channels',
+    officialDesc: 'DEFEAT only contacts you through the channels on this page. If you receive a suspicious message in DEFEAT’s name, please verify by email before acting on it.',
+  },
+};

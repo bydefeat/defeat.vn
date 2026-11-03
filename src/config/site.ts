@@ -3,7 +3,7 @@ export const SITE = {
   legalName: 'DEFEAT Software',
   url: 'https://defeat.vn',
   email: 'contact@defeat.vn',
-  phone: '+84 000 000 000',
+  phone: '+84 935 974 907',
   address: {
     street: '',
     locality: 'Ho Chi Minh City',
@@ -17,14 +17,24 @@ export const SITE = {
   channels: [
     { key: 'announcements', icon: 'telegram', url: 'https://t.me/bydefeat', handle: 't.me/bydefeat', label: { vi: 'Nhóm thông báo', en: 'Announcements' } },
     { key: 'community', icon: 'telegram', url: 'https://t.me/defeatcommunity', handle: 't.me/defeatcommunity', label: { vi: 'Cộng đồng chat', en: 'Community chat' } },
-    { key: 'telegram', icon: 'telegram', url: 'https://t.me/vanixjnk', handle: '@vanixjnk', label: { vi: 'Telegram cá nhân', en: 'Personal Telegram' } },
+    { key: 'telegram', icon: 'telegram', url: 'https://t.me/vanixjnk', handle: '@vanixjnk', label: { vi: 'Nhắn tin trực tiếp', en: 'Direct message' } },
+    { key: 'zalo', icon: 'zalo', url: 'https://zalo.me/84935974907', handle: '+84 935 974 907', label: { vi: 'Zalo', en: 'Zalo' } },
     { key: 'facebook', icon: 'facebook', url: 'https://www.facebook.com/vanixjnk', handle: '/vanixjnk', label: { vi: 'Facebook cá nhân', en: 'Personal Facebook' } },
   ],
   ogImage: '/og-default.png',
   themeColor: '#e82024',
+  taxId: '',
+  hours: { vi: '', en: '' },
 } as const;
 
-export type NavKey = 'services' | 'products' | 'caseStudies' | 'news' | 'about' | 'contact';
+export interface BankAccount { bank: string; bin: string; number: string; holder: string; branch?: string }
+
+export const PAYMENT: { accounts: BankAccount[]; transferNote: string } = {
+  accounts: [{ bank: 'MB Bank', bin: '970422', number: '100000001', holder: 'NGUYEN DINH BAO' }],
+  transferNote: 'DEFEAT <mã báo giá>',
+};
+
+export type NavKey = 'services' | 'products' | 'caseStudies' | 'news' | 'about' | 'contact' | 'contactInfo' | 'payment';
 
 /**
  * Mục đang tạm ẩn: không hiện ở menu, footer, trang chủ. Trang tương ứng cũng tắt (trả 404) bằng cách
@@ -40,6 +50,8 @@ const ALL_NAV: ReadonlyArray<{ key: NavKey; path: string }> = [
   { key: 'caseStudies', path: '/case-studies' },
   { key: 'news', path: '/news' },
   { key: 'about', path: '/about' },
+  { key: 'contactInfo', path: '/contact-info' },
+  { key: 'payment', path: '/payment' },
 ];
 
 export const MAIN_NAV = ALL_NAV.filter((item) => isShown(item.key));

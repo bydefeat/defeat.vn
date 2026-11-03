@@ -1,0 +1,86 @@
+---
+import BaseLayout from '@app/layouts/BaseLayout.astro';
+import PageHero from '@shared/components/PageHero.astro';
+import Icon from '@shared/components/Icon.astro';
+import SocialIcon from '@shared/components/SocialIcon.astro';
+import { breadcrumbLd } from '@shared/seo/jsonld';
+import { SITE } from '@config/site';
+import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
+import { contactInfoText } from '../i18n';
+
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+const text = contactInfoText[locale];
+const crumbs = [
+  { name: t('nav.home'), href: localizePath('/', locale) },
+  { name: text.title, href: localizePath('/contact-info', locale) },
+];
+const address = [SITE.address.street, SITE.address.locality, locale === 'vi' ? 'Việt Nam' : 'Vietnam'].filter(Boolean).join(', ');
+const rows = [
+  { label: text.legalName, value: SITE.legalName },
+  { label: text.taxId, value: SITE.taxId },
+  { label: text.email, value: SITE.email, href: `mailto:${SITE.email}`, icon: 'mail' as const },
+  { label: text.phone, value: SITE.phone, href: `tel:${SITE.phone.replace(/\s/g, '')}`, icon: 'phone' as const },
+  { label: text.address, value: address, icon: 'mapPin' as const },
+  { label: text.hours, value: SITE.hours[locale], icon: 'clock' as const },
+].filter((r) => r.value);
+---
+
+<BaseLayout title={text.title} description={text.desc} path="/contact-info" jsonLd={[breadcrumbLd(crumbs)]}>
+  <PageHero eyebrow={text.eyebrow} title={text.title} description={text.desc} crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container-x grid gap-12 lg:grid-cols-3">
+      <div class="space-y-12 lg:col-span-2">
+        <div data-reveal>
+          <h2 class="t-h3">{text.companyTitle}</h2>
+          <dl class="frame mt-5 divide-y divide-dashed divide-line rounded-box">
+            {rows.map((r) => (
+              <div class="grid gap-1 px-5 py-4 sm:grid-cols-3 sm:gap-4">
+                <dt class="flex items-center gap-2 text-sm text-muted">{r.icon && <Icon name={r.icon} class="size-4 text-primary" />}{r.label}</dt>
+                <dd class="text-[15px] font-medium sm:col-span-2">
+                  {r.href ? <a class="hover:text-primary" href={r.href}>{r.value}</a> : r.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <div data-reveal>
+          <h2 class="t-h3">{text.needsTitle}</h2>
+          <ul class="mt-5 grid gap-4 sm:grid-cols-3">
+            {text.needs.map((n) => (
+              <li class="frame flex flex-col rounded-box p-5">
+                <p class="font-semibold">{n.title}</p>
+                <p class="mt-1 flex-1 text-sm text-muted">{n.desc}</p>
+                <a href={localizePath(n.href, locale)} class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+                  {n.cta}<Icon name="arrowRight" class="size-4" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start" data-reveal>
+        <div class="frame rounded-box p-5">
+          <h2 class="font-semibold">{text.channelsTitle}</h2>
+          <ul class="mt-3 space-y-1 text-[15px]">
+            {SITE.channels.map((c) => (
+              <li>
+                <a class="flex min-h-11 items-center gap-3 hover:text-primary" href={c.url} rel="noopener" target="_blank">
+                  <SocialIcon name={c.icon} class="size-5 shrink-0 text-primary" />
+                  <span>{c.label[locale]} <span class="text-muted">· {c.handle}</span></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="rounded-box bg-base-200 p-5">
+          <h2 class="flex items-center gap-2 font-semibold"><Icon name="shield" class="size-5 text-primary" />{text.officialTitle}</h2>
+          <p class="mt-2 text-sm text-muted">{text.officialDesc}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
