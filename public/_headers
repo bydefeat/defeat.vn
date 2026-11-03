@@ -1,0 +1,10 @@
+# Favicon & logo: tên file không đổi theo bản build nên không dùng immutable.
+# Cache 1 ngày, sau đó vẫn dùng bản cũ tới 30 ngày trong lúc tải lại ngầm → tab không phải chờ favicon.
+/favicon-32.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/apple-touch-icon.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/icon-512.png
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/brand/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000

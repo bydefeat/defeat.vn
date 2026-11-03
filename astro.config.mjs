@@ -33,7 +33,12 @@ export default defineConfig({
   // Prism (class-based) thay vì Shiki (inline style) để tương thích CSP.
   markdown: { syntaxHighlight: 'prism' },
 
+  // Rê chuột vào link → trình duyệt tải trước. Với clientPrerender (Speculation Rules), Chrome/Edge còn DỰNG SẴN
+  // trang → bấm là hiện ngay, gần như không thấy vòng quay loading ở tab. Trình duyệt khác tự dùng prefetch thường.
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
+  experimental: {
+    clientPrerender: true,
+  },
 
   fonts: [
     {

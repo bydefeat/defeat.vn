@@ -81,6 +81,12 @@ sắp thứ tự theo vật thể rồi theo mặt, chi tiết gắn vào đúng
 logo mờ, vùng ký tự "nở" màu đỏ quanh con trỏ. Vẽ trong **Web Worker (OffscreenCanvas)** → luồng chính rảnh; fallback luồng chính 12fps.
 Chỉ chạy khi khối hiện trên màn hình; reduced motion → khung tĩnh; màu theo theme (`--ascii-ink`, `--ascii-hot`).
 
+**Điều hướng nhanh:** `prefetch` (rê chuột) + `experimental.clientPrerender` (Speculation Rules, mức `moderate`):
+Chrome/Edge dựng sẵn trang khi người dùng rê chuột lên link → bấm là hiện ngay, gần như không thấy vòng quay loading/favicon
+nháy ở tab. Khi bật CSP, Astro chèn luật tĩnh lúc build và tự thêm hash vào CSP. Trình duyệt khác dùng prefetch thường.
+Lưu ý: Chrome tắt prerender khi đang mở DevTools (Preload panel báo `PrerenderingDisabledByDevTools`) — đóng DevTools để thử.
+Favicon/logo có `Cache-Control` 1 ngày + `stale-while-revalidate` 30 ngày (`public/_headers`).
+
 **Thanh cuộn:** ẩn toàn site (`scrollbar-width: none` + `::-webkit-scrollbar`), vẫn cuộn bình thường.
 
 **Logo:** công nghệ & mạng xã hội là SVG từ thesvg.org (`scripts/assets/tech`, `scripts/assets/social`); logo DEFEAT ở `public/brand/`.
