@@ -1,20 +1,20 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Locale } from '@i18n/config';
-import { splitId } from '@shared/lib/content';
+import { LOCALES } from '@i18n/config';
+import { pickLocalized, splitId } from '@shared/lib/content';
 
 export type ProductEntry = CollectionEntry<'products'>;
 
 const isPublished = (e: ProductEntry) => import.meta.env.DEV || !e.data.draft;
 
 export async function getProducts(locale: Locale, opts: { featured?: boolean; limit?: number } = {}) {
-  const all = await getCollection(
-    'products',
-    (e) => isPublished(e) && splitId(e.id).locale === locale && (!opts.featured || e.data.featured),
-  );
+  // Chọn bản theo ngôn ngữ trước, rồi mới lọc "nổi bật" theo chính bản đó.
+  const all = pickLocalized(await getCollection('products', isPublished), locale).filter((e) => !opts.featured || e.data.featured);
   const sorted = all.sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
   return opts.limit ? sorted.slice(0, opts.limit) : sorted;
 }
 
+/** Ngôn ngữ có bản viết thật cho slug (dùng cho hreflang). */
 export async function getProductLocales(slug: string): Promise<Locale[]> {
   const all = await getCollection('products', isPublished);
   return all.map((e) => splitId(e.id)).filter((s) => s.slug === slug).map((s) => s.locale);
@@ -29,7 +29,7 @@ export async function productStaticPaths(locale: Locale) {
   return Promise.all(
     items.map(async (product) => ({
       params: { slug: productSlug(product) },
-      props: { product, availableLocales: await getProductLocales(productSlug(product)) },
+      props: { product, availableLocales: [...LOCALES], translations: await getProductLocales(productSlug(product)) },
     })),
   );
 }

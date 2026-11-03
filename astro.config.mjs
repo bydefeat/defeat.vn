@@ -6,8 +6,18 @@ import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import { existsSync } from 'node:fs';
 
 const SITE = 'https://defeat.vn';
+
+// Bài /en/... chưa có bản tiếng Anh vẫn được dựng (dùng bản tiếng Việt, canonical trỏ về bản gốc) → không đưa vào sitemap.
+/** @param {string} pathname */
+const isUntranslated = (pathname) => {
+  const m = pathname.match(/^\/en\/(news|products|case-studies)\/([^/]+)$/);
+  if (!m) return false;
+  const base = `./src/content/${m[1]}/en/${m[2]}`;
+  return !existsSync(`${base}.mdx`) && !existsSync(`${base}.md`);
+};
 
 /**
  * Chiến lược render (xem docs/ARCHITECTURE.md):
@@ -82,7 +92,10 @@ export default defineConfig({
     sitemap({
       i18n: { defaultLocale: 'vi', locales: { vi: 'vi-VN', en: 'en-US' } },
       // Loại trang noindex (pháp lý chưa có nội dung, 404) khỏi sitemap.
-      filter: (page) => !/\/(ingest\/|404|privacy|terms)/.test(new URL(page).pathname),
+      filter: (page) => {
+        const { pathname } = new URL(page);
+        return !/\/(ingest\/|404|privacy|terms)/.test(pathname) && !isUntranslated(pathname);
+      },
     }),
   ],
 

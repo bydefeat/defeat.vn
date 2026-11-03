@@ -16,6 +16,10 @@ export interface SeoProps {
   path: string;
   /** Ngôn ngữ có bản dịch của trang này. Mặc định: tất cả. */
   availableLocales?: readonly Locale[];
+  /** Ngôn ngữ có bản viết thật (hreflang). Mặc định = availableLocales. */
+  translations?: readonly Locale[];
+  /** Ngôn ngữ thật của nội dung. Khác `locale` (trang dùng bản dự phòng) → canonical trỏ về bản gốc. */
+  contentLocale?: Locale;
   image?: string;
   imageAlt?: string;
   type?: 'website' | 'article' | 'product';
@@ -31,6 +35,8 @@ const {
   locale,
   path,
   availableLocales = LOCALES,
+  translations = availableLocales,
+  contentLocale = locale,
   image = SITE.ogImage,
   imageAlt = SITE.name,
   type = 'website',
@@ -41,13 +47,13 @@ const {
 } = Astro.props as SeoProps;
 
 const fullTitle = path === '/' ? `${SITE.name} — ${title}` : `${title} | ${SITE.name}`;
-const canonical = new URL(localizePath(path, locale), SITE.url).toString();
+const canonical = new URL(localizePath(path, contentLocale), SITE.url).toString();
 const imageUrl = new URL(image, SITE.url).toString();
-const alternates = availableLocales.map((l) => ({
+const alternates = translations.map((l) => ({
   hreflang: LOCALE_META[l].hreflang,
   href: new URL(localizePath(path, l), SITE.url).toString(),
 }));
-const xDefaultLocale = availableLocales.includes(DEFAULT_LOCALE) ? DEFAULT_LOCALE : availableLocales[0];
+const xDefaultLocale = translations.includes(DEFAULT_LOCALE) ? DEFAULT_LOCALE : translations[0];
 const xDefault = new URL(localizePath(path, xDefaultLocale ?? locale), SITE.url).toString();
 ---
 
@@ -66,9 +72,9 @@ const xDefault = new URL(localizePath(path, xDefaultLocale ?? locale), SITE.url)
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={imageUrl} />
 <meta property="og:image:alt" content={imageAlt} />
-<meta property="og:locale" content={LOCALE_META[locale].ogLocale} />
+<meta property="og:locale" content={LOCALE_META[contentLocale].ogLocale} />
 {
-  availableLocales
+  translations
     .filter((l) => l !== locale)
     .map((l) => <meta property="og:locale:alternate" content={LOCALE_META[l].ogLocale} />)
 }

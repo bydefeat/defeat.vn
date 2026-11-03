@@ -109,7 +109,7 @@ Tương thích CSP: không dùng `style=""` trong HTML; JS chỉ đổi style qu
 ## 4. SEO
 
 - Mỗi trang: `title`, `description`, `canonical`, `robots`, Open Graph, Twitter Card (`src/shared/seo/Seo.astro`).
-- `hreflang` vi-VN / en-US / x-default; chỉ khai báo ngôn ngữ thật sự có bản dịch (`availableLocales`).
+- `hreflang` vi-VN / en-US / x-default; chỉ khai báo ngôn ngữ thật sự có bản viết (`translations`); trang dùng bản dự phòng có canonical về bản gốc (`contentLocale`).
 - JSON-LD: `Organization`, `WebSite`, `FAQPage` (home), `Service`, `SoftwareApplication` (+ `Offer`), `NewsArticle`, `BreadcrumbList`.
 - `sitemap-index.xml` có hreflang (loại trừ trang noindex), `robots.txt`, RSS `/rss.xml` và `/en/rss.xml`.
 - Mỗi trang đúng một `<h1>`; ảnh qua `<Image />` (WebP, `srcset`, kích thước cố định → không CLS).
@@ -127,6 +127,10 @@ Tương thích CSP: không dùng `style=""` trong HTML; JS chỉ đổi style qu
 ## 6. Nội dung
 
 - File: `src/content/<collection>/<vi|en>/<slug>.mdx`. Cùng slug ở hai ngôn ngữ = bản dịch của nhau.
+- **Chỉ cần viết 1 ngôn ngữ.** Bài/sản phẩm/dự án chỉ có bản `vi/` vẫn xuất hiện ở `/en/...` (danh sách, trang chủ, RSS, trang chi tiết)
+  bằng bản tiếng Việt (`pickLocalized` trong `src/shared/lib/content.ts`). Trang dự phòng: nhãn "available in Vietnamese only",
+  `lang="vi-VN"` cho nội dung, canonical trỏ về bản gốc, hreflang chỉ khai báo bản thật, không đưa vào sitemap.
+  Muốn có bản tiếng Anh thì thêm `en/<cùng-slug>.mdx` — tự thay bản dự phòng, không cần sửa gì khác.
 - `draft: true` → chỉ hiện khi dev.
 - Nội dung có tiền tố **[Mẫu] / [Sample]** là dữ liệu mẫu, phải thay trước khi go-live. Số liệu ở `src/modules/home/i18n.ts` (`stats`) và thông tin ở `src/config/site.ts` cũng cần cập nhật.
 

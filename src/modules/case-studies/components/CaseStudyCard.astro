@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
-import type { Locale } from '@i18n/config';
+import { LOCALE_META, type Locale } from '@i18n/config';
+import { entryLocale } from '@shared/lib/content';
 import { localizePath, useTranslations } from '@i18n/utils';
 import Icon from '@shared/components/Icon.astro';
 import { caseStudyPath, type CaseStudyEntry } from '../api';
@@ -9,10 +10,12 @@ interface Props { item: CaseStudyEntry; locale: Locale; headingLevel?: 'h2' | 'h
 const { item, locale, headingLevel: H = 'h3' } = Astro.props;
 const t = useTranslations(locale);
 const { data } = item;
+// Bản dự phòng (chưa dịch) → khai báo đúng ngôn ngữ của tiêu đề/tóm tắt.
+const contentLang = entryLocale(item) !== locale ? LOCALE_META[entryLocale(item)].hreflang : undefined;
 const href = localizePath(caseStudyPath(item), locale);
 ---
 
-<article class="card-base card-hover md:!flex-row" data-reveal>
+<article class="card-base card-hover md:!flex-row" data-reveal lang={contentLang}>
   <div class="aspect-[16/9] overflow-hidden md:aspect-auto md:w-2/5 md:shrink-0">
     {
       data.cover ? (

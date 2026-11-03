@@ -17,6 +17,8 @@ type Props = Omit<SeoProps, 'locale'> & { hideCtaBand?: boolean };
 const props = Astro.props as Props;
 const locale = resolveLocale(Astro.currentLocale);
 const t = useTranslations(locale);
+// Trang đang hiển thị bản dự phòng (chưa có bản dịch) → gắn lang đúng cho nội dung.
+const fallback = props.contentLocale && props.contentLocale !== locale ? props.contentLocale : undefined;
 
 ---
 
@@ -60,7 +62,7 @@ const t = useTranslations(locale);
       {t('common.skipToContent')}
     </a>
     <Header locale={locale} path={props.path} availableLocales={props.availableLocales} />
-    <main id="main" class="vt-content flex-1">
+    <main id="main" class="vt-content flex-1" lang={fallback && LOCALE_META[fallback].hreflang}>
       <slot />
     </main>
     <Footer locale={locale} hideCtaBand={props.hideCtaBand} />

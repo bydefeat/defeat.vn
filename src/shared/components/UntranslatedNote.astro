@@ -1,0 +1,12 @@
+---
+/** Nhãn nhỏ báo trang đang hiển thị bản gốc vì chưa có bản dịch (xem pickLocalized trong @shared/lib/content). */
+import { LOCALE_META } from '@i18n/config';
+import { resolveLocale, useTranslations } from '@i18n/utils';
+
+const locale = resolveLocale(Astro.currentLocale);
+const t = useTranslations(locale);
+---
+
+<p class="frame inline-flex items-center gap-2 rounded-full px-3 py-1 text-[13px] text-muted" lang={LOCALE_META[locale].hreflang}>
+  <span class="size-1.5 rounded-full bg-primary" aria-hidden="true"></span>{t('common.untranslated')}
+</p>

@@ -3,16 +3,17 @@ import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '@app/layouts/BaseLayout.astro';
 import Breadcrumbs from '@shared/components/Breadcrumbs.astro';
+import UntranslatedNote from '@shared/components/UntranslatedNote.astro';
 import { articleLd, breadcrumbLd } from '@shared/seo/jsonld';
-import { readingTime } from '@shared/lib/content';
+import { entryLocale, readingTime } from '@shared/lib/content';
 import { resolveLocale, useTranslations, localizePath, formatDate } from '@i18n/utils';
 import type { Locale } from '@i18n/config';
 import NewsCard from '../components/NewsCard.astro';
 import { getNews, newsPath, type NewsEntry } from '../api';
 import { newsText } from '../i18n';
 
-interface Props { post: NewsEntry; availableLocales: Locale[] }
-const { post, availableLocales } = Astro.props;
+interface Props { post: NewsEntry; availableLocales: Locale[]; translations: Locale[] }
+const { post, availableLocales, translations } = Astro.props;
 const locale = resolveLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const text = newsText[locale];
@@ -34,6 +35,8 @@ const crumbs = [
   path={path}
   type="article"
   availableLocales={availableLocales}
+  translations={translations}
+  contentLocale={entryLocale(post)}
   image={data.cover?.src}
   imageAlt={data.coverAlt}
   publishedTime={data.pubDate}
@@ -48,6 +51,7 @@ const crumbs = [
       <div class="beams opacity-70" aria-hidden="true"></div>
       <div class="container-x relative"><div class="frame-l frame-r frame-b mx-auto px-5 pb-12 pt-10 sm:px-12 sm:pb-16 sm:pt-14">
         <Breadcrumbs items={crumbs} />
+        {entryLocale(post) !== locale && <div class="mt-6"><UntranslatedNote /></div>}
         <h1 class="vt-title t-h1 mt-8">{data.title}</h1>
         <p class="t-lead mt-4 text-muted">{data.description}</p>
         <div class="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">

@@ -1,7 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from '@shared/components/Icon.astro';
-import type { Locale } from '@i18n/config';
+import { LOCALE_META, type Locale } from '@i18n/config';
+import { entryLocale } from '@shared/lib/content';
 import { localizePath, useTranslations } from '@i18n/utils';
 import { productPath, type ProductEntry } from '../api';
 import { productsText } from '../i18n';
@@ -11,10 +12,12 @@ const { product, locale, headingLevel: H = 'h3' } = Astro.props;
 const t = useTranslations(locale);
 const text = productsText[locale];
 const { data } = product;
+// Bản dự phòng (chưa dịch) → khai báo đúng ngôn ngữ của tiêu đề/tóm tắt.
+const contentLang = entryLocale(product) !== locale ? LOCALE_META[entryLocale(product)].hreflang : undefined;
 const href = localizePath(productPath(product), locale);
 ---
 
-<article class="card-base card-hover" data-category={data.category} data-reveal>
+<article class="card-base card-hover" data-category={data.category} data-reveal lang={contentLang}>
   <div class="aspect-[16/9] overflow-hidden">
     {
       data.cover ? (

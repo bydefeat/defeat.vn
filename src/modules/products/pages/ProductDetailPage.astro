@@ -5,6 +5,7 @@ import BaseLayout from '@app/layouts/BaseLayout.astro';
 import PageHero from '@shared/components/PageHero.astro';
 import Icon from '@shared/components/Icon.astro';
 import { breadcrumbLd, softwareLd } from '@shared/seo/jsonld';
+import { entryLocale } from '@shared/lib/content';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
 import type { Locale } from '@i18n/config';
 import PriceTag from '../components/PriceTag.astro';
@@ -12,8 +13,8 @@ import PriceTagFallback from '../components/PriceTagFallback.astro';
 import { productPath, productSlug, type ProductEntry } from '../api';
 import { productsText } from '../i18n';
 
-interface Props { product: ProductEntry; availableLocales: Locale[] }
-const { product, availableLocales } = Astro.props;
+interface Props { product: ProductEntry; availableLocales: Locale[]; translations: Locale[] }
+const { product, availableLocales, translations } = Astro.props;
 const locale = resolveLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const text = productsText[locale];
@@ -33,13 +34,15 @@ const crumbs = [
   path={path}
   type="product"
   availableLocales={availableLocales}
+  translations={translations}
+  contentLocale={entryLocale(product)}
   image={data.cover?.src}
   jsonLd={[
     softwareLd({ name: data.title, description: data.summary, path: localizePath(path, locale), image: data.cover?.src, category: text.categories[data.category], priceVnd: data.listPriceVnd }),
     breadcrumbLd(crumbs),
   ]}
 >
-  <PageHero eyebrow={text.categories[data.category]} title={data.title} description={data.summary} crumbs={crumbs} />
+  <PageHero eyebrow={text.categories[data.category]} title={data.title} description={data.summary} crumbs={crumbs} untranslated={entryLocale(product) !== locale} />
 
   <section class="section">
     <div class="container-x grid gap-12 lg:grid-cols-3">

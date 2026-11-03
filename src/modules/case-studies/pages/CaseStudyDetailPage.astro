@@ -4,13 +4,14 @@ import { render } from 'astro:content';
 import BaseLayout from '@app/layouts/BaseLayout.astro';
 import PageHero from '@shared/components/PageHero.astro';
 import { articleLd, breadcrumbLd } from '@shared/seo/jsonld';
+import { entryLocale } from '@shared/lib/content';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
 import type { Locale } from '@i18n/config';
 import { caseStudyPath, type CaseStudyEntry } from '../api';
 import { caseStudiesText } from '../i18n';
 
-interface Props { item: CaseStudyEntry; availableLocales: Locale[] }
-const { item, availableLocales } = Astro.props;
+interface Props { item: CaseStudyEntry; availableLocales: Locale[]; translations: Locale[] }
+const { item, availableLocales, translations } = Astro.props;
 const locale = resolveLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 const text = caseStudiesText[locale];
@@ -30,6 +31,8 @@ const crumbs = [
   path={path}
   type="article"
   availableLocales={availableLocales}
+  translations={translations}
+  contentLocale={entryLocale(item)}
   image={data.cover?.src}
   publishedTime={data.date}
   jsonLd={[
@@ -37,7 +40,7 @@ const crumbs = [
     breadcrumbLd(crumbs),
   ]}
 >
-  <PageHero eyebrow={data.industry} title={data.title} description={data.summary} crumbs={crumbs} />
+  <PageHero eyebrow={data.industry} title={data.title} description={data.summary} crumbs={crumbs} untranslated={entryLocale(item) !== locale} />
 
   {
     data.results.length > 0 && (
