@@ -8,3 +8,5 @@
   Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
 /brand/*
   Cache-Control: public, max-age=86400, stale-while-revalidate=2592000
+/tech/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=2592000

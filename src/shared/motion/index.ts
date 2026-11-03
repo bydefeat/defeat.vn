@@ -1,6 +1,5 @@
 import { initHeader } from './header';
 import { initReveal } from './reveal';
-import { initBrandColors } from './brand';
 import { initTransitions } from './transitions';
 import { initTheme } from './theme';
 import { initIlloCanvases } from './illo-canvas';
@@ -11,7 +10,6 @@ import { initPlay } from './play';
 function boot() {
   initTheme();
   initHeader();
-  initBrandColors();
   initReveal();
   initTransitions();
   initIlloCanvases();

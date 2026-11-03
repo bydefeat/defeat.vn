@@ -12,8 +12,9 @@ const title = landing[Astro.props.locale].logosTitle;
     <ul class="mx-auto mt-8 flex max-w-4xl flex-wrap items-center justify-center gap-x-9 gap-y-7" data-reveal-group="25">
       {
         TECH_LOGOS.map((logo) => (
-          <li class="tech-item" data-brand={logo.color} title={logo.name} data-reveal>
-            <svg viewBox={logo.viewBox} class="tech-logo size-7" fill="currentColor" fill-rule={logo.fillRule} role="img" aria-label={logo.name} set:html={logo.body} />
+          <li title={logo.name} data-reveal>
+            <img src={`/tech/${logo.slug}.svg`} alt={logo.name} width="28" height="28" loading="lazy" decoding="async" class:list={['size-7 object-contain', logo.dark && 'only-light']} />
+            {logo.dark && <img src={`/tech/${logo.slug}-dark.svg`} alt={logo.name} width="28" height="28" loading="lazy" decoding="async" class="only-dark size-7 object-contain" />}
           </li>
         ))
       }
