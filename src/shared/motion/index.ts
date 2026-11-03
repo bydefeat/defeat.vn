@@ -5,6 +5,8 @@ import { initTransitions } from './transitions';
 import { initTheme } from './theme';
 import { initIlloCanvases } from './illo-canvas';
 import { initAsciiFields } from './ascii-field';
+import { initSteps } from './steps';
+import { initPlay } from './play';
 
 function boot() {
   initTheme();
@@ -14,6 +16,8 @@ function boot() {
   initTransitions();
   initIlloCanvases();
   initAsciiFields();
+  initSteps();
+  initPlay();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });

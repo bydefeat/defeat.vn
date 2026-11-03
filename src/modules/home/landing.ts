@@ -7,9 +7,16 @@ export type Accent = 'red' | 'teal' | 'violet' | 'sky' | 'yellow';
 interface Landing {
   logosTitle: string;
   benefits: { title: string; items: { illo: Illo; title: string; desc: string }[] };
-  steps: { title: string; items: { icon: IconName; title: string; desc: string }[] };
+  steps: {
+    title: string;
+    desc: string;
+    cta: string;
+    items: { icon: IconName; title: string; desc: string; time: string }[];
+    ui: { to: string; send: string; sent: string; scope: string; timeline: string; cost: string; quote: string; sprint: string; handover: string };
+  };
   features: { illo: Illo; accent: Accent; service: string; eyebrow: string; title: string; desc: string; points: string[] }[];
-  highlights: { icon: IconName; title: string; desc: string }[];
+  highlights: { fx: 'consult' | 'source' | 'security' | 'support'; title: string; desc: string }[];
+  highlightsUi: { nda: string; milestones: [string, string, string] };
   showcase: { title: string; desc: string };
 }
 
@@ -27,11 +34,14 @@ export const landing: Record<Locale, Landing> = {
     },
     steps: {
       title: 'Bắt đầu dự án trong 3 bước.',
+      desc: 'Từ ý tưởng đến sản phẩm chạy thật — minh bạch ở từng bước.',
+      cta: 'Gửi yêu cầu ngay',
       items: [
-        { icon: 'mail', title: 'Gửi yêu cầu', desc: 'Mô tả ngắn bài toán của bạn' },
-        { icon: 'clipboard', title: 'Tư vấn & báo giá', desc: 'Phạm vi, timeline, chi phí rõ ràng' },
-        { icon: 'rocket', title: 'Triển khai & bàn giao', desc: 'Demo định kỳ, bàn giao mã nguồn' },
+        { icon: 'mail', title: 'Gửi yêu cầu', desc: 'Mô tả ngắn bài toán của bạn', time: '5 phút' },
+        { icon: 'clipboard', title: 'Tư vấn & báo giá', desc: 'Phạm vi, timeline, chi phí rõ ràng', time: '24–48 giờ' },
+        { icon: 'rocket', title: 'Triển khai & bàn giao', desc: 'Demo định kỳ, bàn giao mã nguồn', time: 'Sprint 2 tuần' },
       ],
+      ui: { to: 'Đến: DEFEAT', send: 'Gửi', sent: 'Đã gửi', scope: 'Phạm vi', timeline: 'Timeline', cost: 'Chi phí', quote: 'Báo giá', sprint: 'S', handover: 'Bàn giao mã nguồn' },
     },
     features: [
       {
@@ -60,11 +70,12 @@ export const landing: Record<Locale, Landing> = {
       },
     ],
     highlights: [
-      { icon: 'search', title: 'Tư vấn miễn phí', desc: 'Làm rõ bài toán trước khi báo giá' },
-      { icon: 'code', title: 'Bàn giao 100% mã nguồn', desc: 'Bạn sở hữu toàn bộ sản phẩm' },
-      { icon: 'shield', title: 'Cam kết bảo mật', desc: 'Ký NDA, quy trình kiểm soát truy cập' },
-      { icon: 'clock', title: 'Hỗ trợ dài hạn', desc: 'Bảo hành và đồng hành sau bàn giao' },
+      { fx: 'consult', title: 'Tư vấn miễn phí', desc: 'Làm rõ bài toán trước khi báo giá' },
+      { fx: 'source', title: 'Bàn giao 100% mã nguồn', desc: 'Bạn sở hữu toàn bộ sản phẩm' },
+      { fx: 'security', title: 'Cam kết bảo mật', desc: 'Ký NDA, quy trình kiểm soát truy cập' },
+      { fx: 'support', title: 'Hỗ trợ dài hạn', desc: 'Bảo hành và đồng hành sau bàn giao' },
     ],
+    highlightsUi: { nda: 'NDA', milestones: ['Bàn giao', 'Bảo hành', 'Nâng cấp'] },
     showcase: { title: 'Sản phẩm & dự án.', desc: 'Giải pháp đóng gói sẵn và các dự án DEFEAT đã triển khai.' },
   },
   en: {
@@ -80,11 +91,14 @@ export const landing: Record<Locale, Landing> = {
     },
     steps: {
       title: 'Start your project in 3 steps.',
+      desc: 'From idea to a product in production — transparent at every step.',
+      cta: 'Send a request',
       items: [
-        { icon: 'mail', title: 'Send a request', desc: 'Briefly describe your challenge' },
-        { icon: 'clipboard', title: 'Consult & quote', desc: 'Clear scope, timeline and cost' },
-        { icon: 'rocket', title: 'Build & hand over', desc: 'Regular demos, full source handover' },
+        { icon: 'mail', title: 'Send a request', desc: 'Briefly describe your challenge', time: '5 minutes' },
+        { icon: 'clipboard', title: 'Consult & quote', desc: 'Clear scope, timeline and cost', time: '24–48 hours' },
+        { icon: 'rocket', title: 'Build & hand over', desc: 'Regular demos, full source handover', time: '2-week sprints' },
       ],
+      ui: { to: 'To: DEFEAT', send: 'Send', sent: 'Sent', scope: 'Scope', timeline: 'Timeline', cost: 'Cost', quote: 'Quote', sprint: 'S', handover: 'Source handed over' },
     },
     features: [
       {
@@ -113,11 +127,12 @@ export const landing: Record<Locale, Landing> = {
       },
     ],
     highlights: [
-      { icon: 'search', title: 'Free consultation', desc: 'Clarify the problem before quoting' },
-      { icon: 'code', title: '100% source handover', desc: 'You own the entire product' },
-      { icon: 'shield', title: 'Security commitment', desc: 'NDAs and controlled access' },
-      { icon: 'clock', title: 'Long-term support', desc: 'Warranty and support after launch' },
+      { fx: 'consult', title: 'Free consultation', desc: 'Clarify the problem before quoting' },
+      { fx: 'source', title: '100% source handover', desc: 'You own the entire product' },
+      { fx: 'security', title: 'Security commitment', desc: 'NDAs and controlled access' },
+      { fx: 'support', title: 'Long-term support', desc: 'Warranty and support after launch' },
     ],
+    highlightsUi: { nda: 'NDA', milestones: ['Handover', 'Warranty', 'Upgrades'] },
     showcase: { title: 'Products & projects.', desc: 'Packaged solutions and projects delivered by DEFEAT.' },
   },
 };

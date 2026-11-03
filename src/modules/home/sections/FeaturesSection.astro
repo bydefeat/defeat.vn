@@ -1,13 +1,14 @@
 ---
 import Icon from '@shared/components/Icon.astro';
 import Illustration from '@shared/components/Illustration.astro';
+import HighlightsStrip from './HighlightsStrip.astro';
 import type { Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
 import { landing } from '../landing';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-const { features, highlights } = landing[locale];
+const { features } = landing[locale];
 const accentClass = { red: 'text-acc-red', teal: 'text-acc-teal', violet: 'text-acc-violet', sky: 'text-acc-sky', yellow: 'text-acc-yellow' } as const;
 ---
 
@@ -38,16 +39,6 @@ const accentClass = { red: 'text-acc-red', teal: 'text-acc-teal', violet: 'text-
         </div>
       ))
     }
-    <ul class="frame-t grid grid-cols-2 md:grid-cols-4" data-reveal-group="70">
-      {
-        highlights.map((h, i) => (
-          <li class:list={['flex flex-col items-center px-4 py-9 text-center', i % 2 === 1 && 'frame-l', i > 1 && 'max-md:frame-t', i === 2 && 'md:frame-l']} data-reveal>
-            <Icon name={h.icon} class="size-5" />
-            <h3 class="mt-3 text-[15px] font-medium">{h.title}</h3>
-            <p class="mt-1 max-w-[18ch] text-[13px] text-muted">{h.desc}</p>
-          </li>
-        ))
-      }
-    </ul>
+    <HighlightsStrip locale={locale} />
   </div>
 </section>
