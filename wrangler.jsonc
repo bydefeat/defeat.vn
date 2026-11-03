@@ -1,9 +1,18 @@
-// Cấu hình Cloudflare Workers. Adapter @astrojs/cloudflare sinh dist/server/wrangler.json dựa trên file này.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "defeat-vn",
   "compatibility_date": "2026-11-01",
-  "observability": { "enabled": true }
-  // Bật khi lên giai đoạn Store (Sessions):
-  // "kv_namespaces": [{ "binding": "SESSION", "id": "<KV_NAMESPACE_ID>" }]
+  "observability": {
+    "enabled": true
+  },
+  "routes": [
+    {
+      "pattern": "defeat.vn",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.defeat.vn",
+      "custom_domain": true
+    }
+  ]
 }
