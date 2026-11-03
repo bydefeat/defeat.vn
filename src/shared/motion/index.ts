@@ -7,6 +7,7 @@ import { initReveal } from './reveal';
 import { initBrandColors } from './brand';
 import { initTransitions } from './transitions';
 import { initTheme } from './theme';
+import { initIlloCanvases } from './illo-canvas';
 
 function boot() {
   initTheme();
@@ -14,6 +15,7 @@ function boot() {
   initBrandColors();
   initReveal();
   initTransitions();
+  initIlloCanvases();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });

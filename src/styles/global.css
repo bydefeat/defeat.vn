@@ -247,12 +247,31 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   .container-x { @apply mx-auto w-full max-w-[1200px] px-5 sm:px-6; }
   .section { @apply py-14 sm:py-20; }
 
-  /* Minh hoạ isometric nét chấm: mặt khối tô màu nền để che nét phía sau */
-  .illo { width: 100%; height: auto; color: color-mix(in oklab, var(--color-base-content) 82%, transparent); }
+  /* Minh hoạ isometric nét chấm (SVG fallback + canvas pixel khi có JS) */
+  .illo { width: 100%; height: auto; color: var(--illo-ink); }
   .illo .f { fill: var(--illo-bg, var(--color-base-100)); }
   .illo .n { fill: none; }
   .illo .illo-dots { opacity: 0.75; }
-  .dot-grid .illo { --illo-bg: var(--color-base-100); }
+  .illo-host { position: relative; --illo-ink: color-mix(in oklab, var(--color-base-content) 70%, var(--color-base-100)); }
+  .illo-host > svg { display: block; }
+  .illo-host.is-canvas > svg { visibility: hidden; }
+  .illo-host > canvas { position: absolute; image-rendering: pixelated; pointer-events: none; }
+  .illo-main { inset: 0; width: 100%; height: 100%; }
+  .illo-halo { inset: -18% -14%; width: 128%; height: 136%; }
+  .acc-red { --acc: var(--acc-red); }
+  .acc-teal { --acc: var(--acc-teal); }
+  .acc-violet { --acc: var(--acc-violet); }
+  .acc-sky { --acc: var(--acc-sky); }
+  .acc-yellow { --acc: var(--acc-yellow); }
+
+  /* Ô có minh hoạ: nền sáng nhẹ khi rê chuột; mô tả trượt hiện (thiết bị có chuột) */
+  [data-illo-hover] { transition: background-color 0.35s var(--ease); }
+  @media (hover: hover) {
+    [data-illo-hover]:hover { background-color: var(--color-base-200); }
+    .reveal-desc { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.4s var(--ease), opacity 0.3s; }
+    .reveal-desc > * { overflow: hidden; }
+    [data-illo-hover]:hover .reveal-desc, [data-illo-hover]:focus-within .reveal-desc { grid-template-rows: 1fr; opacity: 1; }
+  }
 
   /* Nhãn màu theo tính năng */
   .eyebrow { @apply t-label; color: var(--eb, var(--color-primary)); }

@@ -66,14 +66,44 @@ class Scene {
   rect(origin, U, V, u0, v0, u1, v1, opt = {}) {
     return this.plane(origin, U, V, [[u0, v0], [u1, v0], [u1, v1], [u0, v1]], { closed: true, ...opt });
   }
+  /** Hình 2D trên màn hình (toạ độ đã chiếu), vẽ trên cùng. */
+  add2d(pts, { closed = true, fill = true, key = 1e7 } = {}) {
+    this.items.push({ pts, closed, fill, key, cls: '' });
+    return this;
+  }
+  /** Tia lấp lánh 4 cánh tại điểm 3D. */
+  sparkle(p3, r = 10, opt = {}) {
+    const [cx, cy] = P(p3);
+    const k = r * 0.22;
+    return this.add2d([[cx, cy - r], [cx + k, cy - k], [cx + r, cy], [cx + k, cy + k], [cx, cy + r], [cx - k, cy + k], [cx - r, cy], [cx - k, cy - k]], opt);
+  }
+  /** Lưới ô trên mặt phẳng ngang z, từ (x,y) kích thước w×d, n×m ô. */
+  grid(x, y, z, w, d, n, m, key = 1e6) {
+    for (let i = 0; i <= n; i++) this.add([[x + (w * i) / n, y, z], [x + (w * i) / n, y + d, z]], { closed: false, fill: false, key });
+    for (let j = 0; j <= m; j++) this.add([[x, y + (d * j) / m, z], [x + w, y + (d * j) / m, z]], { closed: false, fill: false, key });
+    return this;
+  }
+  /** Các tia ngắn toả ra quanh một điểm 3D (hiệu ứng "phát sáng"). */
+  rays(p3, r0, r1, n = 6, a0 = 0) {
+    const [cx, cy] = P(p3);
+    for (let i = 0; i < n; i++) {
+      const a = a0 + (i / n) * Math.PI * 2;
+      this.add2d([[cx + Math.cos(a) * r0, cy + Math.sin(a) * r0], [cx + Math.cos(a) * r1, cy + Math.sin(a) * r1]], { closed: false, fill: false });
+    }
+    return this;
+  }
+
   /** Vệt hạt: dải chấm ngẫu nhiên dọc một đường (toạ độ màn hình). */
   streak(x1, y1, x2, y2, width, count, seed) {
     const r = rng(seed);
+    // kéo dài vệt ra hai phía cho giống vệt sáng xuyên khung
+    const ex = (x2 - x1) * 0.35, ey = (y2 - y1) * 0.35;
+    x1 -= ex; y1 -= ey; x2 += ex; y2 += ey;
     const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy), nx = -dy / len, ny = dx / len;
     this.dots = this.dots ?? [];
-    for (let i = 0; i < Math.round(count * 0.6); i++) {
+    for (let i = 0; i < Math.round(count * 3.2); i++) {
       const t = r(); const spread = (r() - 0.5) * width * (0.3 + t);
-      this.dots.push([x1 + dx * t + nx * spread, y1 + dy * t + ny * spread, 0.5 + r() * 0.7]);
+      this.dots.push([x1 + dx * t + nx * spread, y1 + dy * t + ny * spread, 0.32 + r() * 0.3]);
     }
     return this;
   }
@@ -81,7 +111,7 @@ class Scene {
     const items = [...this.items].sort((a, b) => a.key - b.key);
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     for (const it of items) for (const [x, y] of it.pts) { minX = Math.min(minX, x); minY = Math.min(minY, y); maxX = Math.max(maxX, x); maxY = Math.max(maxY, y); }
-    const pad = 16;
+    const pad = 10;
     const vb = [f(minX - pad), f(minY - pad), f(maxX - minX + pad * 2), f(maxY - minY + pad * 2)];
     const paths = items.map((it) => {
       const d = 'M' + it.pts.map(([x, y]) => `${f(x)} ${f(y)}`).join('L') + (it.closed ? 'Z' : '');
@@ -92,7 +122,7 @@ class Scene {
       .map(([x, y, r]) => `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}"/>`);
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb.join(' ')}" fill="none" class="illo">` +
       (dots.length ? `<g class="illo-dots" fill="currentColor">${dots.join('')}</g>` : '') +
-      `<g class="illo-lines" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0 3.4">${paths.join('')}</g>` +
+      `<g class="illo-lines" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0 2.8">${paths.join('')}</g>` +
       `</svg>\n`;
   }
 }
@@ -103,7 +133,7 @@ const out = {};
 /* 1. Cửa sổ ứng dụng với dấu ngoặc code và con trỏ — "Phần mềm theo yêu cầu" */
 {
   const s = new Scene();
-  s.base(0, 0, 0, 150, 150, 10); // đế
+  s.base(20, 40, 0, 120, 110, 8); // đế
   s.box(30, 70, 10, 100, 8, 90); // tấm màn hình đứng
   const o = [30, 78, 10];
   s.rect(o, X, Z, 6, 70, 94, 84, {}); // thanh tiêu đề
@@ -113,6 +143,9 @@ const out = {};
   s.plane(o, X, Z, [[56, 54], [44, 22]]); // /
   s.plane([110, 100, 10], X, Y, [[0, 0], [0, 30], [8, 22], [14, 34], [19, 31], [13, 20], [24, 20]], { closed: true, fill: true, key: 400 }); // con trỏ
   s.streak(-160, 40, 60, -60, 50, 260, 1).streak(150, 120, 330, 30, 40, 200, 2);
+  s.grid(10, 10, 10, 60, 60, 4, 4, -500);
+  s.sparkle([140, 40, 120], 13).sparkle([150, 60, 70], 8).sparkle([10, 60, 120], 9);
+  s.rays([128, 70, 105], 14, 24, 5, -0.3);
   out['custom-software'] = s;
 }
 
@@ -126,6 +159,9 @@ const out = {};
   s.plane([30, 64, 38], X, Z, sh(), { closed: true, fill: true, key: 301 });
   s.plane([30, 64, 38], X, Z, [[20, 52], [32, 40], [52, 64]], { key: 302 }); // dấu tick
   s.streak(-140, -10, 40, -110, 40, 220, 3).streak(120, 60, 300, -40, 46, 230, 4);
+  s.grid(20, 20, 38, 90, 90, 6, 6, -800);
+  s.sparkle([110, 60, 150], 12).sparkle([20, 110, 120], 8);
+  s.rays([65, 64, 110], 70, 82, 8, 0.2);
   out['security'] = s;
 }
 
@@ -142,24 +178,30 @@ const out = {};
   }
   s.plane([55, 40, 102], Z, X, [[0, 0], [30, 0]], { key: 500 }); // ăng-ten
   s.streak(-120, 10, 80, -100, 44, 220, 5).streak(80, 110, 260, 30, 36, 180, 6);
+  s.grid(-40, 90, 0, 60, 60, 4, 4, -2000);
+  s.sparkle([130, 20, 120], 11).sparkle([-20, 60, 90], 8);
+  for (let i = 0; i < 3; i++) s.rays([110, 40, 14 + i * 34], 4, 9, 4, 0.78);
   out['infrastructure'] = s;
 }
 
 /* 4. Biểu đồ cột đi lên — "Tối ưu chi phí, tăng hiệu quả" */
 {
   const s = new Scene();
-  s.base(0, 0, 0, 170, 110, 8);
+  s.base(5, 20, 0, 165, 90, 8);
   [30, 55, 80, 115].forEach((h, i) => s.box(18 + i * 38, 35, 8, 24, 24, h));
   s.plane([10, 30, 30], X, Z, [[0, 0], [45, 25], [85, 45], [150, 120]], { key: 400 });
   s.plane([10, 30, 30], X, Z, [[136, 122], [150, 120], [146, 106]], { key: 401 });
   s.streak(-150, 30, 30, -90, 46, 230, 7).streak(160, 80, 320, -20, 40, 200, 8);
+  s.grid(10, 70, 8, 150, 30, 10, 2, -500);
+  s.sparkle([168, 30, 150], 12).sparkle([120, 20, 170], 7);
+  s.rays([160, 30, 150], 16, 26, 6);
   out['growth'] = s;
 }
 
 /* 5. Hai cửa sổ trình duyệt chồng nhau — "Website & Web App" */
 {
   const s = new Scene();
-  s.base(0, 0, 0, 180, 160, 8);
+  s.base(10, 30, 0, 170, 130, 8);
   const win = (x, y, k) => {
     s.box(x, y, 8, 120, 6, 96, { key: k });
     const o = [x, y + 6, 8];
@@ -171,13 +213,15 @@ const out = {};
   win(20, 40, 100);
   win(50, 100, 200);
   s.streak(-170, 20, 20, -90, 44, 240, 9).streak(170, 120, 340, 10, 44, 220, 10);
+  s.grid(10, 10, 8, 50, 50, 4, 4, -500);
+  s.sparkle([180, 90, 130], 12).sparkle([10, 120, 90], 8).sparkle([150, 40, 130], 7);
   out['web'] = s;
 }
 
 /* 6. Điện thoại đứng với lưới ứng dụng — "Ứng dụng di động" */
 {
   const s = new Scene();
-  s.base(0, 0, 0, 120, 120, 8);
+  s.base(15, 30, 0, 95, 85, 8);
   s.box(30, 60, 8, 60, 10, 116, { key: 100 });
   const o = [30, 70, 8];
   s.rect(o, X, Z, 5, 8, 55, 108, { key: 200 });
@@ -185,6 +229,9 @@ const out = {};
   for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) s.rect(o, X, Z, 10 + c * 14, 78 - r * 16, 20 + c * 14, 88 - r * 16, { key: 201 });
   s.rect(o, X, Z, 10, 16, 48, 32, { key: 201 });
   s.streak(-130, 0, 40, -120, 42, 220, 11).streak(110, 90, 270, -10, 40, 200, 12);
+  s.grid(70, 10, 8, 40, 40, 4, 4, -500);
+  s.sparkle([95, 60, 140], 12).sparkle([20, 50, 110], 8);
+  s.rays([60, 70, 130], 50, 60, 10, 0.1);
   out['mobile'] = s;
 }
 
@@ -201,13 +248,15 @@ const out = {};
   s.rect(o, X, Z, 80, 54, 128, 78, { key: 201 });
   s.plane(o, X, Z, [[12, 14], [34, 30], [56, 22], [80, 42], [104, 34], [128, 48]], { key: 202 });
   s.streak(-150, 40, 20, -80, 44, 230, 13).streak(140, 150, 310, 40, 40, 200, 14);
+  s.sparkle([150, 70, 150], 12).sparkle([-10, 80, 140], 8);
+  s.rays([70, 84, 85], 82, 92, 12, 0.15);
   out['dashboard'] = s;
 }
 
 /* 8. Quả địa cầu với quỹ đạo vệ tinh trên bệ — "Cloud & DevOps" */
 {
   const s = new Scene();
-  s.base(0, 0, 0, 140, 140, 8);
+  s.base(20, 20, 0, 100, 100, 8);
   s.box(45, 45, 8, 50, 50, 14, { key: -900 });
   const c = [70, 70, 92], R = 52;
   s.circle(c, [0.7071, -0.7071, 0], Z, R, { fill: true, key: 200 }); // viền cầu (mặt phẳng hướng về người xem)
@@ -219,6 +268,8 @@ const out = {};
   s.box(c[0] + R * 1.5, c[1] - 6, c[2] + 20, 12, 12, 10, { key: 203 }); // vệ tinh
   s.plane(c, X, Z, [[0, -R], [0, -R - 8]], { key: 199 });
   s.streak(-160, 0, 20, -120, 46, 240, 15).streak(150, 100, 320, -10, 42, 210, 16);
+  s.grid(10, 10, 8, 40, 40, 4, 4, -500);
+  s.sparkle([20, 120, 160], 10).sparkle([140, 30, 170], 13).sparkle([150, 100, 60], 7);
   out['cloud'] = s;
 }
 

@@ -5,6 +5,7 @@ import type { Locale } from '@i18n/config';
 import { landing } from '../landing';
 interface Props { locale: Locale }
 const { benefits } = landing[Astro.props.locale];
+const accents = ['teal', 'violet', 'sky', 'yellow'] as const;
 ---
 
 <section class="container-x section" aria-labelledby="home-benefits">
@@ -13,11 +14,13 @@ const { benefits } = landing[Astro.props.locale];
   </div>
   <ul class="cells grid border-t-0! sm:grid-cols-2" data-reveal-group="80">
     {
-      benefits.items.map((b) => (
-        <li class="group relative flex flex-col overflow-hidden px-6 pb-7 pt-6 sm:px-8" data-reveal>
-          <div class="flex h-52 items-center justify-center sm:h-64"><Illustration name={b.illo} class="h-full w-full max-w-[340px] transition-transform duration-700 ease-out group-hover:-translate-y-1.5 [&>svg]:h-full [&>svg]:w-full" /></div>
-          <h3 class="t-h3 mt-4 text-xl">{b.title}</h3>
-          <p class="mt-1.5 text-sm text-muted">{b.desc}</p>
+      benefits.items.map((b, i) => (
+        <li class="group relative flex flex-col justify-end overflow-hidden px-6 pb-7 pt-6 sm:min-h-[420px] sm:px-8" data-illo-hover tabindex="0" data-reveal>
+          <div class="flex flex-1 items-center justify-center py-4">
+            <Illustration name={b.illo} accent={accents[i % accents.length]} class="w-full max-w-[440px]" />
+          </div>
+          <h3 class="t-h3 text-xl">{b.title}</h3>
+          <div class="reveal-desc"><p class="pt-1.5 text-sm text-muted">{b.desc}</p></div>
         </li>
       ))
     }

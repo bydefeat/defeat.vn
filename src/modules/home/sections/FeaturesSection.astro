@@ -19,7 +19,7 @@ const accentClass = { red: 'text-acc-red', teal: 'text-acc-teal', violet: 'text-
   <div class="frame">
     {
       features.map((f, i) => (
-        <div class:list={['grid md:grid-cols-2', i > 0 && 'frame-t']}>
+        <div class:list={['grid md:grid-cols-2', i > 0 && 'frame-t']} data-illo-hover>
           <div class:list={['flex flex-col justify-center px-6 py-12 sm:px-10 sm:py-16', i % 2 === 1 && 'md:order-2 md:frame-l', i % 2 === 0 && 'md:frame-r']} data-reveal>
             <p class:list={['t-label', accentClass[f.accent]]}>{f.eyebrow}</p>
             <h2 class="t-h2 mt-4 max-w-md">{f.title}</h2>
@@ -37,7 +37,7 @@ const accentClass = { red: 'text-acc-red', teal: 'text-acc-teal', violet: 'text-
             </a>
           </div>
           <div class:list={['dot-grid flex items-center justify-center px-8 py-12 max-md:frame-t', i % 2 === 1 && 'md:order-1']} data-reveal>
-            <Illustration name={f.illo} class="w-full max-w-[380px]" />
+            <Illustration name={f.illo} accent={f.accent} class="w-full max-w-[400px]" />
           </div>
         </div>
       ))

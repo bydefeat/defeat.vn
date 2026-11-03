@@ -1,12 +1,22 @@
 ---
 /**
  * Minh hoạ isometric nét chấm (tranh gốc DEFEAT, sinh bởi scripts/generate-illustrations.mjs).
- * Nhúng SVG trực tiếp để nét vẽ dùng currentColor → tự đổi theo theme sáng/tối.
+ * - Không JS: hiển thị SVG nhúng trực tiếp (nét dùng currentColor, tự đổi theo theme).
+ * - Có JS: src/shared/motion/illo-canvas.ts raster hoá thành canvas pixel, có hiệu ứng hover
+ *   (đổi sang màu nhấn, hạt lấp lánh, halftone toả tia). Vùng kích hoạt hover: phần tử cha [data-illo-hover].
  */
 const files = import.meta.glob<string>('/src/assets/illustrations/*.svg', { query: '?raw', import: 'default', eager: true });
-interface Props { name: string; class?: string; label?: string }
-const { name, class: className, label } = Astro.props;
+type Accent = 'red' | 'teal' | 'violet' | 'sky' | 'yellow';
+interface Props { name: string; class?: string; label?: string; accent?: Accent }
+const { name, class: className, label, accent = 'teal' } = Astro.props;
 const svg = files[`/src/assets/illustrations/${name}.svg`] ?? '';
 ---
 
-<div class:list={['[&>svg]:block', className]} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'} set:html={svg} />
+<div
+  class:list={['illo-host', `acc-${accent}`, className]}
+  data-illo-canvas
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  set:html={svg}
+/>

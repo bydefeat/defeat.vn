@@ -69,7 +69,10 @@ Font: **Inter** (variable 400–800, latin + vietnamese). Thang chữ: `t-displa
 
 **Minh hoạ isometric nét chấm (tranh gốc):** `node scripts/generate-illustrations.mjs` → `src/assets/illustrations/*.svg`
 (custom-software, security, infrastructure, growth, web, mobile, dashboard, cloud). Hiển thị bằng `Illustration.astro`
-(SVG nhúng trực tiếp, nét dùng `currentColor`, mặt khối tô màu nền → tự đổi theo theme).
+(SVG nhúng trực tiếp làm fallback khi không có JS). Khi có JS, `src/shared/motion/illo-canvas.ts` raster hoá SVG
+thành canvas pixel (1 pixel canvas = 1.5px CSS, `image-rendering: pixelated`, nét xen kẽ pixel đậm/nhạt), gồm lớp nét,
+lớp vệt hạt và lớp halftone toả tia. Rê chuột vào vùng `[data-illo-hover]`: đổi dần sang màu nhấn (`acc-*`), hạt lấp lánh,
+halftone hiện lên, mô tả trượt ra (`.reveal-desc`). Chỉ chạy animation khi đang hover/chuyển đổi; đổi theme thì vẽ lại.
 
 **Logo:** công nghệ & mạng xã hội là SVG từ thesvg.org (`scripts/assets/tech`, `scripts/assets/social`); logo DEFEAT ở `public/brand/`.
 
