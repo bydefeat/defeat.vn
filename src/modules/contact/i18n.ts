@@ -7,7 +7,7 @@ export interface ContactFormLabels {
 }
 
 export const contactText: Record<Locale, {
-  eyebrow: string; title: string; desc: string; infoTitle: string; email: string; phone: string; address: string;
+  eyebrow: string; title: string; desc: string; infoTitle: string; channelsTitle: string; email: string; phone: string; address: string;
   steps: { title: string; desc: string }[]; form: ContactFormLabels;
 }> = {
   vi: {
@@ -15,6 +15,7 @@ export const contactText: Record<Locale, {
     title: 'Trao đổi về dự án của bạn',
     desc: 'Gửi yêu cầu, chúng tôi phản hồi trong 1–2 ngày làm việc với đề xuất giải pháp, timeline và báo giá sơ bộ.',
     infoTitle: 'Thông tin liên hệ',
+    channelsTitle: 'Nhắn tin trực tiếp & cộng đồng',
     email: 'Email', phone: 'Điện thoại', address: 'Địa chỉ',
     steps: [
       { title: 'Tiếp nhận', desc: 'Chúng tôi xem yêu cầu và liên hệ lại để làm rõ.' },
@@ -37,6 +38,7 @@ export const contactText: Record<Locale, {
     title: 'Let’s talk about your project',
     desc: 'Send your request and we will reply within 1–2 business days with a proposed solution, timeline and initial quote.',
     infoTitle: 'Contact information',
+    channelsTitle: 'Direct message & community',
     email: 'Email', phone: 'Phone', address: 'Address',
     steps: [
       { title: 'Intake', desc: 'We review your request and get back to clarify.' },

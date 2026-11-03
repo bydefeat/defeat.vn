@@ -14,11 +14,18 @@ export const SITE = {
     country: 'VN',
   },
   foundingYear: 2026,
+  /** Kênh chính thức của DEFEAT (footer, JSON-LD sameAs). */
   social: {
     github: 'https://github.com/bydefeat',
-    facebook: '',
-    linkedin: '',
+    telegram: 'https://t.me/bydefeat',
   },
+  /** Kênh cộng đồng & liên hệ trực tiếp (footer cột "Kết nối", trang Liên hệ). */
+  channels: [
+    { key: 'announcements', icon: 'telegram', url: 'https://t.me/bydefeat', handle: 't.me/bydefeat', label: { vi: 'Nhóm thông báo', en: 'Announcements' } },
+    { key: 'community', icon: 'telegram', url: 'https://t.me/defeatcommunity', handle: 't.me/defeatcommunity', label: { vi: 'Cộng đồng chat', en: 'Community chat' } },
+    { key: 'telegram', icon: 'telegram', url: 'https://t.me/vanixjnk', handle: '@vanixjnk', label: { vi: 'Telegram cá nhân', en: 'Personal Telegram' } },
+    { key: 'facebook', icon: 'facebook', url: 'https://www.facebook.com/vanixjnk', handle: '/vanixjnk', label: { vi: 'Facebook cá nhân', en: 'Personal Facebook' } },
+  ],
   ogImage: '/og-default.png',
   themeColor: '#e82024',
 } as const;
