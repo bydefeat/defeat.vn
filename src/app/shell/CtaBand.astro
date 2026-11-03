@@ -1,5 +1,5 @@
 ---
-/** CTA cuối trang: khung nét đứt, nền vạch dọc trôi chậm, tiêu đề lớn căn giữa, nút viên thuốc. */
+/** CTA cuối trang: khung nét đứt, nền ASCII art động (src/shared/motion/ascii-field.ts), tiêu đề lớn căn giữa, nút viên thuốc. */
 import type { Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
 import Icon from '@shared/components/Icon.astro';
@@ -10,9 +10,8 @@ const t = useTranslations(locale);
 ---
 
 <section class="container-x py-14 sm:py-20" aria-labelledby="cta-band-title">
-  <div class="frame relative overflow-hidden rounded-box px-6 py-20 text-center sm:py-28" data-reveal>
-    <div class="cta-bars" aria-hidden="true"></div>
-    <div class="relative mx-auto max-w-2xl">
+  <div class="ascii-field frame relative overflow-hidden rounded-box px-6 py-20 text-center sm:py-28" data-ascii-field data-ascii-src="/brand/defeat_logo.png" data-reveal>
+    <div class="relative z-10 mx-auto max-w-2xl">
       <h2 id="cta-band-title" class="t-display">{t('ctaBand.title')}</h2>
       <p class="t-lead mx-auto mt-5 max-w-lg text-muted">{t('ctaBand.desc')}</p>
       <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">

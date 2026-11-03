@@ -74,6 +74,15 @@ thành canvas pixel (1 pixel canvas = 1.5px CSS, `image-rendering: pixelated`, n
 lớp vệt hạt và lớp halftone toả tia. Rê chuột vào vùng `[data-illo-hover]`: đổi dần sang màu nhấn (`acc-*`), hạt lấp lánh,
 halftone hiện lên, mô tả trượt ra (`.reveal-desc`). Chỉ chạy animation khi đang hover/chuyển đổi; đổi theme thì vẽ lại.
 
+**Bộ máy minh hoạ** (`scripts/generate-illustrations.mjs`): chiếu isometric trực giao, loại bỏ mặt khuất (n·V > 0, V = (1,1,1)),
+sắp thứ tự theo vật thể rồi theo mặt, chi tiết gắn vào đúng mặt; cầu (viền tròn chuẩn, vĩ/kinh tuyến nửa trước), trụ (viền tiếp tuyến), lăng trụ.
+
+**CTA nền ASCII art** (`ascii-field.ts`, `ascii-core.ts`, `ascii.worker.ts`): trường ký tự ` .:-=+*#%@` theo sóng nhiễu trôi chậm,
+logo mờ, vùng ký tự "nở" màu đỏ quanh con trỏ. Vẽ trong **Web Worker (OffscreenCanvas)** → luồng chính rảnh; fallback luồng chính 12fps.
+Chỉ chạy khi khối hiện trên màn hình; reduced motion → khung tĩnh; màu theo theme (`--ascii-ink`, `--ascii-hot`).
+
+**Thanh cuộn:** ẩn toàn site (`scrollbar-width: none` + `::-webkit-scrollbar`), vẫn cuộn bình thường.
+
 **Logo:** công nghệ & mạng xã hội là SVG từ thesvg.org (`scripts/assets/tech`, `scripts/assets/social`); logo DEFEAT ở `public/brand/`.
 
 **Motion (tối giản, mượt):**

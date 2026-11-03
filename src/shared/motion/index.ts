@@ -8,6 +8,7 @@ import { initBrandColors } from './brand';
 import { initTransitions } from './transitions';
 import { initTheme } from './theme';
 import { initIlloCanvases } from './illo-canvas';
+import { initAsciiFields } from './ascii-field';
 
 function boot() {
   initTheme();
@@ -16,6 +17,7 @@ function boot() {
   initReveal();
   initTransitions();
   initIlloCanvases();
+  initAsciiFields();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
