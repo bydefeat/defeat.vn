@@ -5,11 +5,13 @@
 import { initHeader } from './header';
 import { initReveal } from './reveal';
 import { initBrandColors } from './brand';
+import { initTransitions } from './transitions';
 
 function boot() {
   initHeader();
   initBrandColors();
   initReveal();
+  initTransitions();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });

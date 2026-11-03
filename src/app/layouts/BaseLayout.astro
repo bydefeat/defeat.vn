@@ -19,46 +19,21 @@ const props = Astro.props as Props;
 const locale = resolveLocale(Astro.currentLocale);
 const t = useTranslations(locale);
 
-/**
- * Kiểu hiệu ứng chuyển trang theo LOẠI TRANG ĐÍCH (xem global.css, mục PAGE TRANSITIONS):
- * home → iris · danh sách → curtain · chi tiết → push · liên hệ → focus · giới thiệu → shutter · còn lại → fade.
- */
-const LIST_SECTIONS = ['services', 'products', 'case-studies', 'news'];
-const segs = props.path.split('/').filter(Boolean);
-const vt =
-  segs.length === 0
-    ? 'home'
-    : segs.length === 1 && LIST_SECTIONS.includes(segs[0]!)
-      ? 'list'
-      : segs.length >= 2 && LIST_SECTIONS.includes(segs[0]!)
-        ? 'detail'
-        : segs[0] === 'contact'
-          ? 'contact'
-          : segs[0] === 'about'
-            ? 'about'
-            : 'plain';
 ---
 
 <!doctype html>
-<html lang={LOCALE_META[locale].hreflang} data-theme="defeat" data-vt={vt}>
+<html lang={LOCALE_META[locale].hreflang} data-theme="defeat">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content={SITE.themeColor} />
     <meta name="color-scheme" content="light" />
     <meta name="generator" content={Astro.generator} />
-    <!--
-      Nhận biết kiểu điều hướng TRƯỚC khi trang mới hiển thị (pagereveal phải đăng ký sớm, trong <head>):
-      - cùng trang, khác ngôn ngữ → "lang" (lật trang)
-      - nút Back/Forward          → "back" (đẩy ngược chiều)
-    -->
+    <!-- Back/Forward → type "back" cho chuyển trang (pagereveal phải đăng ký sớm, trong <head>). -->
     <script is:inline>
       addEventListener('pagereveal', function (e) {
         var a = window.navigation && navigation.activation;
-        if (!e.viewTransition || !a || !a.from) return;
-        var strip = function (u) { return new URL(u).pathname.replace(/^\/en(?=\/|$)/, '') || '/'; };
-        if (strip(a.from.url) === strip(a.entry.url) && a.from.url !== a.entry.url) e.viewTransition.types.add('lang');
-        else if (a.navigationType === 'traverse') e.viewTransition.types.add('back');
+        if (e.viewTransition && a && a.navigationType === 'traverse') e.viewTransition.types.add('back');
       });
     </script>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -76,7 +51,7 @@ const vt =
     </a>
     <Topbar locale={locale} />
     <Header locale={locale} path={props.path} availableLocales={props.availableLocales} />
-    <main id="main" class="flex-1">
+    <main id="main" class="vt-content flex-1">
       <slot />
     </main>
     <Footer locale={locale} hideCtaBand={props.hideCtaBand} />

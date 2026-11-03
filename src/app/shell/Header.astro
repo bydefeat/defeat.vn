@@ -38,6 +38,7 @@ const langHref = (l: Locale) => localizePath(availableLocales.includes(l) ? path
             <li class="nav-item relative flex items-center" data-mega>
               <a href={href(item.path)} class="nav-link" aria-current={isActive(item.path) ? 'page' : undefined}>
                 {t(`nav.${item.key}`)}
+                {isActive(item.path) && <span class="nav-indicator" aria-hidden="true" />}
               </a>
               <button
                 type="button"
@@ -74,6 +75,7 @@ const langHref = (l: Locale) => localizePath(availableLocales.includes(l) ? path
             <li>
               <a href={href(item.path)} class="nav-link" aria-current={isActive(item.path) ? 'page' : undefined}>
                 {t(`nav.${item.key}`)}
+                {isActive(item.path) && <span class="nav-indicator" aria-hidden="true" />}
               </a>
             </li>
           ),

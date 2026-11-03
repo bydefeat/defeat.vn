@@ -11,11 +11,11 @@ interface Props {
 const { eyebrow, title, description, crumbs } = Astro.props;
 ---
 
-<section class="border-b border-base-300 bg-base-200">
+<section class="vt-hero border-b border-base-300 bg-base-200">
   <div class="container-x py-10 sm:py-14">
     <Breadcrumbs items={crumbs} />
     {eyebrow && <p class="t-label mt-8 text-primary">{eyebrow}</p>}
-    <h1 class:list={['t-h1 max-w-4xl', eyebrow ? 'mt-2' : 'mt-8']}>{title}</h1>
+    <h1 class:list={['vt-title t-h1 max-w-4xl', eyebrow ? 'mt-2' : 'mt-8']}>{title}</h1>
     {description && <p class="t-lead mt-4 max-w-3xl text-muted">{description}</p>}
     <slot />
   </div>

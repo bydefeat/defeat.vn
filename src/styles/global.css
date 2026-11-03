@@ -93,94 +93,54 @@
 }
 
 /* ==========================================================================
-   PAGE TRANSITIONS — cross-document View Transitions (CSS, tương thích CSP)
-   Mỗi loại trang đích có một hiệu ứng riêng (html[data-vt], render từ server):
-     home    → iris     : trang mới mở ra từ một vòng tròn ở giữa
-     list    → curtain  : trang mới kéo lên như rèm từ dưới, trang cũ nhấc nhẹ lên
-     detail  → push     : trang mới đẩy vào từ phải, trang cũ lùi sang trái
-     contact → focus    : trang mới thu từ lớn về đúng cỡ, trang cũ lùi xa
-     about   → shutter  : trang mới mở như cửa chớp từ giữa ra hai bên
-     plain   → fade     : chuyển mờ
-   Theo kiểu điều hướng (script pagereveal trong <head>):
-     lang    → flip     : lật trang 3D khi đổi ngôn ngữ cùng một trang
-     back    → push ngược chiều khi bấm Back/Forward
-   Trang cũ luôn giữ nguyên độ đậm (chỉ tối nhẹ) → không lộ nền trắng, không nháy.
-   Chỉ animate transform / clip-path / filter trên ảnh chụp → chạy mượt trên GPU.
+   PAGE TRANSITIONS — "một mặt giấy liên tục" (cross-document View Transitions, CSS, tương thích CSP)
+   - Khung (topbar, header, footer, nền) ĐỨNG YÊN: không chụp/trượt cả trang.
+   - Chỉ vùng nội dung đổi: nội dung cũ mờ nhanh, nội dung mới hiện tại chỗ.
+   - Phần tử dùng chung BIẾN HÌNH liên tục thay vì bị thay:
+       nav-indicator : vạch đỏ dưới mục menu đang chọn trượt sang mục mới
+       page-hero     : dải đầu trang co giãn chiều cao
+       page-title    : tiêu đề card bay lên thành tiêu đề trang chi tiết (gán lúc pageswap)
+   - Back/Forward (type "back", gán bởi pagereveal trong <head>): nội dung mới hiện từ phía trên xuống.
    ========================================================================== */
 @view-transition {
   navigation: auto;
 }
 
 .site-header { view-transition-name: site-header; }
-::view-transition-group(site-header) { z-index: 50; animation-duration: 0.45s; animation-timing-function: var(--ease); }
+.vt-content { view-transition-name: page-content; }
+.vt-hero { view-transition-name: page-hero; }
+.vt-title { view-transition-name: page-title; }
+.nav-indicator { view-transition-name: nav-indicator; }
+
+/* Khung đứng yên */
+::view-transition-old(root) { display: none; }
+::view-transition-new(root) { animation: none; }
+::view-transition-group(site-header) { z-index: 50; animation: none; }
 ::view-transition-old(site-header) { display: none; }
 ::view-transition-new(site-header) { animation: none; }
 
-:root { --vt-dur: 620ms; --vt-ease: cubic-bezier(0.65, 0, 0.2, 1); }
+/* Vạch menu trượt */
+::view-transition-group(nav-indicator) { z-index: 51; animation-duration: 420ms; animation-timing-function: var(--ease); }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: var(--vt-dur);
-  animation-timing-function: var(--vt-ease);
-  animation-fill-mode: both;
-  mix-blend-mode: normal;
-}
-/* plain: fade */
-::view-transition-old(root) { animation-name: vt-dim; }
-::view-transition-new(root) { animation-name: vt-fade-in; }
+/* Nội dung: mờ ra / hiện vào tại chỗ (không di chuyển khối) */
+::view-transition-group(page-content) { animation: none; }
+::view-transition-old(page-content) { animation: vt-content-out 160ms ease-in both; }
+::view-transition-new(page-content) { animation: vt-content-in 420ms var(--ease) 70ms both; }
+html:active-view-transition-type(back)::view-transition-new(page-content) { animation-name: vt-content-in-back; }
 
-/* home: iris */
-html[data-vt="home"]::view-transition-old(root) { animation-name: vt-recede; }
-html[data-vt="home"]::view-transition-new(root) { animation-name: vt-iris; }
+/* Dải đầu trang: co giãn chiều cao, nội dung bên trong đổi nhẹ */
+::view-transition-group(page-hero) { animation-duration: 460ms; animation-timing-function: var(--ease); overflow: clip; }
+::view-transition-old(page-hero) { animation: vt-fade-out 180ms ease-in both; }
+::view-transition-new(page-hero) { animation: vt-fade-in 360ms var(--ease) 90ms both; }
 
-/* list: curtain */
-html[data-vt="list"]::view-transition-old(root) { animation-name: vt-lift; }
-html[data-vt="list"]::view-transition-new(root) { animation-name: vt-curtain; }
+/* Tiêu đề biến hình (card → trang chi tiết) */
+::view-transition-group(page-title) { z-index: 10; animation-duration: 520ms; animation-timing-function: var(--ease); }
 
-/* detail: push */
-html[data-vt="detail"]::view-transition-old(root) { animation-name: vt-out-left; }
-html[data-vt="detail"]::view-transition-new(root) { animation-name: vt-in-right; }
-
-/* contact: focus */
-html[data-vt="contact"]::view-transition-old(root) { animation-name: vt-recede; }
-html[data-vt="contact"]::view-transition-new(root) { animation-name: vt-focus; }
-
-/* about: shutter */
-html[data-vt="about"]::view-transition-old(root) { animation-name: vt-dim; }
-html[data-vt="about"]::view-transition-new(root) { animation-name: vt-shutter; }
-
-/* lang: flip (ưu tiên cao hơn kiểu theo trang) */
-html:active-view-transition-type(lang)::view-transition-group(root) { perspective: 1600px; }
-html:active-view-transition-type(lang)::view-transition-old(root) { animation-name: vt-flip-out; animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0); animation-duration: calc(var(--vt-dur) / 2); }
-html:active-view-transition-type(lang)::view-transition-new(root) { animation-name: vt-flip-in; animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1); animation-duration: calc(var(--vt-dur) / 2); animation-delay: calc(var(--vt-dur) / 2); }
-
-/* back: đẩy ngược chiều */
-html:active-view-transition-type(back)::view-transition-old(root) { animation-name: vt-out-right; animation-timing-function: var(--vt-ease); animation-duration: var(--vt-dur); animation-delay: 0s; }
-html:active-view-transition-type(back)::view-transition-new(root) { animation-name: vt-in-left; animation-timing-function: var(--vt-ease); animation-duration: var(--vt-dur); animation-delay: 0s; }
-
-@keyframes vt-dim { to { filter: brightness(0.82); } }
+@keyframes vt-content-out { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes vt-content-in { from { opacity: 0; transform: translateY(14px); } }
+@keyframes vt-content-in-back { from { opacity: 0; transform: translateY(-14px); } }
+@keyframes vt-fade-out { to { opacity: 0; } }
 @keyframes vt-fade-in { from { opacity: 0; } }
-@keyframes vt-recede { to { transform: scale(0.94); filter: brightness(0.75); } }
-@keyframes vt-iris {
-  from { clip-path: circle(0% at 50% 45%); }
-  to { clip-path: circle(150% at 50% 45%); }
-}
-@keyframes vt-lift { to { transform: translateY(-6%); filter: brightness(0.8); } }
-@keyframes vt-curtain {
-  from { clip-path: inset(100% 0 0 0 round 24px 24px 0 0); transform: translateY(12%); }
-  to { clip-path: inset(0 0 0 0 round 0); transform: none; }
-}
-@keyframes vt-out-left { to { transform: translateX(-28%); filter: brightness(0.8); } }
-@keyframes vt-in-right { from { transform: translateX(100%); } }
-@keyframes vt-out-right { to { transform: translateX(28%); filter: brightness(0.8); } }
-@keyframes vt-in-left { from { transform: translateX(-100%); } }
-@keyframes vt-focus { from { transform: scale(1.08); opacity: 0; } 35% { opacity: 1; } to { transform: none; opacity: 1; } }
-@keyframes vt-shutter {
-  from { clip-path: inset(0 50% 0 50%); }
-  to { clip-path: inset(0 0 0 0); }
-}
-@keyframes vt-flip-out { to { transform: rotateY(-90deg); filter: brightness(0.7); } }
-@keyframes vt-flip-in { from { transform: rotateY(90deg); filter: brightness(0.7); } }
 
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
@@ -267,6 +227,7 @@ html:active-view-transition-type(back)::view-transition-new(root) { animation-na
 
   .nav-link { @apply relative inline-flex h-10 items-center text-[15px] font-medium text-base-content/80 transition-colors hover:text-primary; }
   .nav-link[aria-current="page"] { @apply text-primary; }
+  .nav-indicator { @apply pointer-events-none absolute inset-x-0 -bottom-[calc((var(--header-h)-2.5rem)/2+1px)] h-0.5 rounded-full bg-primary; }
 
   .dropdown-panel {
     @apply invisible absolute left-0 top-full z-50 pt-2 opacity-0;

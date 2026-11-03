@@ -69,11 +69,12 @@ Làm mới giá khi dữ liệu thay đổi: gọi `context.cache.invalidate({ t
 - Fade-up nhẹ khi cuộn tới (`data-reveal`, so le bằng `data-reveal-group="ms"`), chỉ dùng `transform` + `opacity`.
 - Chỉ phần tử nằm dưới màn hình lúc tải mới bị ẩn chờ cuộn → không nháy khi tải/chuyển trang.
 - Hover: card nhấc nhẹ, đổi màu tiêu đề, phóng ảnh 3%; nút; dropdown fade.
-- Chuyển trang (View Transitions, CSS): mỗi loại trang đích một hiệu ứng — trang chủ `iris` (mở từ vòng tròn),
-  danh sách `curtain` (rèm kéo lên), chi tiết `push` (đẩy từ phải), liên hệ `focus` (thu về đúng cỡ),
-  giới thiệu `shutter` (cửa chớp), còn lại `fade`. Đổi ngôn ngữ cùng trang → `flip` (lật 3D); Back/Forward → `push` ngược chiều.
-  Loại trang: `html[data-vt]` do BaseLayout render; kiểu điều hướng: script `pagereveal` inline trong `<head>`.
-  Trang cũ không mờ đi (chỉ tối nhẹ) → không lộ nền trắng. Không canvas, không animation lúc tải.
+- Chuyển trang (View Transitions, CSS) theo nguyên tắc "một mặt giấy liên tục":
+  topbar, header, footer đứng yên; chỉ vùng nội dung (`.vt-content`) mờ ra / hiện vào tại chỗ.
+  Phần tử dùng chung biến hình: vạch menu đang chọn (`.nav-indicator`) trượt sang mục mới, dải đầu trang
+  (`.vt-hero`) co giãn, tiêu đề card → tiêu đề trang chi tiết (`.vt-title`, gán lúc `pageswap` trong
+  `src/shared/motion/transitions.ts`). Back/Forward: nội dung hiện từ trên xuống (type `back`, script `pagereveal` trong `<head>`).
+  Không canvas, không animation lúc tải.
 - Không JS / `prefers-reduced-motion` → mọi nội dung hiển thị ngay.
 
 **JS (`src/shared/motion/`):** `header.ts` (dropdown, menu mobile, bfcache), `reveal.ts` (fade-up), `brand.ts` (màu logo).
