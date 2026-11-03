@@ -20,7 +20,7 @@ src/
 │  ├─ products/              # schema.ts, api.ts, pricing.ts, components/, pages/
 │  ├─ case-studies/          # schema.ts, api.ts, components/, pages/
 │  ├─ news/                  # schema.ts, api.ts, rss.ts, components/, pages/
-│  ├─ contact/               # action.ts, components/ContactForm.tsx, pages/
+│  ├─ contact/               # pages/
 │  ├─ about/  legal/
 ├─ content/<collection>/<locale>/<slug>.mdx
 ├─ content.config.ts         # Chỉ đăng ký collection, schema lấy từ module
@@ -122,7 +122,6 @@ Tương thích CSP: không dùng `style=""` trong HTML; JS chỉ đổi style qu
   - Code highlight dùng **Prism** (Shiki dùng inline style, không tương thích CSP).
   - **Không dùng `<ClientRouter />`** (không hỗ trợ khi bật CSP); chuyển trang dùng View Transitions gốc của trình duyệt (CSS).
 - Form: kiểm tra Zod phía server, honeypot chống bot, bắt buộc đồng ý liên hệ.
-- Secret qua `astro:env` (`RESEND_API_KEY`...). Xem `.env.example`.
 
 ## 6. Nội dung
 

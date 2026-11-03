@@ -48,7 +48,6 @@ Astro 7.4 + TypeScript 6 (Node 26 LTS, Vite 8)
 | `motion` | 14.9.0 | Tùy chọn |
 | `zod` | 4.6.7 | Không cài riêng, dùng `astro/zod` |
 | `@keystatic/astro` / `@keystatic/core` | 6.0.0 / 0.6.9 | Giai đoạn 2; peer `astro 5 \|\| 6 \|\| 7` |
-| `resend` | 6.37.0 | Gửi email từ form |
 | `drizzle-orm` | 0.45.4 | Giai đoạn 3; bản 1.0 đang RC, cân nhắc khi lên Store |
 
 > Quy tắc: trước khi khởi tạo hoặc nâng cấp, chạy `npx @astrojs/upgrade` và `npm outdated` để kiểm tra lại phiên bản.
@@ -240,7 +239,7 @@ Astro 7.4 + TypeScript 6 (Node 26 LTS, Vite 8)
 ```
 src/
 ├─ components/
-│  ├─ islands/       # React có tương tác (ContactForm, ProductFilter...)
+│  ├─ islands/       # React có tương tác (ProductFilter...)
 │  └─ *.astro        # component tĩnh dùng class daisyUI (Hero, Footer, Card...)
 ├─ content/
 │  ├─ products/      # *.mdx

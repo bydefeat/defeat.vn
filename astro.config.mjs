@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, envField, fontProviders } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import { cacheCloudflare } from '@astrojs/cloudflare/cache';
 import react from '@astrojs/react';
@@ -62,13 +62,6 @@ export default defineConfig({
     '/ingest/v1/pricing/[slug]': { maxAge: 600, swr: 86400, tags: ['pricing'] },
   },
 
-  env: {
-    schema: {
-      RESEND_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
-      CONTACT_TO_EMAIL: envField.string({ context: 'server', access: 'secret', default: 'contact@defeat.vn' }),
-      CONTACT_FROM_EMAIL: envField.string({ context: 'server', access: 'secret', default: 'DEFEAT <noreply@defeat.vn>' }),
-    },
-  },
 
   integrations: [
     react(),

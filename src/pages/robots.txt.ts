@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 export const GET: APIRoute = ({ site }) => {
   const sitemap = new URL('sitemap-index.xml', site).href;
   return new Response(
-    ['User-agent: *', 'Allow: /', 'Disallow: /ingest/', 'Disallow: /_actions/', 'Disallow: /_server-islands/', '', `Sitemap: ${sitemap}`, ''].join('\n'),
+    ['User-agent: *', 'Allow: /', 'Disallow: /ingest/', 'Disallow: /_server-islands/', '', `Sitemap: ${sitemap}`, ''].join('\n'),
     { headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
   );
 };
