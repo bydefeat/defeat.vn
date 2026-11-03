@@ -10,6 +10,7 @@ export const productSchema = ({ image }: SchemaContext) =>
     category: z.enum(PRODUCT_CATEGORIES),
     cover: image().optional(),
     coverAlt: z.string().optional(),
+    icon: image().optional(),
     techStack: z.array(z.string()).default([]),
     features: z.array(z.string()).default([]),
     demoUrl: z.url().optional(),
