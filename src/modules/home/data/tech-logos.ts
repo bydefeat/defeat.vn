@@ -8,7 +8,7 @@ export const TECH_LOGOS: TechLogo[] = [
   { slug: 'nodedotjs', name: 'Node.js', dark: false },
   { slug: 'bun', name: 'Bun', dark: false },
   { slug: 'nestjs', name: 'NestJS', dark: false },
-  { slug: 'go', name: 'Go', dark: true },
+  { slug: 'go', name: 'Go', dark: false },
   { slug: 'rust', name: 'Rust', dark: true },
   { slug: 'c', name: 'C', dark: false },
   { slug: 'cplusplus', name: 'C++', dark: false },
