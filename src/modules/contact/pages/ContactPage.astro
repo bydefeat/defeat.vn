@@ -39,7 +39,7 @@ const community = SITE.channels.filter((c) => c.key === 'announcements' || c.key
               <li>
                 <a href={c.href} {...(c.external ? { rel: 'noopener', target: '_blank' } : {})} class="group frame flex h-full flex-col rounded-box p-6 transition-colors hover:bg-base-200/60">
                   <span class="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-content">
-                    {'social' in c ? <SocialIcon name={c.social} class="size-6" /> : <Icon name={c.icon} class="size-6" />}
+                    {'social' in c && c.social ? <SocialIcon name={c.social} class="size-6" /> : 'icon' in c && c.icon && <Icon name={c.icon} class="size-6" />}
                   </span>
                   <span class="mt-5 text-sm text-muted">{c.title}</span>
                   <span class="mt-1 text-lg font-medium">{c.value}</span>
