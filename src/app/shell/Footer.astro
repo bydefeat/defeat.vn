@@ -5,6 +5,7 @@ import type { Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
 import Icon from '@shared/components/Icon.astro';
 import { SERVICES } from '@modules/services/data';
+import SocialIcon from '@shared/components/SocialIcon.astro';
 import CtaBand from './CtaBand.astro';
 
 interface Props {
@@ -61,8 +62,15 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
           <ul class="mt-6 flex gap-2" aria-label={t('footer.followUs')}>
             {socials.map(([name, url]) => (
               <li>
-                <a href={url} rel="noopener" target="_blank" class="btn btn-sm btn-outline border-base-300 bg-base-100 capitalize hover:border-primary hover:bg-primary hover:text-primary-content">
-                  {name}
+                <a
+                  href={url}
+                  rel="noopener"
+                  target="_blank"
+                  aria-label={name.charAt(0).toUpperCase() + name.slice(1)}
+                  title={name.charAt(0).toUpperCase() + name.slice(1)}
+                  class="flex size-10 items-center justify-center rounded-lg border border-base-300 bg-base-100 text-base-content/70 transition-colors hover:border-primary hover:bg-primary hover:text-primary-content"
+                >
+                  <SocialIcon name={name} class="size-5" />
                 </a>
               </li>
             ))}

@@ -93,6 +93,100 @@
 }
 
 /* ==========================================================================
+   PAGE TRANSITIONS — cross-document View Transitions (CSS, tương thích CSP)
+   Mỗi loại trang đích có một hiệu ứng riêng (html[data-vt], render từ server):
+     home    → iris     : trang mới mở ra từ một vòng tròn ở giữa
+     list    → curtain  : trang mới kéo lên như rèm từ dưới, trang cũ nhấc nhẹ lên
+     detail  → push     : trang mới đẩy vào từ phải, trang cũ lùi sang trái
+     contact → focus    : trang mới thu từ lớn về đúng cỡ, trang cũ lùi xa
+     about   → shutter  : trang mới mở như cửa chớp từ giữa ra hai bên
+     plain   → fade     : chuyển mờ
+   Theo kiểu điều hướng (script pagereveal trong <head>):
+     lang    → flip     : lật trang 3D khi đổi ngôn ngữ cùng một trang
+     back    → push ngược chiều khi bấm Back/Forward
+   Trang cũ luôn giữ nguyên độ đậm (chỉ tối nhẹ) → không lộ nền trắng, không nháy.
+   Chỉ animate transform / clip-path / filter trên ảnh chụp → chạy mượt trên GPU.
+   ========================================================================== */
+@view-transition {
+  navigation: auto;
+}
+
+.site-header { view-transition-name: site-header; }
+::view-transition-group(site-header) { z-index: 50; animation-duration: 0.45s; animation-timing-function: var(--ease); }
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
+
+:root { --vt-dur: 620ms; --vt-ease: cubic-bezier(0.65, 0, 0.2, 1); }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--vt-dur);
+  animation-timing-function: var(--vt-ease);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+}
+/* plain: fade */
+::view-transition-old(root) { animation-name: vt-dim; }
+::view-transition-new(root) { animation-name: vt-fade-in; }
+
+/* home: iris */
+html[data-vt="home"]::view-transition-old(root) { animation-name: vt-recede; }
+html[data-vt="home"]::view-transition-new(root) { animation-name: vt-iris; }
+
+/* list: curtain */
+html[data-vt="list"]::view-transition-old(root) { animation-name: vt-lift; }
+html[data-vt="list"]::view-transition-new(root) { animation-name: vt-curtain; }
+
+/* detail: push */
+html[data-vt="detail"]::view-transition-old(root) { animation-name: vt-out-left; }
+html[data-vt="detail"]::view-transition-new(root) { animation-name: vt-in-right; }
+
+/* contact: focus */
+html[data-vt="contact"]::view-transition-old(root) { animation-name: vt-recede; }
+html[data-vt="contact"]::view-transition-new(root) { animation-name: vt-focus; }
+
+/* about: shutter */
+html[data-vt="about"]::view-transition-old(root) { animation-name: vt-dim; }
+html[data-vt="about"]::view-transition-new(root) { animation-name: vt-shutter; }
+
+/* lang: flip (ưu tiên cao hơn kiểu theo trang) */
+html:active-view-transition-type(lang)::view-transition-group(root) { perspective: 1600px; }
+html:active-view-transition-type(lang)::view-transition-old(root) { animation-name: vt-flip-out; animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0); animation-duration: calc(var(--vt-dur) / 2); }
+html:active-view-transition-type(lang)::view-transition-new(root) { animation-name: vt-flip-in; animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1); animation-duration: calc(var(--vt-dur) / 2); animation-delay: calc(var(--vt-dur) / 2); }
+
+/* back: đẩy ngược chiều */
+html:active-view-transition-type(back)::view-transition-old(root) { animation-name: vt-out-right; animation-timing-function: var(--vt-ease); animation-duration: var(--vt-dur); animation-delay: 0s; }
+html:active-view-transition-type(back)::view-transition-new(root) { animation-name: vt-in-left; animation-timing-function: var(--vt-ease); animation-duration: var(--vt-dur); animation-delay: 0s; }
+
+@keyframes vt-dim { to { filter: brightness(0.82); } }
+@keyframes vt-fade-in { from { opacity: 0; } }
+@keyframes vt-recede { to { transform: scale(0.94); filter: brightness(0.75); } }
+@keyframes vt-iris {
+  from { clip-path: circle(0% at 50% 45%); }
+  to { clip-path: circle(150% at 50% 45%); }
+}
+@keyframes vt-lift { to { transform: translateY(-6%); filter: brightness(0.8); } }
+@keyframes vt-curtain {
+  from { clip-path: inset(100% 0 0 0 round 24px 24px 0 0); transform: translateY(12%); }
+  to { clip-path: inset(0 0 0 0 round 0); transform: none; }
+}
+@keyframes vt-out-left { to { transform: translateX(-28%); filter: brightness(0.8); } }
+@keyframes vt-in-right { from { transform: translateX(100%); } }
+@keyframes vt-out-right { to { transform: translateX(28%); filter: brightness(0.8); } }
+@keyframes vt-in-left { from { transform: translateX(-100%); } }
+@keyframes vt-focus { from { transform: scale(1.08); opacity: 0; } 35% { opacity: 1; } to { transform: none; opacity: 1; } }
+@keyframes vt-shutter {
+  from { clip-path: inset(0 50% 0 50%); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes vt-flip-out { to { transform: rotateY(-90deg); filter: brightness(0.7); } }
+@keyframes vt-flip-in { from { transform: rotateY(90deg); filter: brightness(0.7); } }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+/* ==========================================================================
    BASE
    ========================================================================== */
 @layer base {

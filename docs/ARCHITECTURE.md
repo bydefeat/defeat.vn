@@ -69,7 +69,11 @@ Làm mới giá khi dữ liệu thay đổi: gọi `context.cache.invalidate({ t
 - Fade-up nhẹ khi cuộn tới (`data-reveal`, so le bằng `data-reveal-group="ms"`), chỉ dùng `transform` + `opacity`.
 - Chỉ phần tử nằm dưới màn hình lúc tải mới bị ẩn chờ cuộn → không nháy khi tải/chuyển trang.
 - Hover: card nhấc nhẹ, đổi màu tiêu đề, phóng ảnh 3%; nút; dropdown fade.
-- Không có hiệu ứng chuyển trang (điều hướng tự nhiên của trình duyệt), không canvas, không animation lúc tải.
+- Chuyển trang (View Transitions, CSS): mỗi loại trang đích một hiệu ứng — trang chủ `iris` (mở từ vòng tròn),
+  danh sách `curtain` (rèm kéo lên), chi tiết `push` (đẩy từ phải), liên hệ `focus` (thu về đúng cỡ),
+  giới thiệu `shutter` (cửa chớp), còn lại `fade`. Đổi ngôn ngữ cùng trang → `flip` (lật 3D); Back/Forward → `push` ngược chiều.
+  Loại trang: `html[data-vt]` do BaseLayout render; kiểu điều hướng: script `pagereveal` inline trong `<head>`.
+  Trang cũ không mờ đi (chỉ tối nhẹ) → không lộ nền trắng. Không canvas, không animation lúc tải.
 - Không JS / `prefers-reduced-motion` → mọi nội dung hiển thị ngay.
 
 **JS (`src/shared/motion/`):** `header.ts` (dropdown, menu mobile, bfcache), `reveal.ts` (fade-up), `brand.ts` (màu logo).
@@ -89,7 +93,7 @@ Tương thích CSP: không dùng `style=""` trong HTML; JS chỉ đổi style qu
 
 - CSP bật (`security.csp`), hash tự động cho script/style. Vì vậy:
   - Code highlight dùng **Prism** (Shiki dùng inline style, không tương thích CSP).
-  - **Không dùng `<ClientRouter />`** (không hỗ trợ khi bật CSP); site điều hướng bình thường, không hiệu ứng chuyển trang.
+  - **Không dùng `<ClientRouter />`** (không hỗ trợ khi bật CSP); chuyển trang dùng View Transitions gốc của trình duyệt (CSS).
 - Form: kiểm tra Zod phía server, honeypot chống bot, bắt buộc đồng ý liên hệ.
 - Secret qua `astro:env` (`RESEND_API_KEY`...). Xem `.env.example`.
 
