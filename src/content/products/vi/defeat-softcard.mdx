@@ -1,0 +1,123 @@
+---
+title: "DEFEAT Softcard"
+summary: "Mã nguồn website đổi thẻ cào, bán mã thẻ, nạp cước và nạp game tự động 24/7: nhiều nhà cung cấp, ví, ngân hàng, API đối tác và trang quản trị đầy đủ."
+category: source-code
+cover: ../../../assets/products/defeat-softcard-v1/thumbnail.png
+coverAlt: "DEFEAT Softcard: nền tảng đổi thẻ cào sang tiền mặt tự động"
+techStack: ["Next.js 16", "React 19", "TypeScript", "PostgreSQL", "Drizzle ORM", "Valkey", "Better Auth", "Ant Design", "MCP"]
+features:
+  - "Đổi thẻ cào sang tiền mặt, phí theo nhóm thành viên"
+  - "Bán mã thẻ điện thoại, thẻ game, phần mềm"
+  - "Nạp cước điện thoại, nạp game, đơn lẻ và hàng loạt"
+  - "Nhiều nhà cung cấp, tự chọn theo phí, tự chuyển khi lỗi"
+  - "Ví, nạp/rút, tự khớp giao dịch ngân hàng"
+  - "API đối tác, sandbox, tài liệu API trực quan"
+  - "2FA, phân quyền, tường lửa IP, nhật ký"
+  - "Quản trị bằng AI Agent qua chuẩn MCP"
+listPriceVnd: 5000000
+featured: true
+order: 1
+---
+
+import { Image } from 'astro:assets';
+import doiThe from '../../../assets/products/defeat-softcard-v1/doi-the.png';
+import muaThe from '../../../assets/products/defeat-softcard-v1/mua-the.png';
+import gioHang from '../../../assets/products/defeat-softcard-v1/gio-hang.png';
+import ketNoiApi from '../../../assets/products/defeat-softcard-v1/ket-noi-api.png';
+import taiLieuApi from '../../../assets/products/defeat-softcard-v1/tai-lieu-api.png';
+import baoMat from '../../../assets/products/defeat-softcard-v1/bao-mat.png';
+import quanTri from '../../../assets/products/defeat-softcard-v1/quan-tri.png';
+
+## Tổng quan
+
+**DEFEAT Softcard** là bộ mã nguồn vận hành website thẻ cào trọn gói: **đổi thẻ cào sang tiền**, **bán mã thẻ**, **nạp cước điện thoại và nạp game**, kèm ví thành viên, nạp/rút qua ngân hàng và API cho đại lý. Mọi giao dịch chạy tự động 24/7, từ lúc khách gửi yêu cầu, chọn nhà cung cấp, đến khi cộng tiền hoặc giao thẻ.
+
+Hệ thống được viết mới hoàn toàn trên Next.js 16 và PostgreSQL, tách rõ khu khách hàng, khu đối tác API và khu quản trị.
+
+## Tính năng cốt lõi
+
+### Đổi thẻ cào
+
+- Nhận thẻ Viettel, Vinaphone, Mobifone, Vietnamobile, Zing, Garena, Vcoin, Scoin... gửi từng thẻ hoặc nhiều thẻ một lần.
+- Bảng phí theo **nhóm thành viên** (Thành viên, Đồng, Bạc...) và theo từng mệnh giá, hiển thị công khai cho khách.
+- Xử lý sai mệnh giá, thẻ lỗi, thẻ chờ; tự hỏi lại trạng thái thẻ treo và gửi lại khi nhà cung cấp báo không tìm thấy.
+- Báo cáo lãi theo kênh, nhà mạng, nhà cung cấp.
+
+<Image src={doiThe} alt="Trang đổi thẻ cào và bảng phí theo nhóm thành viên" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+### Bán mã thẻ
+
+- Danh mục thẻ điện thoại, thẻ game và phần mềm theo nhà phát hành và mệnh giá.
+- Giỏ hàng nhiều thẻ, chiết khấu theo sản phẩm, thanh toán bằng số dư ví hoặc chuyển khoản.
+- Lấy thẻ từ **kho thẻ nhập sẵn** (nhập Excel) hoặc mua tức thì từ nhà cung cấp; hoàn tiền tự động khi đơn lỗi.
+
+<Image src={muaThe} alt="Danh mục mua thẻ điện thoại, thẻ game và phần mềm" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+<Image src={gioHang} alt="Chọn mệnh giá và giỏ hàng mua thẻ Viettel" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+### Nạp cước và nạp game
+
+- Nạp cước điện thoại trả trước, trả sau và nạp game theo form riêng của từng sản phẩm.
+- Đơn lẻ, đơn hàng loạt, nạp nhanh; trạng thái đơn minh bạch cho khách.
+
+### Nhà cung cấp và định tuyến
+
+- Kết nối nhiều nhà cung cấp cho từng dịch vụ, tự đồng bộ biểu phí định kỳ.
+- **Tự chọn nhà cung cấp phí thấp nhất** hoặc giữ chuỗi ưu tiên; nhà cung cấp lỗi thì tự chuyển sang nhà tiếp theo.
+- Cấu hình phí, lãi và giới hạn theo kênh, theo nhóm khách.
+
+### Ví, thanh toán và đối soát
+
+- Ví thành viên: nạp tiền, rút tiền, chuyển tiền nội bộ, phí chuyển tiền, biến động số dư.
+- Cổng **ngân hàng nội địa** (VCB, MB, ACB, TCB...) và **ví điện tử** (MoMo, ZaloPay, ViettelPay).
+- **Tự khớp giao dịch ngân hàng** với hoá đơn nạp và đơn mua thẻ theo nội dung chuyển khoản, giao thẻ ngay khi nhận tiền.
+- Hoa hồng giới thiệu (affiliate) tự thanh toán sau thời gian chờ.
+
+### API đối tác và nhà phát triển
+
+- Khách tự tạo kết nối API: chọn dịch vụ (đổi thẻ, mua thẻ, nạp cước/game), Callback URL, kiểu GET/POST, giới hạn IP.
+- Trang tài liệu API có mục lục, ví dụ, mã lỗi và **Sandbox** với thẻ mẫu cho từng tình huống (đúng, sai mệnh giá, thẻ lỗi, chờ...), thử ngay trên trình duyệt.
+
+<Image src={ketNoiApi} alt="Trang khách tự đăng ký kết nối API" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+<Image src={taiLieuApi} alt="Tài liệu API đổi thẻ kèm Sandbox và thẻ mẫu" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+### Bảo mật
+
+- Xác thực 2 bước: OTP email, Google Authenticator hoặc mật khẩu cấp 2 cho thao tác quan trọng.
+- Đường dẫn quản trị bí mật, phân quyền theo vai trò (RBAC), danh sách IP trắng/đen, nhật ký đăng nhập.
+- Cảnh báo giao dịch bất thường, giới hạn tần suất, khoá kết nối gửi thẻ sai liên tục.
+
+<Image src={baoMat} alt="Trang bảo mật tài khoản với OTP email, Google Authenticator, mật khẩu cấp 2" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+### Quản trị và AI Agent
+
+- Bảng quản trị: doanh thu, lãi từng dịch vụ hôm nay và trong tháng, danh sách việc cần xử lý.
+- Thống kê đổi thẻ, bán thẻ, nạp cước, ví, top khách; xuất Excel.
+- Quản lý nội dung: tin tức, trang tĩnh, banner, menu, SEO, đa ngôn ngữ, mẫu email.
+- **Kết nối AI Agent qua chuẩn MCP**: quản trị viên thêm website vào Claude, ChatGPT... đăng nhập một lần rồi ra lệnh bằng lời, quyền của agent theo đúng vai trò được cấp.
+
+<Image src={quanTri} alt="Bảng quản trị: doanh thu, lãi theo dịch vụ và việc cần xử lý" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+## Quy trình một giao dịch
+
+1. **Khách chọn dịch vụ**: đổi thẻ, mua thẻ hoặc nạp cước/game, trên web hoặc qua API.
+2. **Kiểm tra dữ liệu**: mệnh giá, serial, số dư, giới hạn và IP.
+3. **Định tuyến**: chọn nhà cung cấp theo phí và tình trạng, tự chuyển khi lỗi.
+4. **Hoàn tất và đối soát**: cộng ví hoặc giao thẻ, gửi callback, ghi nhận lãi vào báo cáo.
+
+## Kiến trúc
+
+- **Nền tảng:** Next.js 16, React 19, TypeScript, PostgreSQL với Drizzle ORM, Valkey cho cache và hàng đợi.
+- **Kênh bán:** khách lẻ trên web, đại lý qua API, quản trị viên và AI Agent qua MCP.
+- **Tự động hoá:** tác vụ định kỳ đồng bộ phí, hỏi thẻ chờ, đồng bộ ngân hàng, trả hoa hồng; có nhật ký từng lần chạy.
+- **Ngôn ngữ:** tiếng Việt và tiếng Anh.
+- **Triển khai:** máy chủ riêng sau Cloudflare và nginx, nhận đúng IP thật của khách.
+
+## Phù hợp với
+
+- Đơn vị muốn mở website đổi thẻ, bán thẻ, nạp game với hệ thống của riêng mình.
+- Đại lý thẻ cần kết nối nhiều nhà cung cấp và cung cấp API cho đối tác.
+- Doanh nghiệp muốn sở hữu mã nguồn và tiếp tục phát triển.
+
+> Hệ thống chỉ hỗ trợ kinh doanh dịch vụ hợp pháp. DEFEAT tư vấn, cài đặt và hướng dẫn vận hành khi bàn giao.

@@ -1,7 +1,7 @@
 ---
 import type { Locale } from '@i18n/config';
 import { landing } from '../landing';
-import { TECH_LOGOS } from '../data/tech-logos';
+import { TECH_LOGOS } from '@shared/lib/tech-logos';
 interface Props { locale: Locale }
 const title = landing[Astro.props.locale].logosTitle;
 ---

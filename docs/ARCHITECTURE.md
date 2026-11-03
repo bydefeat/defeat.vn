@@ -89,7 +89,7 @@ Favicon/logo có `Cache-Control` 1 ngày + `stale-while-revalidate` 30 ngày (`p
 
 **Thanh cuộn:** ẩn toàn site (`scrollbar-width: none` + `::-webkit-scrollbar`), vẫn cuộn bình thường.
 
-**Logo:** công nghệ là SVG màu gốc từ thesvg.org, đặt nguyên file ở `public/tech/` (logo có bản sáng/tối: `<slug>.svg` + `<slug>-dark.svg`), danh sách ở `src/modules/home/data/tech-logos.ts`; icon mạng xã hội ở `scripts/assets/social`; logo DEFEAT ở `public/brand/`.
+**Logo:** công nghệ là SVG màu gốc từ thesvg.org, đặt nguyên file ở `public/tech/` (logo có bản sáng/tối: `<slug>.svg` + `<slug>-dark.svg`), danh sách ở `src/shared/lib/tech-logos.ts` (`TECH_LOGOS` cho dải logo trang chủ, `techLogo()` tra logo theo tên trong `techStack`); icon mạng xã hội ở `scripts/assets/social`; logo DEFEAT ở `public/brand/`.
 
 **Motion (tối giản, mượt):**
 - Fade-up nhẹ khi cuộn tới (`data-reveal`, so le bằng `data-reveal-group="ms"`), chỉ dùng `transform` + `opacity`.

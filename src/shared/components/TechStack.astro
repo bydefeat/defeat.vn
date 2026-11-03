@@ -1,0 +1,27 @@
+---
+import { techLogo } from '@shared/lib/tech-logos';
+interface Props { items: string[]; label: string; compact?: boolean }
+const { items, label, compact = false } = Astro.props;
+const icon = compact ? 'size-3.5' : 'size-4';
+---
+
+<ul class:list={['flex flex-wrap', compact ? 'gap-1.5' : 'gap-2']} aria-label={label}>
+  {
+    items.map((name) => {
+      const logo = techLogo(name);
+      return (
+        <li class:list={['frame inline-flex items-center rounded-full', compact ? 'gap-1.5 py-0.5 pr-2 pl-1 text-xs text-muted' : 'gap-2 py-1 pr-3 pl-1.5 text-sm']}>
+          {logo ? (
+            <span class:list={['flex items-center justify-center rounded-full bg-base-200', compact ? 'size-5' : 'size-6']}>
+              <img src={`/tech/${logo.slug}.svg`} alt="" width="16" height="16" loading="lazy" decoding="async" class:list={[icon, 'object-contain', logo.dark && 'only-light']} />
+              {logo.dark && <img src={`/tech/${logo.slug}-dark.svg`} alt="" width="16" height="16" loading="lazy" decoding="async" class:list={[icon, 'only-dark object-contain']} />}
+            </span>
+          ) : (
+            <span class="ml-1.5 size-1.5 rounded-full bg-primary" aria-hidden="true" />
+          )}
+          {name}
+        </li>
+      );
+    })
+  }
+</ul>

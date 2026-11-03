@@ -30,3 +30,15 @@ export const TECH_LOGOS: TechLogo[] = [
   { slug: 'tailwind-css', name: 'Tailwind CSS', dark: false },
   { slug: 'figma', name: 'Figma', dark: false },
 ];
+
+const MORE_LOGOS: TechLogo[] = [
+  { slug: 'drizzle', name: 'Drizzle ORM', dark: false },
+  { slug: 'valkey', name: 'Valkey', dark: false },
+  { slug: 'better-auth', name: 'Better Auth', dark: true },
+  { slug: 'ant-design', name: 'Ant Design', dark: false },
+  { slug: 'model-context-protocol', name: 'MCP', dark: true },
+];
+
+const BY_NAME = new Map([...TECH_LOGOS, ...MORE_LOGOS].map((logo) => [logo.name.toLowerCase(), logo]));
+
+export const techLogo = (name: string): TechLogo | undefined => BY_NAME.get(name.replace(/\s+[\d.]+$/, '').toLowerCase());

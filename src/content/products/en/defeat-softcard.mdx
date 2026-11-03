@@ -1,0 +1,123 @@
+---
+title: "DEFEAT Softcard"
+summary: "Source code for an automated 24/7 prepaid card exchange, digital code store and mobile/game top-up website: multi-provider, wallets, banks, partner API and full admin."
+category: source-code
+cover: ../../../assets/products/defeat-softcard-v1/thumbnail.png
+coverAlt: "DEFEAT Softcard: automated prepaid card to cash exchange platform"
+techStack: ["Next.js 16", "React 19", "TypeScript", "PostgreSQL", "Drizzle ORM", "Valkey", "Better Auth", "Ant Design", "MCP"]
+features:
+  - "Prepaid card to cash exchange, fees by member tier"
+  - "Sell mobile, game and software codes"
+  - "Mobile and game top-ups, single or bulk"
+  - "Multi-provider, cheapest-fee routing, automatic failover"
+  - "Wallets, deposits/withdrawals, automatic bank matching"
+  - "Partner API, sandbox, interactive API docs"
+  - "2FA, roles, IP firewall, audit logs"
+  - "AI Agent administration over MCP"
+listPriceVnd: 5000000
+featured: true
+order: 1
+---
+
+import { Image } from 'astro:assets';
+import doiThe from '../../../assets/products/defeat-softcard-v1/doi-the.png';
+import muaThe from '../../../assets/products/defeat-softcard-v1/mua-the.png';
+import gioHang from '../../../assets/products/defeat-softcard-v1/gio-hang.png';
+import ketNoiApi from '../../../assets/products/defeat-softcard-v1/ket-noi-api.png';
+import taiLieuApi from '../../../assets/products/defeat-softcard-v1/tai-lieu-api.png';
+import baoMat from '../../../assets/products/defeat-softcard-v1/bao-mat.png';
+import quanTri from '../../../assets/products/defeat-softcard-v1/quan-tri.png';
+
+## Overview
+
+**DEFEAT Softcard** is a complete source code package for running a prepaid card business: **card-to-cash exchange**, **digital code sales**, **mobile and game top-ups**, plus member wallets, bank deposits/withdrawals and an API for resellers. Every transaction runs automatically 24/7, from the customer's request and provider selection to crediting the wallet or delivering the code.
+
+It is built from scratch on Next.js 16 and PostgreSQL, with separate customer, partner API and admin areas.
+
+## Core capabilities
+
+### Card exchange
+
+- Accepts Viettel, Vinaphone, Mobifone, Vietnamobile, Zing, Garena, Vcoin, Scoin and more, one card or many at once.
+- Public fee table by **member tier** and denomination.
+- Handles wrong denominations, invalid and pending cards; re-checks stuck cards and resubmits when a provider loses them.
+- Profit reports by channel, telco and provider.
+
+<Image src={doiThe} alt="Card exchange page with fee table by member tier" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+### Digital code store
+
+- Catalog of mobile, game and software codes by issuer and denomination.
+- Multi-item cart, per-product discounts, pay by wallet balance or bank transfer.
+- Delivers from **imported stock** (Excel) or buys instantly from providers; automatic refunds on failed orders.
+
+<Image src={muaThe} alt="Catalog of mobile, game and software codes" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+<Image src={gioHang} alt="Denomination picker and cart for Viettel codes" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+### Mobile and game top-ups
+
+- Prepaid/postpaid mobile and game top-ups with product-specific forms.
+- Single, bulk and quick orders with clear statuses for customers.
+
+### Providers and routing
+
+- Multiple providers per service with scheduled fee syncing.
+- **Cheapest-fee routing** or a fixed priority chain; automatic failover to the next provider.
+- Fees, margins and limits per channel and customer group.
+
+### Wallets, payments and reconciliation
+
+- Member wallets: deposits, withdrawals, internal transfers, transfer fees, balance history.
+- **Local bank** (VCB, MB, ACB, TCB...) and **e-wallet** (MoMo, ZaloPay, ViettelPay) gateways.
+- **Automatic bank matching** of incoming transfers to invoices and card orders, delivering codes as soon as payment lands.
+- Referral commissions paid out automatically after a holding period.
+
+### Partner and developer API
+
+- Customers create their own API connections: services, Callback URL, GET/POST, IP allowlist.
+- API docs with navigation, examples and error codes, plus a **Sandbox** with sample cards for every case, testable in the browser.
+
+<Image src={ketNoiApi} alt="Self-service API connection page" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+<Image src={taiLieuApi} alt="Card exchange API docs with Sandbox and sample cards" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+### Security
+
+- Two-factor confirmation: email OTP, Google Authenticator or a secondary password for sensitive actions.
+- Secret admin path, role-based access control, IP allow/deny lists, login logs.
+- Unusual-activity alerts, rate limits, automatic lockout of connections spamming invalid cards.
+
+<Image src={baoMat} alt="Account security page with email OTP, Google Authenticator and secondary password" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+### Admin and AI Agent
+
+- Dashboard with today's and this month's revenue and profit per service, plus a pending-task queue.
+- Statistics for exchange, sales, top-ups, wallets and top customers; Excel export.
+- Content management: news, pages, banners, menus, SEO, languages, email templates.
+- **AI Agent access over MCP**: add the site to Claude, ChatGPT and others, sign in once and give instructions in plain language, with permissions bound to the assigned role.
+
+<Image src={quanTri} alt="Admin dashboard: revenue, profit by service and pending tasks" widths={[800, 1200, 1920]} sizes="(min-width: 1024px) 66vw, 100vw" class="my-6 w-full rounded-box frame" />
+
+## From request to completed transaction
+
+1. **Choose a service**: exchange, buy codes or top up, on the web or via API.
+2. **Validate**: denomination, serial, balance, limits and IP.
+3. **Route**: pick a provider by fee and health, fail over on errors.
+4. **Complete and reconcile**: credit the wallet or deliver the code, send the callback, record profit.
+
+## Architecture
+
+- **Platform:** Next.js 16, React 19, TypeScript, PostgreSQL with Drizzle ORM, Valkey for cache and queues.
+- **Channels:** retail web customers, resellers via API, admins and AI Agents via MCP.
+- **Automation:** scheduled jobs for fee sync, pending-card checks, bank sync and commission payouts, each run logged.
+- **Languages:** Vietnamese and English.
+- **Deployment:** dedicated server behind Cloudflare and nginx, with correct client IP handling.
+
+## Ideal for
+
+- Teams launching their own card exchange, code store or game top-up website.
+- Card resellers connecting multiple providers and offering an API to partners.
+- Businesses that want to own the code and keep building on it.
+
+> For lawful services only. DEFEAT provides consulting, installation and operating guidance at handover.
