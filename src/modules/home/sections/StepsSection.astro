@@ -1,0 +1,28 @@
+---
+/** 3 bước bắt đầu: tiêu đề trong khung + 3 ô icon tròn. */
+import Icon from '@shared/components/Icon.astro';
+import type { Locale } from '@i18n/config';
+import { landing } from '../landing';
+interface Props { locale: Locale }
+const { steps } = landing[Astro.props.locale];
+---
+
+<section class="container-x pb-14 sm:pb-20" aria-labelledby="home-steps">
+  <div class="frame px-6 py-10 text-center" data-reveal>
+    <h2 id="home-steps" class="t-h2">{steps.title}</h2>
+  </div>
+  <ol class="cells grid border-t-0! sm:grid-cols-3" data-reveal-group="90">
+    {
+      steps.items.map((s, i) => (
+        <li class="flex flex-col items-center px-6 py-9 text-center" data-reveal>
+          <span class="relative flex size-11 items-center justify-center rounded-full bg-base-content/[0.08]">
+            <Icon name={s.icon} class="size-[18px]" />
+            <span class="absolute -right-1.5 -top-1.5 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-content">{i + 1}</span>
+          </span>
+          <h3 class="mt-4 text-[15px] font-medium">{s.title}</h3>
+          <p class="mt-0.5 text-sm text-muted">{s.desc}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>

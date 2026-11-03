@@ -34,7 +34,7 @@ const href = localizePath(productPath(product), locale);
       data.techStack.length > 0 && (
         <ul class="mt-4 flex flex-wrap gap-1.5" aria-label={t('common.techStack')}>
           {data.techStack.slice(0, 4).map((tech) => (
-            <li class="rounded border border-base-300 px-2 py-0.5 text-xs text-muted">{tech}</li>
+            <li class="rounded frame px-2 py-0.5 text-xs text-muted">{tech}</li>
           ))}
         </ul>
       )

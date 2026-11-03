@@ -1,29 +1,23 @@
 ---
-/** Dải logo công nghệ (SVG từ thesvg.org): xám, rê chuột chuyển sang màu thương hiệu. */
+/** Dải logo công nghệ trong khung nét đứt (SVG từ thesvg.org; xám, rê chuột → màu thương hiệu). */
 import type { Locale } from '@i18n/config';
-import { homeText } from '../i18n';
+import { landing } from '../landing';
 import { TECH_LOGOS } from '../data/tech-logos';
 interface Props { locale: Locale }
-const text = homeText[Astro.props.locale].tech;
+const title = landing[Astro.props.locale].logosTitle;
 ---
 
-<section class="section border-y border-base-300 bg-base-200" aria-labelledby="home-tech">
-  <div class="container-x">
-    <div class="mx-auto max-w-2xl text-center" data-reveal>
-      <h2 id="home-tech" class="t-h2">{text.title}</h2>
-      <span class="accent-bar mx-auto" aria-hidden="true"></span>
-      <p class="t-lead mt-5 text-muted">{text.desc}</p>
-    </div>
-    <ul class="mt-12 grid grid-cols-4 gap-3 sm:gap-4 lg:grid-cols-8" data-reveal-group="30">
+<section class="container-x" aria-labelledby="home-tech">
+  <div class="frame-l frame-r frame-b px-6 py-12 text-center">
+    <h2 id="home-tech" class="text-sm text-muted">{title}</h2>
+    <ul class="mx-auto mt-8 flex max-w-4xl flex-wrap items-center justify-center gap-x-9 gap-y-7" data-reveal-group="25">
       {
         TECH_LOGOS.map((logo) => (
-          <li class="tech-item flex flex-col items-center justify-center gap-2.5 rounded-box border border-base-300 bg-base-100 px-2 py-5 transition-shadow hover:shadow-[0_10px_24px_-14px_rgba(19,32,51,0.25)]" data-brand={logo.color} data-reveal>
-            <svg viewBox={logo.viewBox} class="tech-logo size-8 sm:size-9" fill="currentColor" fill-rule={logo.fillRule} role="img" aria-label={logo.name} set:html={logo.body} />
-            <span class="text-center text-[11px] font-medium leading-tight text-muted sm:text-xs">{logo.name}</span>
+          <li class="tech-item" data-brand={logo.color} title={logo.name} data-reveal>
+            <svg viewBox={logo.viewBox} class="tech-logo size-7" fill="currentColor" fill-rule={logo.fillRule} role="img" aria-label={logo.name} set:html={logo.body} />
           </li>
         ))
       }
     </ul>
-    <p class="mt-5 text-center text-xs text-muted/70">{text.note}</p>
   </div>
 </section>

@@ -54,16 +54,24 @@ Làm mới giá khi dữ liệu thay đổi: gọi `context.cache.invalidate({ t
 
 ## 3. Giao diện & Motion
 
-**Phong cách:** corporate, sạch, sáng (tham khảo bố cục các website doanh nghiệp phần mềm như nencer.vn / nencer.com).
-- Màu: nền trắng / xám-xanh nhạt (`base-200` #f4f7fb), chữ navy (#132033), chữ phụ `text-muted` (#5b6b80),
-  nhấn đỏ thương hiệu (`primary` #e82024), liên kết xanh (`accent` #0a68ac), dải CTA navy (`secondary`).
-- Font: **Inter** (variable 400–800, subset latin + vietnamese, preload, `font-display: fallback`).
-- Thang chữ: `t-display`, `t-h1`, `t-h2`, `t-h3`, `t-lead`, `t-label`.
-- Thành phần: `card-base` + `card-hover` (nhấc nhẹ + bóng khi rê chuột), `icon-chip`, `pill`, `accent-bar`
-  (gạch đỏ dưới tiêu đề), `cover-placeholder` (ảnh tạm khi chưa có ảnh).
-- Logo công nghệ: SVG đơn sắc từ thesvg.org (`scripts/assets/tech/`), sinh dữ liệu bằng
-  `node scripts/generate-tech-logos.mjs`; hiển thị xám, rê chuột chuyển sang màu thương hiệu.
-- Logo DEFEAT: PNG trong `public/brand/`.
+**Phong cách:** tối giản kiểu sản phẩm công nghệ (tham khảo hướng thiết kế của template Jet trên Framer — chỉ phong cách,
+toàn bộ minh hoạ và nội dung là của DEFEAT): nền đen/trắng, khung **nét đứt**, panel **nền chấm**, tiêu đề lớn weight 500,
+nút **viên thuốc** (trắng trên nền tối / đen trên nền sáng), mỗi tính năng một màu nhấn.
+
+**Sáng / tối:** 2 theme daisyUI `defeat-dark` (mặc định) và `defeat-light`.
+- Theme được đặt bằng script inline trong `<head>` trước khi vẽ (không nháy sai màu), nhớ lựa chọn trong `localStorage` (`defeat-theme`).
+- Nút đổi theme `[data-theme-toggle]` ở header (`src/shared/motion/theme.ts`), chuyển màu mượt bằng View Transition (type `theme`).
+- Biến theo theme: `--muted`, `--line`, `--line-strong`, `--dot`, `--acc-red|teal|violet|sky|yellow`, `--glow`.
+
+**Thành phần:** `frame`, `frame-t|b|l|r` (viền nét đứt), `cells` (lưới ô ngăn nét đứt), `dot-grid`, `btn-invert`, `btn-line`,
+`card-base` + `card-hover`, `pill`, `icon-chip`, `beams` (vệt sáng hero), `cta-bars` (nền vạch CTA).
+Font: **Inter** (variable 400–800, latin + vietnamese). Thang chữ: `t-display`, `t-h1`, `t-h2`, `t-h3`, `t-lead`, `t-label`.
+
+**Minh hoạ isometric nét chấm (tranh gốc):** `node scripts/generate-illustrations.mjs` → `src/assets/illustrations/*.svg`
+(custom-software, security, infrastructure, growth, web, mobile, dashboard, cloud). Hiển thị bằng `Illustration.astro`
+(SVG nhúng trực tiếp, nét dùng `currentColor`, mặt khối tô màu nền → tự đổi theo theme).
+
+**Logo:** công nghệ & mạng xã hội là SVG từ thesvg.org (`scripts/assets/tech`, `scripts/assets/social`); logo DEFEAT ở `public/brand/`.
 
 **Motion (tối giản, mượt):**
 - Fade-up nhẹ khi cuộn tới (`data-reveal`, so le bằng `data-reveal-group="ms"`), chỉ dùng `transform` + `opacity`.

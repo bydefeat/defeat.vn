@@ -6,8 +6,10 @@ import { initHeader } from './header';
 import { initReveal } from './reveal';
 import { initBrandColors } from './brand';
 import { initTransitions } from './transitions';
+import { initTheme } from './theme';
 
 function boot() {
+  initTheme();
   initHeader();
   initBrandColors();
   initReveal();

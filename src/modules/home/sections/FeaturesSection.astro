@@ -1,0 +1,57 @@
+---
+/**
+ * Tính năng: các hàng xen kẽ trái/phải — nội dung (nhãn màu, tiêu đề, mô tả, checklist) + minh hoạ trên nền chấm.
+ * Cuối khối: 4 điểm nổi bật dạng icon.
+ */
+import Icon from '@shared/components/Icon.astro';
+import Illustration from '@shared/components/Illustration.astro';
+import type { Locale } from '@i18n/config';
+import { localizePath, useTranslations } from '@i18n/utils';
+import { landing } from '../landing';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const { features, highlights } = landing[locale];
+const accentClass = { red: 'text-acc-red', teal: 'text-acc-teal', violet: 'text-acc-violet', sky: 'text-acc-sky', yellow: 'text-acc-yellow' } as const;
+---
+
+<section class="container-x pb-14 sm:pb-20" aria-label={t('nav.services')}>
+  <div class="frame">
+    {
+      features.map((f, i) => (
+        <div class:list={['grid md:grid-cols-2', i > 0 && 'frame-t']}>
+          <div class:list={['flex flex-col justify-center px-6 py-12 sm:px-10 sm:py-16', i % 2 === 1 && 'md:order-2 md:frame-l', i % 2 === 0 && 'md:frame-r']} data-reveal>
+            <p class:list={['t-label', accentClass[f.accent]]}>{f.eyebrow}</p>
+            <h2 class="t-h2 mt-4 max-w-md">{f.title}</h2>
+            <p class="mt-4 max-w-sm text-muted">{f.desc}</p>
+            <ul class="mt-7 space-y-3 text-[15px]">
+              {f.points.map((p) => (
+                <li class="flex items-center gap-3">
+                  <Icon name="check" class:list={['size-[18px] shrink-0', accentClass[f.accent]]} />
+                  {p}
+                </li>
+              ))}
+            </ul>
+            <a href={localizePath(`/services/${f.service}`, locale)} class="mt-6 inline-flex min-h-11 items-center gap-1.5 self-start text-sm text-muted transition-colors hover:text-base-content">
+              {t('cta.viewDetail')} <Icon name="arrowRight" class="size-4" />
+            </a>
+          </div>
+          <div class:list={['dot-grid flex items-center justify-center px-8 py-12 max-md:frame-t', i % 2 === 1 && 'md:order-1']} data-reveal>
+            <Illustration name={f.illo} class="w-full max-w-[380px]" />
+          </div>
+        </div>
+      ))
+    }
+    <ul class="frame-t grid grid-cols-2 md:grid-cols-4" data-reveal-group="70">
+      {
+        highlights.map((h, i) => (
+          <li class:list={['flex flex-col items-center px-4 py-9 text-center', i % 2 === 1 && 'frame-l', i > 1 && 'max-md:frame-t', i === 2 && 'md:frame-l']} data-reveal>
+            <Icon name={h.icon} class="size-5" />
+            <h3 class="mt-3 text-[15px] font-medium">{h.title}</h3>
+            <p class="mt-1 max-w-[18ch] text-[13px] text-muted">{h.desc}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

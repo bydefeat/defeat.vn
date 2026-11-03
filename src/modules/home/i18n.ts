@@ -66,7 +66,7 @@ export const homeText: Record<Locale, {
     news: { eyebrow: 'Tin tức', title: 'Tin tức & chia sẻ mới nhất' },
     faq: {
       eyebrow: 'Câu hỏi thường gặp',
-      title: 'Giải đáp nhanh',
+      title: 'Câu hỏi thường gặp.',
       items: [
         { q: 'DEFEAT nhận những loại dự án nào?', a: 'Phần mềm quản trị doanh nghiệp, website, web app, ứng dụng di động, tích hợp hệ thống và cung cấp đội ngũ phát triển riêng.' },
         { q: 'Tôi có nhận được toàn bộ mã nguồn không?', a: 'Có. Với dự án gia công, khách hàng sở hữu toàn bộ mã nguồn và tài liệu sau khi nghiệm thu.' },
@@ -127,7 +127,7 @@ export const homeText: Record<Locale, {
     news: { eyebrow: 'News', title: 'Latest news & insights' },
     faq: {
       eyebrow: 'FAQ',
-      title: 'Quick answers',
+      title: 'Frequently asked questions.',
       items: [
         { q: 'What kinds of projects does DEFEAT take on?', a: 'Business management software, websites, web apps, mobile apps, system integration and dedicated development teams.' },
         { q: 'Do I get the full source code?', a: 'Yes. For outsourced projects, the client owns all source code and documentation after acceptance.' },

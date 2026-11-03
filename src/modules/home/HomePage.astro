@@ -3,11 +3,11 @@ import BaseLayout from '@app/layouts/BaseLayout.astro';
 import { organizationLd, websiteLd } from '@shared/seo/jsonld';
 import { resolveLocale } from '@i18n/utils';
 import Hero from './sections/Hero.astro';
-import ServicesSection from './sections/ServicesSection.astro';
 import TechSection from './sections/TechSection.astro';
-import WhySection from './sections/WhySection.astro';
-import ProductsSection from './sections/ProductsSection.astro';
-import CaseStudiesSection from './sections/CaseStudiesSection.astro';
+import BenefitsSection from './sections/BenefitsSection.astro';
+import StepsSection from './sections/StepsSection.astro';
+import FeaturesSection from './sections/FeaturesSection.astro';
+import ShowcaseSection from './sections/ShowcaseSection.astro';
 import NewsSection from './sections/NewsSection.astro';
 import FaqSection from './sections/FaqSection.astro';
 import { homeText } from './i18n';
@@ -23,11 +23,11 @@ const faqLd = {
 
 <BaseLayout title={text.seoTitle} description={text.seoDesc} path="/" jsonLd={[organizationLd(), websiteLd(locale), faqLd]}>
   <Hero locale={locale} />
-  <ServicesSection locale={locale} />
   <TechSection locale={locale} />
-  <ProductsSection locale={locale} />
-  <WhySection locale={locale} />
-  <CaseStudiesSection locale={locale} />
+  <BenefitsSection locale={locale} />
+  <StepsSection locale={locale} />
+  <FeaturesSection locale={locale} />
+  <ShowcaseSection locale={locale} />
   <NewsSection locale={locale} />
   <FaqSection locale={locale} />
 </BaseLayout>

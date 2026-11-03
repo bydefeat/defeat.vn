@@ -1,9 +1,8 @@
 ---
 /**
- * Header (sticky): logo · menu chính (dropdown Dịch vụ) · đổi ngôn ngữ · CTA.
+ * Header (sticky, tối giản): logo · menu (dropdown Dịch vụ) · ngôn ngữ · nút sáng/tối · CTA dạng viên thuốc.
  * Dropdown mở bằng hover (chuột) hoặc nút mũi tên (bàn phím/cảm ứng, aria-expanded).
- * Menu mobile: panel (<details>), dịch vụ dạng danh sách con, ngôn ngữ, CTA.
- * Hành vi: src/shared/motion/header.ts
+ * Hành vi: src/shared/motion/header.ts, theme.ts
  */
 import { MAIN_NAV, SITE } from '@config/site';
 import { LOCALES, LOCALE_META, type Locale } from '@i18n/config';
@@ -22,16 +21,17 @@ const t = useTranslations(locale);
 const href = (p: string) => localizePath(p, locale);
 const isActive = (navPath: string) => path === navPath || path.startsWith(navPath + '/');
 const langHref = (l: Locale) => localizePath(availableLocales.includes(l) ? path : '/', l);
+const themeLabel = locale === 'vi' ? 'Chuyển chế độ sáng/tối' : 'Toggle light/dark mode';
 ---
 
-<header class="site-header sticky top-0 z-50 border-b border-base-300 bg-base-100" data-site-header>
+<header class="site-header sticky top-0 z-50 bg-base-100" data-site-header>
   <nav class="container-x relative flex h-[var(--header-h)] items-center gap-8" aria-label="Main">
     <a href={href('/')} class="flex shrink-0 items-center py-2" aria-label={`DEFEAT — ${t('nav.home')}`}>
-      <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" class="h-6 w-auto lg:h-7" fetchpriority="high" />
+      <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" class="h-6 w-auto" fetchpriority="high" />
     </a>
 
     <!-- Desktop -->
-    <ul class="hidden flex-1 items-center gap-7 lg:flex">
+    <ul class="hidden flex-1 items-center justify-center gap-7 lg:flex">
       {
         MAIN_NAV.map((item) =>
           item.key === 'services' ? (
@@ -42,30 +42,30 @@ const langHref = (l: Locale) => localizePath(availableLocales.includes(l) ? path
               </a>
               <button
                 type="button"
-                class="flex size-7 items-center justify-center text-base-content/60 hover:text-primary"
+                class="flex size-6 items-center justify-center text-muted hover:text-base-content"
                 aria-expanded="false"
                 aria-controls="dropdown-services"
                 aria-label={t('header.openServices')}
                 data-mega-toggle
               >
-                <svg class="chev size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                <svg class="chev size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
               </button>
-              <div class="dropdown-panel w-[680px]" id="dropdown-services">
-                <div class="rounded-box border border-base-300 bg-base-100 p-3 shadow-[0_16px_40px_-16px_rgba(19,32,51,0.25)]">
+              <div class="dropdown-panel w-[640px] -translate-x-1/4" id="dropdown-services">
+                <div class="frame rounded-box bg-base-100 p-2 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.5)]">
                   <ul class="grid grid-cols-2 gap-1">
                     {SERVICES.map((s) => (
                       <li>
                         <a href={href(`/services/${s.slug}`)} class="group/item flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-base-200">
-                          <span class="icon-chip size-9"><Icon name={s.icon} class="size-[18px]" /></span>
+                          <span class="icon-chip size-9"><Icon name={s.icon} class="size-4" /></span>
                           <span>
-                            <span class="block text-sm font-semibold group-hover/item:text-primary">{s.title[locale]}</span>
+                            <span class="block text-sm font-medium">{s.title[locale]}</span>
                             <span class="mt-0.5 line-clamp-2 block text-[13px] leading-snug text-muted">{s.summary[locale]}</span>
                           </span>
                         </a>
                       </li>
                     ))}
                   </ul>
-                  <a href={href('/services')} class="mt-2 flex items-center justify-between rounded-lg bg-base-200 px-4 py-3 text-sm font-semibold transition-colors hover:text-primary">
+                  <a href={href('/services')} class="mt-1 flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-muted transition-colors hover:bg-base-200 hover:text-base-content">
                     {t('header.allServices')} <Icon name="arrowRight" class="size-4" />
                   </a>
                 </div>
@@ -83,103 +83,103 @@ const langHref = (l: Locale) => localizePath(availableLocales.includes(l) ? path
       }
     </ul>
 
-    <div class="ml-auto hidden items-center gap-4 lg:flex">
-      <div class="flex items-center gap-1 text-[13px] font-semibold" role="group" aria-label={t('common.language')}>
-        <Icon name="globe" class="mr-1 size-4 text-muted" />
+    <div class="ml-auto flex items-center gap-2 lg:ml-0">
+      <div class="hidden items-center text-xs font-medium sm:flex" role="group" aria-label={t('common.language')}>
         {
-          LOCALES.map((l, i) => (
-            <>
-              {i > 0 && <span class="text-base-300" aria-hidden="true">|</span>}
-              <a
-                href={langHref(l)}
-                hreflang={LOCALE_META[l].hreflang}
-                lang={LOCALE_META[l].hreflang}
-                title={LOCALE_META[l].label}
-                class:list={['px-1 py-1 transition-colors', l === locale ? 'text-primary' : 'text-muted hover:text-base-content']}
-                aria-current={l === locale ? 'true' : undefined}
-              >
-                {l.toUpperCase()}
-              </a>
-            </>
+          LOCALES.map((l) => (
+            <a
+              href={langHref(l)}
+              hreflang={LOCALE_META[l].hreflang}
+              lang={LOCALE_META[l].hreflang}
+              title={LOCALE_META[l].label}
+              class:list={['rounded-full px-2.5 py-1.5 transition-colors', l === locale ? 'text-base-content' : 'text-muted hover:text-base-content']}
+              aria-current={l === locale ? 'true' : undefined}
+            >
+              {l.toUpperCase()}
+            </a>
           ))
         }
       </div>
-      <a href={href('/contact')} class="btn btn-primary">{t('cta.quote')}</a>
-    </div>
+      <button type="button" class="theme-toggle flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-base-200 hover:text-base-content" aria-label={themeLabel} title={themeLabel} aria-pressed="true" data-theme-toggle>
+        <Icon name="moon" class="i-moon size-[18px]" />
+        <Icon name="sun" class="i-sun size-[18px]" />
+      </button>
+      <a href={href('/contact')} class="btn btn-invert btn-sm hidden h-9 px-4 lg:inline-flex">{t('cta.quote')}</a>
 
-    <!-- Mobile -->
-    <details class="mobile-menu ml-auto lg:hidden" data-mobile-menu>
-      <summary class="-mr-2 flex size-11 cursor-pointer list-none items-center justify-center rounded-lg" aria-label={t('nav.menu')}>
-        <svg class="size-6 [.mobile-menu[open]_&]:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-        <svg class="hidden size-6 [.mobile-menu[open]_&]:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-      </summary>
-      <div class="mobile-panel absolute inset-x-0 top-full h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain border-t border-base-300 bg-base-100">
-        <div class="container-x flex min-h-full flex-col pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2">
-          <ul class="flex flex-col">
-            {
-              MAIN_NAV.map((item) =>
-                item.key === 'services' ? (
-                  <li class="border-b border-base-300">
-                    <details class="m-sub">
-                      <summary class="flex min-h-13 cursor-pointer list-none items-center justify-between text-base font-semibold">
-                        {t(`nav.${item.key}`)}
-                        <svg class="chev size-5 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
-                      </summary>
-                      <ul class="grid gap-0.5 pb-3">
-                        {SERVICES.map((s) => (
+      <!-- Mobile -->
+      <details class="mobile-menu lg:hidden" data-mobile-menu>
+        <summary class="-mr-2 flex size-11 cursor-pointer list-none items-center justify-center rounded-full" aria-label={t('nav.menu')}>
+          <svg class="size-6 [.mobile-menu[open]_&]:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg>
+          <svg class="hidden size-6 [.mobile-menu[open]_&]:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </summary>
+        <div class="mobile-panel absolute inset-x-0 top-full h-[calc(100dvh-var(--header-h))] overflow-y-auto overscroll-contain bg-base-100 frame-t">
+          <div class="container-x flex min-h-full flex-col pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2">
+            <ul class="flex flex-col">
+              {
+                MAIN_NAV.map((item) =>
+                  item.key === 'services' ? (
+                    <li class="frame-b">
+                      <details class="m-sub">
+                        <summary class="flex min-h-13 cursor-pointer list-none items-center justify-between text-lg">
+                          {t(`nav.${item.key}`)}
+                          <svg class="chev size-5 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                        </summary>
+                        <ul class="grid gap-0.5 pb-3">
+                          {SERVICES.map((s) => (
+                            <li>
+                              <a href={href(`/services/${s.slug}`)} class="flex min-h-11 items-center gap-3 rounded-lg px-2 text-[15px] text-muted active:bg-base-200">
+                                <Icon name={s.icon} class="size-4" />
+                                {s.title[locale]}
+                              </a>
+                            </li>
+                          ))}
                           <li>
-                            <a href={href(`/services/${s.slug}`)} class="flex min-h-11 items-center gap-3 rounded-lg px-2 text-[15px] text-base-content/80 active:bg-base-200">
-                              <Icon name={s.icon} class="size-4 text-primary" />
-                              {s.title[locale]}
+                            <a href={href('/services')} class="flex min-h-11 items-center gap-2 px-2 text-[15px] text-base-content">
+                              {t('header.allServices')} <Icon name="arrowRight" class="size-4" />
                             </a>
                           </li>
-                        ))}
-                        <li>
-                          <a href={href('/services')} class="flex min-h-11 items-center gap-2 px-2 text-[15px] font-semibold text-primary">
-                            {t('header.allServices')} <Icon name="arrowRight" class="size-4" />
-                          </a>
-                        </li>
-                      </ul>
-                    </details>
-                  </li>
-                ) : (
-                  <li class="border-b border-base-300">
-                    <a
-                      href={href(item.path)}
-                      class:list={['flex min-h-13 items-center text-base font-semibold', isActive(item.path) && 'text-primary']}
-                      aria-current={isActive(item.path) ? 'page' : undefined}
-                    >
-                      {t(`nav.${item.key}`)}
-                    </a>
-                  </li>
-                ),
-              )
-            }
-            <li class="border-b border-base-300">
-              <a href={href('/contact')} class="flex min-h-13 items-center text-base font-semibold">{t('nav.contact')}</a>
-            </li>
-          </ul>
+                        </ul>
+                      </details>
+                    </li>
+                  ) : (
+                    <li class="frame-b">
+                      <a
+                        href={href(item.path)}
+                        class:list={['flex min-h-13 items-center text-lg', isActive(item.path) ? 'text-base-content' : 'text-base-content/80']}
+                        aria-current={isActive(item.path) ? 'page' : undefined}
+                      >
+                        {t(`nav.${item.key}`)}
+                      </a>
+                    </li>
+                  ),
+                )
+              }
+              <li class="frame-b">
+                <a href={href('/contact')} class="flex min-h-13 items-center text-lg text-base-content/80">{t('nav.contact')}</a>
+              </li>
+            </ul>
 
-          <div class="mt-auto space-y-4 pt-8">
-            <a href={href('/contact')} class="btn btn-primary btn-block btn-lg">{t('cta.quote')}</a>
-            <div class="flex items-center justify-between gap-4 text-sm">
-              <div class="flex items-center rounded-lg border border-base-300 p-0.5 text-xs font-semibold" role="group" aria-label={t('common.language')}>
-                {LOCALES.map((l) => (
-                  <a
-                    href={langHref(l)}
-                    hreflang={LOCALE_META[l].hreflang}
-                    class:list={['flex h-9 min-w-11 items-center justify-center rounded-md px-3', l === locale ? 'bg-primary text-primary-content' : 'text-muted']}
-                    aria-current={l === locale ? 'true' : undefined}
-                  >
-                    {l.toUpperCase()}
-                  </a>
-                ))}
+            <div class="mt-auto space-y-4 pt-8">
+              <a href={href('/contact')} class="btn btn-invert btn-block btn-lg">{t('cta.quote')}</a>
+              <div class="flex items-center justify-between gap-4 text-sm">
+                <div class="frame flex items-center rounded-full p-0.5 text-xs font-medium" role="group" aria-label={t('common.language')}>
+                  {LOCALES.map((l) => (
+                    <a
+                      href={langHref(l)}
+                      hreflang={LOCALE_META[l].hreflang}
+                      class:list={['flex h-9 min-w-11 items-center justify-center rounded-full px-3', l === locale ? 'bg-base-content text-base-100' : 'text-muted']}
+                      aria-current={l === locale ? 'true' : undefined}
+                    >
+                      {l.toUpperCase()}
+                    </a>
+                  ))}
+                </div>
+                <a href={`mailto:${SITE.email}`} class="text-muted">{SITE.email}</a>
               </div>
-              <a href={`mailto:${SITE.email}`} class="text-muted">{SITE.email}</a>
             </div>
           </div>
         </div>
-      </div>
-    </details>
+      </details>
+    </div>
   </nav>
 </header>

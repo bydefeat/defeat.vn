@@ -1,0 +1,25 @@
+---
+/** Lợi ích: tiêu đề trong khung + lưới 2×2 các ô minh hoạ isometric nét chấm. */
+import Illustration from '@shared/components/Illustration.astro';
+import type { Locale } from '@i18n/config';
+import { landing } from '../landing';
+interface Props { locale: Locale }
+const { benefits } = landing[Astro.props.locale];
+---
+
+<section class="container-x section" aria-labelledby="home-benefits">
+  <div class="frame px-6 py-10 text-center" data-reveal>
+    <h2 id="home-benefits" class="t-h2">{benefits.title}</h2>
+  </div>
+  <ul class="cells grid border-t-0! sm:grid-cols-2" data-reveal-group="80">
+    {
+      benefits.items.map((b) => (
+        <li class="group relative flex flex-col overflow-hidden px-6 pb-7 pt-6 sm:px-8" data-reveal>
+          <div class="flex h-52 items-center justify-center sm:h-64"><Illustration name={b.illo} class="h-full w-full max-w-[340px] transition-transform duration-700 ease-out group-hover:-translate-y-1.5 [&>svg]:h-full [&>svg]:w-full" /></div>
+          <h3 class="t-h3 mt-4 text-xl">{b.title}</h3>
+          <p class="mt-1.5 text-sm text-muted">{b.desc}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>

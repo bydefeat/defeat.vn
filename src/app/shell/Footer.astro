@@ -1,11 +1,11 @@
 ---
-/** Footer: thông tin công ty, các cột liên kết, thanh bản quyền. Nền sáng. */
+/** Footer tối giản: logo + mô tả + liên hệ, các cột liên kết, thanh bản quyền + mạng xã hội. */
 import { SITE } from '@config/site';
 import type { Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
 import Icon from '@shared/components/Icon.astro';
-import { SERVICES } from '@modules/services/data';
 import SocialIcon from '@shared/components/SocialIcon.astro';
+import { SERVICES } from '@modules/services/data';
 import CtaBand from './CtaBand.astro';
 
 interface Props {
@@ -21,7 +21,7 @@ const year = new Date().getFullYear();
 const columns = [
   {
     title: t('nav.services'),
-    links: SERVICES.slice(0, 5).map((s) => ({ label: s.title[locale], href: href(`/services/${s.slug}`) })),
+    links: SERVICES.slice(0, 4).map((s) => ({ label: s.title[locale], href: href(`/services/${s.slug}`) })),
   },
   {
     title: t('footer.company'),
@@ -37,6 +37,8 @@ const columns = [
     links: [
       { label: t('nav.news'), href: href('/news') },
       { label: t('footer.rss'), href: href('/rss.xml') },
+      { label: t('footer.privacy'), href: href('/privacy') },
+      { label: t('footer.terms'), href: href('/terms') },
     ],
   },
 ];
@@ -45,50 +47,27 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
 
 {!hideCtaBand && <CtaBand locale={locale} />}
 
-<footer class="border-t border-base-300 bg-base-200">
-  <div class="container-x grid gap-10 py-14 lg:grid-cols-12">
-    <div class="lg:col-span-4">
+<footer class="container-x pb-10 pt-6">
+  <div class="grid gap-10 pb-12 lg:grid-cols-12">
+    <div class="lg:col-span-5">
       <a href={href('/')} class="inline-flex" aria-label="DEFEAT">
-        <img src="/brand/defeat_brand.png" alt="DEFEAT" width="2010" height="537" loading="lazy" class="h-7 w-auto" />
+        <img src="/brand/defeat_logo.png" alt="DEFEAT" width="961" height="961" loading="lazy" class="size-8" />
       </a>
-      <p class="mt-4 max-w-sm text-sm text-muted">{t('footer.tagline')}</p>
-      <ul class="mt-6 space-y-2 text-sm">
-        <li class="flex items-center gap-2.5"><Icon name="mapPin" class="size-4 text-primary" /><span>{SITE.address.locality}, Việt Nam</span></li>
-        <li class="flex items-center gap-2.5"><Icon name="phone" class="size-4 text-primary" /><a class="hover:text-primary" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></li>
-        <li class="flex items-center gap-2.5"><Icon name="mail" class="size-4 text-primary" /><a class="hover:text-primary" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+      <p class="mt-4 max-w-xs text-sm text-muted">{t('footer.tagline')}</p>
+      <ul class="mt-5 space-y-1.5 text-sm text-muted">
+        <li><a class="hover:text-base-content" href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+        <li><a class="hover:text-base-content" href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phone}</a></li>
+        <li>{SITE.address.locality}, Việt Nam</li>
       </ul>
-      {
-        socials.length > 0 && (
-          <ul class="mt-6 flex gap-2" aria-label={t('footer.followUs')}>
-            {socials.map(([name, url]) => (
-              <li>
-                <a
-                  href={url}
-                  rel="noopener"
-                  target="_blank"
-                  aria-label={name.charAt(0).toUpperCase() + name.slice(1)}
-                  title={name.charAt(0).toUpperCase() + name.slice(1)}
-                  class="flex size-10 items-center justify-center rounded-lg border border-base-300 bg-base-100 text-base-content/70 transition-colors hover:border-primary hover:bg-primary hover:text-primary-content"
-                >
-                  <SocialIcon name={name} class="size-5" />
-                </a>
-              </li>
-            ))}
-          </ul>
-        )
-      }
     </div>
-
-    <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:col-span-8">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:col-span-7">
       {
         columns.map((col) => (
           <nav aria-label={col.title} class="first:col-span-2 sm:first:col-span-1">
-            <h2 class="text-sm font-bold">{col.title}</h2>
+            <h2 class="text-sm font-medium">{col.title}</h2>
             <ul class="mt-4 space-y-2.5 text-sm">
               {col.links.map((l) => (
-                <li>
-                  <a class="text-muted transition-colors hover:text-primary" href={l.href}>{l.label}</a>
-                </li>
+                <li><a class="text-muted transition-colors hover:text-base-content" href={l.href}>{l.label}</a></li>
               ))}
             </ul>
           </nav>
@@ -96,15 +75,17 @@ const socials = Object.entries(SITE.social).filter(([, url]) => url);
       }
     </div>
   </div>
-
-  <div class="border-t border-base-300">
-    <div class="container-x flex flex-col gap-3 py-5 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between">
-      <p>© {year} {SITE.legalName}. {t('footer.rights')}</p>
-      <ul class="flex flex-wrap gap-x-5 gap-y-2">
-        <li><a class="hover:text-primary" href={href('/privacy')}>{t('footer.privacy')}</a></li>
-        <li><a class="hover:text-primary" href={href('/terms')}>{t('footer.terms')}</a></li>
-        <li><a class="inline-flex items-center gap-1 hover:text-primary" href="#top">{t('footer.backToTop')} <Icon name="arrowUp" class="size-3.5" /></a></li>
-      </ul>
+  <div class="frame-t flex flex-col gap-4 pt-6 text-[13px] text-muted sm:flex-row sm:items-center sm:justify-between">
+    <p>© {year} {SITE.legalName}. {t('footer.rights')}</p>
+    <div class="flex items-center gap-4">
+      {
+        socials.map(([name, url]) => (
+          <a href={url} rel="noopener" target="_blank" aria-label={name.charAt(0).toUpperCase() + name.slice(1)} title={name.charAt(0).toUpperCase() + name.slice(1)} class="flex size-9 items-center justify-center rounded-full transition-colors hover:bg-base-200 hover:text-base-content">
+            <SocialIcon name={name} class="size-[18px]" />
+          </a>
+        ))
+      }
+      <a href="#top" class="inline-flex items-center gap-1 hover:text-base-content">{t('footer.backToTop')} <Icon name="arrowUp" class="size-3.5" /></a>
     </div>
   </div>
 </footer>

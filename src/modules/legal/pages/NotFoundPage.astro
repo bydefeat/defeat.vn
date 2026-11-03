@@ -13,7 +13,7 @@ const t = useTranslations(locale);
       <p class="text-[clamp(5rem,18vw,9rem)] font-extrabold leading-none text-primary" aria-hidden="true">404</p>
       <h1 class="t-h1 mt-4">{t('notFound.title')}</h1>
       <p class="t-lead mt-3 max-w-xl text-muted">{t('notFound.desc')}</p>
-      <a href={localizePath('/', locale)} class="btn btn-primary btn-lg mt-8">
+      <a href={localizePath('/', locale)} class="btn btn-invert btn-lg mt-8">
         {t('notFound.back')} <Icon name="arrowRight" class="arrow size-5" />
       </a>
     </div>

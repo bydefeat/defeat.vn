@@ -53,8 +53,8 @@ const crumbs = [
           <PriceTagFallback slot="fallback" locale={locale} />
         </PriceTag>
         <div class="flex flex-col gap-3">
-          <a href={localizePath('/contact', locale)} class="btn btn-primary">{t('cta.quote')}</a>
-          {data.demoUrl && <a href={data.demoUrl} class="btn btn-outline" rel="noopener" target="_blank">{text.demo}</a>}
+          <a href={localizePath('/contact', locale)} class="btn btn-invert">{t('cta.quote')}</a>
+          {data.demoUrl && <a href={data.demoUrl} class="btn btn-line" rel="noopener" target="_blank">{text.demo}</a>}
         </div>
         {
           data.features.length > 0 && (

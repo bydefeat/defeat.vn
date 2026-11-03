@@ -1,6 +1,6 @@
 ---
 /**
- * Layout gốc (app shell): <html>, <head> (SEO, font, icon), topbar, header, footer, script giao diện.
+ * Layout gốc (app shell): <html>, <head> (SEO, font, icon, theme), header, footer, script giao diện.
  * Mọi trang đều đi qua layout này.
  */
 import '@/styles/global.css';
@@ -9,7 +9,6 @@ import { SITE } from '@config/site';
 import { LOCALE_META } from '@i18n/config';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
 import Seo, { type SeoProps } from '@shared/seo/Seo.astro';
-import Topbar from '../shell/Topbar.astro';
 import Header from '../shell/Header.astro';
 import Footer from '../shell/Footer.astro';
 
@@ -22,12 +21,23 @@ const t = useTranslations(locale);
 ---
 
 <!doctype html>
-<html lang={LOCALE_META[locale].hreflang} data-theme="defeat">
+<html lang={LOCALE_META[locale].hreflang} data-theme="defeat-dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content={SITE.themeColor} />
-    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark light" />
+    <!-- Theme: đặt TRƯỚC khi vẽ để không nháy sai màu. Mặc định tối; nhớ lựa chọn của người dùng. -->
+    <script is:inline>
+      (function () {
+        var t;
+        try { t = localStorage.getItem('defeat-theme'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') t = 'dark';
+        var r = document.documentElement;
+        r.dataset.theme = 'defeat-' + t;
+        r.style.colorScheme = t;
+      })();
+    </script>
     <meta name="generator" content={Astro.generator} />
     <!-- Back/Forward → type "back" cho chuyển trang (pagereveal phải đăng ký sớm, trong <head>). -->
     <script is:inline>
@@ -46,10 +56,9 @@ const t = useTranslations(locale);
     <slot name="head" />
   </head>
   <body id="top" class="flex min-h-dvh flex-col bg-base-100 font-sans text-base-content">
-    <a href="#main" class="btn btn-primary btn-sm sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]">
+    <a href="#main" class="btn btn-invert btn-sm sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]">
       {t('common.skipToContent')}
     </a>
-    <Topbar locale={locale} />
     <Header locale={locale} path={props.path} availableLocales={props.availableLocales} />
     <main id="main" class="vt-content flex-1">
       <slot />

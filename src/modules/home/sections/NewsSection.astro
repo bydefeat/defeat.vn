@@ -1,5 +1,4 @@
 ---
-import SectionHeading from '@shared/components/SectionHeading.astro';
 import Icon from '@shared/components/Icon.astro';
 import type { Locale } from '@i18n/config';
 import { localizePath, useTranslations } from '@i18n/utils';
@@ -16,15 +15,13 @@ const posts = await getNews(locale, 3);
 
 {
   posts.length > 0 && (
-    <section class="section" aria-labelledby="home-news">
-      <div class="container-x">
-        <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <SectionHeading index="05" id="home-news" eyebrow={text.eyebrow} title={text.title} />
-          <a href={localizePath('/news', locale)} class="btn btn-outline shrink-0 self-start border-base-300 hover:border-primary hover:bg-base-100 hover:text-primary md:self-auto" data-reveal>{t('cta.viewAll')} <Icon name="arrowRight" class="arrow size-4" /></a>
-        </div>
-        <div data-reveal-group="80" class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p) => <NewsCard post={p} locale={locale} />)}
-        </div>
+    <section class="container-x pb-14 sm:pb-20" aria-labelledby="home-news">
+      <div class="frame flex flex-col items-center gap-4 px-6 py-10 text-center sm:flex-row sm:justify-between sm:text-left" data-reveal>
+        <h2 id="home-news" class="t-h2">{text.title}</h2>
+        <a href={localizePath('/news', locale)} class="btn btn-line btn-sm">{t('cta.viewAll')} <Icon name="arrowRight" class="arrow size-4" /></a>
+      </div>
+      <div class="frame border-t-0! grid gap-4 p-4 sm:grid-cols-2 sm:p-6 lg:grid-cols-3" data-reveal-group="80">
+        {posts.map((p) => <NewsCard post={p} locale={locale} />)}
       </div>
     </section>
   )

@@ -41,7 +41,7 @@ const crumbs = [
 
   {
     data.results.length > 0 && (
-      <section class="border-b border-base-300" aria-label={text.results}>
+      <section class="frame-b" aria-label={text.results}>
         <dl class="container-x grid grid-cols-2 gap-6 py-10 md:grid-cols-4" data-reveal-group="100">
           {data.results.map((r) => (
             <div data-reveal>
@@ -71,7 +71,7 @@ const crumbs = [
             </div>
           )}
         </dl>
-        <a href={localizePath('/contact', locale)} class="btn btn-primary btn-block">{t('cta.quote')}</a>
+        <a href={localizePath('/contact', locale)} class="btn btn-invert btn-block">{t('cta.quote')}</a>
       </aside>
     </div>
   </section>

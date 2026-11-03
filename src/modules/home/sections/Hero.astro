@@ -1,8 +1,5 @@
 ---
-/**
- * Hero: nội dung bên trái, mockup giao diện phần mềm (HTML/CSS, không ảnh) bên phải, dải số liệu bên dưới.
- * Tĩnh hoàn toàn — không animation khi tải (không nháy).
- */
+/** Hero: vệt sáng chéo, nhãn viên thuốc, tiêu đề lớn căn giữa, 2 nút, dải số liệu trong lưới nét đứt. */
 import Icon from '@shared/components/Icon.astro';
 import type { Locale } from '@i18n/config';
 import { localizePath } from '@i18n/utils';
@@ -11,87 +8,34 @@ import { homeText } from '../i18n';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const { hero, stats } = homeText[locale];
-const bars = ['h-10', 'h-16', 'h-12', 'h-20', 'h-14', 'h-24', 'h-[4.5rem]', 'h-28'];
 ---
 
-<section class="vt-hero relative overflow-hidden bg-gradient-to-b from-base-200 to-base-100" aria-labelledby="hero-title">
-  <div class="container-x grid items-center gap-12 py-14 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:py-24">
-    <div>
-      <p class="t-label text-primary">{hero.eyebrow}</p>
-      <h1 id="hero-title" class="t-display mt-4">
-        {hero.title} <span class="text-primary">{hero.highlight}</span>
+<section class="vt-hero relative overflow-hidden" aria-labelledby="hero-title">
+  <div class="beams" aria-hidden="true"></div>
+  <div class="container-x relative">
+    <div class="frame-l frame-r px-4 pb-16 pt-16 text-center sm:pb-20 sm:pt-24">
+      <p class="frame mx-auto inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs text-muted">
+        <span class="size-1.5 rounded-full bg-primary"></span>{hero.eyebrow}
+      </p>
+      <h1 id="hero-title" class="t-display mx-auto mt-7 max-w-4xl">
+        {hero.title} <span class="text-muted">{hero.highlight}</span>
       </h1>
-      <p class="t-lead mt-6 max-w-xl text-muted">{hero.desc}</p>
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a href={localizePath('/contact', locale)} class="btn btn-primary btn-lg">
+      <p class="t-lead mx-auto mt-6 max-w-xl text-muted">{hero.desc}</p>
+      <div class="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+        <a href={localizePath('/contact', locale)} class="btn btn-invert btn-lg">
           {hero.primary} <Icon name="arrowRight" class="arrow size-5" />
         </a>
-        <a href={localizePath('/products', locale)} class="btn btn-lg btn-outline border-base-300 bg-base-100 hover:border-primary hover:bg-base-100 hover:text-primary">
-          {hero.secondary}
-        </a>
+        <a href={localizePath('/products', locale)} class="btn btn-line btn-lg">{hero.secondary}</a>
       </div>
-      <ul class="mt-8 flex flex-col gap-2.5 text-sm text-base-content/80 sm:flex-row sm:flex-wrap sm:gap-x-6">
-        {hero.bullets.map((b) => <li class="flex items-center gap-2"><Icon name="check" class="size-4 text-success" />{b}</li>)}
+      <ul class="mt-9 flex flex-col items-center justify-center gap-2 text-sm text-muted sm:flex-row sm:gap-6">
+        {hero.bullets.map((b) => <li class="flex items-center gap-2"><Icon name="check" class="size-4 text-base-content" />{b}</li>)}
       </ul>
     </div>
-
-    <!-- Mockup giao diện (trang trí) -->
-    <div class="relative hidden sm:block" aria-hidden="true">
-      <div class="absolute -right-10 -top-10 size-72 rounded-full bg-primary/10 blur-3xl"></div>
-      <div class="absolute -bottom-12 -left-8 size-64 rounded-full bg-accent/10 blur-3xl"></div>
-      <div class="relative overflow-hidden rounded-xl border border-base-300 bg-base-100 shadow-[0_30px_60px_-30px_rgba(19,32,51,0.35)]">
-        <div class="flex items-center gap-2 border-b border-base-300 bg-base-200 px-4 py-3">
-          <span class="size-2.5 rounded-full bg-[#ff5f57]"></span>
-          <span class="size-2.5 rounded-full bg-[#febc2e]"></span>
-          <span class="size-2.5 rounded-full bg-[#28c840]"></span>
-          <span class="ml-4 h-5 flex-1 rounded bg-base-100"></span>
-        </div>
-        <div class="grid grid-cols-[150px_1fr]">
-          <div class="space-y-2.5 border-r border-base-300 p-4">
-            <img src="/brand/defeat_logo.png" alt="" width="961" height="961" class="mb-4 size-7" loading="lazy" />
-            <div class="h-2.5 w-20 rounded bg-primary/70"></div>
-            <div class="h-2.5 w-24 rounded bg-base-300"></div>
-            <div class="h-2.5 w-16 rounded bg-base-300"></div>
-            <div class="h-2.5 w-20 rounded bg-base-300"></div>
-            <div class="h-2.5 w-14 rounded bg-base-300"></div>
-          </div>
-          <div class="space-y-4 p-5">
-            <div class="grid grid-cols-3 gap-3">
-              {['bg-primary', 'bg-accent', 'bg-success'].map((c) => (
-                <div class="rounded-lg border border-base-300 p-3">
-                  <div class="h-2 w-12 rounded bg-base-300"></div>
-                  <div class:list={['mt-3 h-4 w-16 rounded', c]}></div>
-                </div>
-              ))}
-            </div>
-            <div class="rounded-lg border border-base-300 p-4">
-              <div class="h-2.5 w-24 rounded bg-base-300"></div>
-              <div class="mt-4 flex h-28 items-end gap-2.5">
-                {bars.map((h, i) => <div class:list={['flex-1 rounded-t', h, i === bars.length - 1 ? 'bg-primary' : 'bg-accent/25']}></div>)}
-              </div>
-            </div>
-            <div class="space-y-2">
-              {[0, 1, 2].map(() => (
-                <div class="flex items-center gap-3 rounded-lg border border-base-300 px-3 py-2.5">
-                  <div class="size-6 rounded-full bg-base-200"></div>
-                  <div class="h-2.5 flex-1 rounded bg-base-200"></div>
-                  <div class="h-2.5 w-12 rounded bg-success/40"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Dải số liệu -->
-  <div class="container-x pb-14 sm:pb-16">
-    <dl class="grid grid-cols-2 overflow-hidden rounded-box border border-base-300 bg-base-100 md:grid-cols-4">
+    <dl class="cells grid grid-cols-2 md:grid-cols-4">
       {
-        stats.map((s, i) => (
-          <div class:list={['flex flex-col gap-1 border-base-300 px-5 py-5 sm:flex-row sm:items-center sm:gap-4 sm:px-6', i % 2 === 1 && 'border-l', i > 1 && 'max-md:border-t', i === 2 && 'md:border-l']}>
-            <dd class="shrink-0 text-2xl font-extrabold text-primary sm:text-3xl">{s.value}</dd>
+        stats.map((s) => (
+          <div class="flex flex-col gap-1 px-5 py-6 sm:px-7">
+            <dd class="text-3xl font-medium tracking-tight">{s.value}</dd>
             <dt class="text-[13px] leading-snug text-muted">{s.label}</dt>
           </div>
         ))

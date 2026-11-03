@@ -44,8 +44,9 @@ const crumbs = [
   ]}
 >
   <article>
-    <header class="vt-hero border-b border-base-300 bg-base-200">
-      <div class="container-x max-w-4xl py-10 sm:py-14">
+    <header class="vt-hero relative overflow-hidden">
+      <div class="beams opacity-70" aria-hidden="true"></div>
+      <div class="container-x relative"><div class="frame-l frame-r frame-b mx-auto px-5 pb-12 pt-10 sm:px-12 sm:pb-16 sm:pt-14">
         <Breadcrumbs items={crumbs} />
         <h1 class="vt-title t-h1 mt-8">{data.title}</h1>
         <p class="t-lead mt-4 text-muted">{data.description}</p>
@@ -55,7 +56,7 @@ const crumbs = [
           {data.updatedDate && <span>· {t('common.updatedOn')} <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate, locale)}</time></span>}
           <span>· {minutes} {t('common.minRead')}</span>
         </div>
-      </div>
+      </div></div>
     </header>
     <div class="container-x max-w-4xl py-12">
       {data.cover && <Image src={data.cover} alt={data.coverAlt ?? data.title} widths={[800, 1200]} sizes="(min-width: 1024px) 896px, 100vw" class="mb-10 w-full rounded-box" loading="eager" />}
@@ -63,7 +64,7 @@ const crumbs = [
       {
         data.tags.length > 0 && (
           <ul class="mt-10 flex flex-wrap gap-2" aria-label={t('common.tags')}>
-            {data.tags.map((tag) => <li class="border border-base-300 px-2.5 py-1 text-[13px] font-medium">{tag}</li>)}
+            {data.tags.map((tag) => <li class="frame px-2.5 py-1 text-[13px] font-medium">{tag}</li>)}
           </ul>
         )
       }
@@ -72,7 +73,7 @@ const crumbs = [
 
   {
     related.length > 0 && (
-      <section class="section border-t border-base-300">
+      <section class="section frame-t">
         <div class="container-x">
           <h2 class="t-h2" data-reveal>{text.related}</h2>
           <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="90">

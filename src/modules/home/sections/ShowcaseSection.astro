@@ -1,0 +1,43 @@
+---
+/** Sản phẩm & dự án: tiêu đề trong khung + lưới card (sản phẩm nổi bật, dự án tiêu biểu). */
+import Icon from '@shared/components/Icon.astro';
+import type { Locale } from '@i18n/config';
+import { localizePath, useTranslations } from '@i18n/utils';
+import ProductCard from '@modules/products/components/ProductCard.astro';
+import CaseStudyCard from '@modules/case-studies/components/CaseStudyCard.astro';
+import { getProducts } from '@modules/products/api';
+import { getCaseStudies } from '@modules/case-studies/api';
+import { landing } from '../landing';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const text = landing[locale].showcase;
+const products = await getProducts(locale, { featured: true, limit: 3 });
+const cases = await getCaseStudies(locale, { featured: true, limit: 2 });
+---
+
+{
+  (products.length > 0 || cases.length > 0) && (
+    <section class="container-x pb-14 sm:pb-20" aria-labelledby="home-showcase">
+      <div class="frame flex flex-col items-center gap-2 px-6 py-10 text-center" data-reveal>
+        <h2 id="home-showcase" class="t-h2">{text.title}</h2>
+        <p class="text-muted">{text.desc}</p>
+      </div>
+      <div class="frame border-t-0! p-4 sm:p-6">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group="80">
+          {products.map((p) => <ProductCard product={p} locale={locale} />)}
+        </div>
+        {cases.length > 0 && (
+          <div class="mt-4 grid gap-4" data-reveal-group="80">
+            {cases.map((c) => <CaseStudyCard item={c} locale={locale} />)}
+          </div>
+        )}
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <a href={localizePath('/products', locale)} class="btn btn-line btn-sm">{t('nav.products')} <Icon name="arrowRight" class="arrow size-4" /></a>
+          <a href={localizePath('/case-studies', locale)} class="btn btn-line btn-sm">{t('nav.caseStudies')} <Icon name="arrowRight" class="arrow size-4" /></a>
+        </div>
+      </div>
+    </section>
+  )
+}

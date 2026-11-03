@@ -92,7 +92,7 @@ export default function ContactForm({ labels, locale }: Props) {
       </label>
 
       <div className="flex flex-col gap-4 sm:col-span-2" aria-live="polite">
-        <button type="submit" className="btn btn-primary w-full sm:w-auto sm:self-start" disabled={status === 'sending'}>
+        <button type="submit" className="btn btn-invert w-full sm:w-auto sm:self-start" disabled={status === 'sending'}>
           {status === 'sending' && <span className="loading loading-spinner loading-sm" />}
           {status === 'sending' ? labels.sending : labels.submit}
         </button>
