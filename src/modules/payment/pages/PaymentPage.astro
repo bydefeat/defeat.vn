@@ -105,15 +105,20 @@ const crumbs = [
 </BaseLayout>
 
 <script>
-  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
-    const label = btn.querySelector('span');
-    const original = label?.textContent ?? '';
-    btn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(btn.dataset.copy ?? '');
-        if (label) label.textContent = btn.dataset.copied ?? '';
-        setTimeout(() => { if (label) label.textContent = original; }, 1800);
-      } catch {}
-    });
-  }
+  import { pageSignal } from '@shared/motion/lifecycle';
+
+  document.addEventListener('astro:page-load', () => {
+    const signal = pageSignal();
+    for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+      const label = btn.querySelector('span');
+      const original = label?.textContent ?? '';
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy ?? '');
+          if (label) label.textContent = btn.dataset.copied ?? '';
+          setTimeout(() => { if (label) label.textContent = original; }, 1800);
+        } catch {}
+      }, { signal });
+    }
+  });
 </script>

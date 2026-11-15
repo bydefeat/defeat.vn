@@ -1,6 +1,7 @@
 ---
 import '@/styles/global.css';
 import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
 import { SITE, isShown } from '@config/site';
 import { LOCALE_META } from '@i18n/config';
 import { resolveLocale, useTranslations, localizePath } from '@i18n/utils';
@@ -34,18 +35,13 @@ const fallback = props.contentLocale && props.contentLocale !== locale ? props.c
       })();
     </script>
     <meta name="generator" content={Astro.generator} />
-    <script is:inline>
-      addEventListener('pagereveal', function (e) {
-        var a = window.navigation && navigation.activation;
-        if (e.viewTransition && a && a.navigationType === 'traverse') e.viewTransition.types.add('back');
-      });
-    </script>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     {isShown('news') && <link rel="alternate" type="application/rss+xml" title={`${SITE.name} — ${t('nav.news')}`} href={localizePath('/rss.xml', locale)} />}
     <Font cssVariable="--font-inter" preload />
     <Seo {...props} locale={locale} />
+    <ClientRouter />
     <slot name="head" />
   </head>
   <body id="top" class="flex min-h-dvh flex-col bg-base-100 font-sans text-base-content">

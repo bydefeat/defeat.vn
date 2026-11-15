@@ -151,17 +151,18 @@ Astro 7.4 + TypeScript 6 (Node 26 LTS, Vite 8)
 - Chống spam form: Cloudflare Turnstile (nhớ thêm domain của Turnstile vào CSP).
 
 ### Chuyển trang mượt — có sẵn trong Astro, không thêm thư viện SPA
-- **Bắt đầu với:** View Transitions gốc của trình duyệt + Prefetch
-  ```css
-  /* global.css */
-  @view-transition { navigation: auto; }
-  ```
+- **Dự án dùng `<ClientRouter />`** (từ `astro:transitions`, đặt trong `BaseLayout.astro`) + Prefetch → chuyển trang phía client,
+  **tab không reload**, HTML vẫn render tĩnh nên SEO không đổi. (`@view-transition { navigation: auto; }` kiểu MPA đã bỏ.)
   ```js
   // astro.config.mjs
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' }
   ```
-- ⚠️ **Khi bật CSP, `<ClientRouter />` không được hỗ trợ** → dự án dùng CSS `@view-transition` (đã triển khai).
-- **Nâng lên `<ClientRouter />`** (chỉ khi tắt CSP) (từ `astro:transitions`; `<ViewTransitions />` cũ **đã bị xóa**) khi cần giữ state hoặc phần tử qua các trang (`transition:persist`), hoặc cần hiệu ứng morph (`transition:name`) trên mọi trình duyệt.
+- ⚠️ **ClientRouter + CSP:** trình duyệt chỉ áp CSP của trang tải đầu tiên, nên script/style inline riêng của trang sau sẽ bị chặn.
+  Cách dự án xử lý:
+  - Không để script/style inline riêng từng trang; script đặt trong `<script>` bundle (được `'self'` cho phép).
+  - Không gán thuộc tính `style` lên `<html>` của trang mới (router copy bằng `setAttribute` → bị CSP chặn); dùng CSSOM sau swap.
+  - Script inline của server island (`server:defer`) bị vô hiệu trong `astro:before-swap` và island được tải từ bundle
+    (`src/shared/motion/server-islands.ts`).
 - Lưu ý khi dùng ClientRouter:
   - `<script>` chỉ chạy một lần → khởi tạo trong sự kiện `astro:page-load`;
   - island React mất state khi chuyển trang nếu không có `transition:persist`;

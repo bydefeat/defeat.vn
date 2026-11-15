@@ -81,10 +81,10 @@ sắp thứ tự theo vật thể rồi theo mặt, chi tiết gắn vào đúng
 logo mờ, vùng ký tự "nở" màu đỏ quanh con trỏ. Vẽ trong **Web Worker (OffscreenCanvas)** → luồng chính rảnh; fallback luồng chính 12fps.
 Chỉ chạy khi khối hiện trên màn hình; reduced motion → khung tĩnh; màu theo theme (`--ascii-ink`, `--ascii-hot`).
 
-**Điều hướng nhanh:** `prefetch` (rê chuột) + `experimental.clientPrerender` (Speculation Rules, mức `moderate`):
-Chrome/Edge dựng sẵn trang khi người dùng rê chuột lên link → bấm là hiện ngay, gần như không thấy vòng quay loading/favicon
-nháy ở tab. Khi bật CSP, Astro chèn luật tĩnh lúc build và tự thêm hash vào CSP. Trình duyệt khác dùng prefetch thường.
-Lưu ý: Chrome tắt prerender khi đang mở DevTools (Preload panel báo `PrerenderingDisabledByDevTools`) — đóng DevTools để thử.
+**Điều hướng nhanh:** `<ClientRouter />` (trong `BaseLayout.astro`) + `prefetch` (rê chuột): bấm link → fetch trang mới
+(thường đã prefetch sẵn) rồi thay DOM, **tab không reload**, không vòng quay loading. Mỗi trang vẫn là HTML tĩnh → SEO giữ nguyên.
+Vòng đời trang (`src/shared/motion/lifecycle.ts`): mọi khởi tạo chạy trong `astro:page-load`; listener gắn `pageSignal()`,
+observer/timer/worker đăng ký `onCleanup()` → tự dọn trong `astro:before-swap`. Theme giữ qua trang trong `theme.ts` (`initThemeCarry`).
 Favicon/logo có `Cache-Control` 1 ngày + `stale-while-revalidate` 30 ngày (`public/_headers`).
 
 **Thanh cuộn:** ẩn toàn site (`scrollbar-width: none` + `::-webkit-scrollbar`), vẫn cuộn bình thường.
@@ -95,11 +95,11 @@ Favicon/logo có `Cache-Control` 1 ngày + `stale-while-revalidate` 30 ngày (`p
 - Fade-up nhẹ khi cuộn tới (`data-reveal`, so le bằng `data-reveal-group="ms"`), chỉ dùng `transform` + `opacity`.
 - Chỉ phần tử nằm dưới màn hình lúc tải mới bị ẩn chờ cuộn → không nháy khi tải/chuyển trang.
 - Hover: card nhấc nhẹ, đổi màu tiêu đề, phóng ảnh 3%; nút; dropdown fade.
-- Chuyển trang (View Transitions, CSS) theo nguyên tắc "một mặt giấy liên tục":
+- Chuyển trang (View Transitions qua ClientRouter) theo nguyên tắc "một mặt giấy liên tục":
   topbar, header, footer đứng yên; chỉ vùng nội dung (`.vt-content`) mờ ra / hiện vào tại chỗ.
   Phần tử dùng chung biến hình: vạch menu đang chọn (`.nav-indicator`) trượt sang mục mới, dải đầu trang
-  (`.vt-hero`) co giãn, tiêu đề card → tiêu đề trang chi tiết (`.vt-title`, gán lúc `pageswap` trong
-  `src/shared/motion/transitions.ts`). Back/Forward: nội dung hiện từ trên xuống (type `back`, script `pagereveal` trong `<head>`).
+  (`.vt-hero`) co giãn, tiêu đề card → tiêu đề trang chi tiết (`.vt-title`, gán lúc `astro:before-preparation` trong
+  `src/shared/motion/transitions.ts`). Back/Forward: nội dung hiện từ trên xuống (`html[data-astro-transition='back']`).
   Không canvas, không animation lúc tải.
 - Không JS / `prefers-reduced-motion` → mọi nội dung hiển thị ngay.
 

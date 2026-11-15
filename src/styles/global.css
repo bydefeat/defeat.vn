@@ -164,10 +164,6 @@
   background-position: center;
 }
 
-@view-transition {
-  navigation: auto;
-}
-
 .site-header { view-transition-name: site-header; }
 .vt-content { view-transition-name: page-content; }
 .vt-hero { view-transition-name: page-hero; }
@@ -183,7 +179,7 @@
 ::view-transition-group(page-content) { animation: none; }
 ::view-transition-old(page-content) { animation: vt-content-out 160ms ease-in both; }
 ::view-transition-new(page-content) { animation: vt-content-in 420ms var(--ease) 70ms both; }
-html:active-view-transition-type(back)::view-transition-new(page-content) { animation-name: vt-content-in-back; }
+html[data-astro-transition='back']::view-transition-new(page-content) { animation-name: vt-content-in-back; }
 ::view-transition-group(page-hero) { animation-duration: 460ms; animation-timing-function: var(--ease); overflow: clip; }
 ::view-transition-old(page-hero) { animation: vt-fade-out 180ms ease-in both; }
 ::view-transition-new(page-hero) { animation: vt-fade-in 360ms var(--ease) 90ms both; }
@@ -200,10 +196,6 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
 @keyframes vt-content-in-back { from { opacity: 0; transform: translateY(-14px); } }
 @keyframes vt-fade-out { to { opacity: 0; } }
 @keyframes vt-fade-in { from { opacity: 0; } }
-
-@media (prefers-reduced-motion: reduce) {
-  @view-transition { navigation: none; }
-}
 
 @layer base {
   html {

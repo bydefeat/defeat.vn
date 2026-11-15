@@ -1,4 +1,5 @@
 import { prefersReducedMotion } from './env';
+import { onCleanup } from './lifecycle';
 
 export function initPlay() {
   const hosts = Array.from(document.querySelectorAll<HTMLElement>('[data-play]'));
@@ -22,6 +23,7 @@ export function initPlay() {
     },
     { threshold: 0.4 },
   );
+  onCleanup(() => io.disconnect());
 
   for (const el of hosts) {
     el.dataset.playWait = '';

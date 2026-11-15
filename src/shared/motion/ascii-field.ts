@@ -1,4 +1,5 @@
 import { AsciiCore, CELL_H, CELL_W } from './ascii-core';
+import { onCleanup, pageSignal } from './lifecycle';
 
 export function initAsciiFields() {
   for (const host of document.querySelectorAll<HTMLElement>('[data-ascii-field]')) start(host);
@@ -12,6 +13,7 @@ interface Driver {
   play(): void;
   pause(): void;
   frame(): void;
+  destroy(): void;
 }
 
 function workerDriver(canvas: HTMLCanvasElement): Driver | null {
@@ -29,6 +31,7 @@ function workerDriver(canvas: HTMLCanvasElement): Driver | null {
       play: () => post({ type: 'play' }),
       pause: () => post({ type: 'pause' }),
       frame: () => post({ type: 'frame' }),
+      destroy: () => w.terminate(),
     };
   } catch {
     return null;
@@ -53,6 +56,7 @@ function mainDriver(canvas: HTMLCanvasElement): Driver {
     play: () => { if (!running) { running = true; loop(); } },
     pause: () => { running = false; cancelAnimationFrame(raf); },
     frame: () => core.draw(performance.now()),
+    destroy: () => { running = false; cancelAnimationFrame(raf); },
   };
 }
 
@@ -95,12 +99,22 @@ function start(host: HTMLElement) {
   sendColors();
   resize();
   img?.addEventListener('load', () => sendLogo(img));
-  new ResizeObserver(resize).observe(host);
+  const signal = pageSignal();
+  const ro = new ResizeObserver(resize);
+  ro.observe(host);
 
   const update = () => (visible && !document.hidden && !reduced ? drv.play() : drv.pause());
-  new IntersectionObserver(([e]) => { visible = !!e?.isIntersecting; update(); }).observe(host);
-  document.addEventListener('visibilitychange', update);
-  new MutationObserver(sendColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const io = new IntersectionObserver(([e]) => { visible = !!e?.isIntersecting; update(); });
+  io.observe(host);
+  document.addEventListener('visibilitychange', update, { signal });
+  const mo = new MutationObserver(sendColors);
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  onCleanup(() => {
+    ro.disconnect();
+    io.disconnect();
+    mo.disconnect();
+    drv.destroy();
+  });
 
   host.addEventListener('pointermove', (e) => {
     const b = host.getBoundingClientRect();

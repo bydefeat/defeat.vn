@@ -1,6 +1,9 @@
+import { pageSignal } from './lifecycle';
+
 export function initHeader() {
   const header = document.querySelector<HTMLElement>('[data-site-header]');
   if (!header) return;
+  const signal = pageSignal();
   const menu = header.querySelector<HTMLDetailsElement>('[data-mobile-menu]');
   const megaItems = Array.from(header.querySelectorAll<HTMLElement>('[data-mega]'));
 
@@ -33,7 +36,7 @@ export function initHeader() {
 
   document.addEventListener('click', (e) => {
     if (!header.contains(e.target as Node)) closeAllMega();
-  });
+  }, { signal });
 
   let ticking = false;
   const update = () => {
@@ -49,19 +52,19 @@ export function initHeader() {
         requestAnimationFrame(update);
       }
     },
-    { passive: true },
+    { passive: true, signal },
   );
 
   menu?.addEventListener('toggle', () => document.documentElement.classList.toggle('menu-open', menu.open));
   window.matchMedia('(min-width: 1024px)').addEventListener('change', (mq) => {
     if (mq.matches && menu?.open) menu.open = false;
-  });
+  }, { signal });
   window.addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
     if (menu) menu.open = false;
     document.documentElement.classList.remove('menu-open');
     closeAllMega();
-  });
+  }, { signal });
   window.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (menu?.open) {
@@ -73,5 +76,5 @@ export function initHeader() {
       setMega(openItem, false);
       openItem.querySelector<HTMLElement>('[data-mega-toggle]')?.focus();
     }
-  });
+  }, { signal });
 }

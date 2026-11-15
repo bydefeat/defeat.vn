@@ -1,3 +1,5 @@
+import { onCleanup } from './lifecycle';
+
 const SCALE = 1.5;
 const HALF = 0.62;
 
@@ -87,6 +89,7 @@ class IlloCanvas {
       rasterize(this.svg, 'lines', this.w, this.h),
       rasterize(this.svg, 'dots', this.w, this.h),
     ]);
+    if (!this.host.isConnected) return; // page was swapped out while rasterizing
     this.phase = Float32Array.from({ length: this.w * this.h }, () => Math.random() * Math.PI * 2);
 
     for (const [cv, w, h, cls] of [
@@ -110,10 +113,21 @@ class IlloCanvas {
     trigger.addEventListener('pointerleave', () => this.setTarget(0));
     trigger.addEventListener('focusin', () => this.setTarget(1));
     trigger.addEventListener('focusout', () => this.setTarget(0));
-    new MutationObserver(() => {
+    const mo = new MutationObserver(() => {
       this.readColors();
       this.draw(performance.now());
-    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    onCleanup(() => this.destroy(mo));
+  }
+
+  private destroyed = false;
+
+  destroy(mo: MutationObserver) {
+    this.destroyed = true;
+    mo.disconnect();
+    cancelAnimationFrame(this.raf);
+    this.raf = 0;
   }
 
   private readColors() {
@@ -127,6 +141,7 @@ class IlloCanvas {
   }
 
   private setTarget(v: number) {
+    if (this.destroyed) return;
     this.target = v;
     if (this.reduced) {
       this.t = v;
@@ -138,6 +153,7 @@ class IlloCanvas {
 
   private loop = () => {
     this.raf = requestAnimationFrame((now) => {
+      if (this.destroyed) return;
       const dt = Math.min(64, now - (this.last || now));
       this.last = now;
       this.t += (this.target - this.t) * Math.min(1, dt / 140);

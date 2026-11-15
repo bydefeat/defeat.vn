@@ -1,8 +1,13 @@
+import type { TransitionBeforePreparationEvent } from 'astro:transitions/client';
+
+/**
+ * Before the view-transition snapshot of the old page is taken, pick which
+ * elements morph: drop the hero morph when scrolled away, and morph the clicked
+ * card title into the destination page title.
+ */
 export function initTransitions() {
-  window.addEventListener('pageswap', (e: Event) => {
-    const ev = e as Event & { viewTransition?: unknown; activation?: { entry?: { url?: string } } };
-    if (!ev.viewTransition || !ev.activation?.entry?.url) return;
-    const to = new URL(ev.activation.entry.url);
+  document.addEventListener('astro:before-preparation', (e) => {
+    const to = (e as TransitionBeforePreparationEvent).to;
     const unname = (sel: string) =>
       document.querySelectorAll<HTMLElement>(sel).forEach((el) => (el.style.viewTransitionName = 'none'));
 

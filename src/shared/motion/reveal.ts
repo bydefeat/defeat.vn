@@ -1,4 +1,5 @@
 import { prefersReducedMotion } from './env';
+import { onCleanup } from './lifecycle';
 
 export function initReveal() {
   const items = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
@@ -23,6 +24,7 @@ export function initReveal() {
     },
     { rootMargin: '0px 0px -6% 0px', threshold: 0.05 },
   );
+  onCleanup(() => io.disconnect());
   for (const el of items) {
     const r = el.getBoundingClientRect();
     if (r.top < vh && r.bottom > 0) continue;

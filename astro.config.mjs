@@ -33,10 +33,8 @@ export default defineConfig({
 
   markdown: { syntaxHighlight: 'prism' },
 
+  // <ClientRouter /> (BaseLayout) handles navigation client-side; prefetch on hover feeds it.
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
-  experimental: {
-    clientPrerender: true,
-  },
 
   fonts: [
     {

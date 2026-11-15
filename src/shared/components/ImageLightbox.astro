@@ -73,6 +73,8 @@ const text = TEXT[resolveLocale(Astro.currentLocale)];
 </dialog>
 
 <script>
+  import { pageSignal } from '@shared/motion/lifecycle';
+
   const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
   const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -411,12 +413,14 @@ const text = TEXT[resolveLocale(Astro.currentLocale)];
       if (!dlg.open) return;
       layout();
       resetZoom();
-    });
+    }, { signal: pageSignal() });
   }
 
-  const dlg = document.querySelector<HTMLDialogElement>('dialog[data-lb]');
-  const root = document.querySelector('[data-lightbox]');
-  if (dlg && root) init(dlg, root);
+  document.addEventListener('astro:page-load', () => {
+    const dlg = document.querySelector<HTMLDialogElement>('dialog[data-lb]');
+    const root = document.querySelector('[data-lightbox]');
+    if (dlg && root) init(dlg, root);
+  });
 </script>
 
 <style is:global>

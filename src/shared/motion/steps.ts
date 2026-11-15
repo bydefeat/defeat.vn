@@ -1,4 +1,5 @@
 import { prefersReducedMotion } from './env';
+import { onCleanup, pageSignal } from './lifecycle';
 
 const HOLD = [2600, 2800, 3400];
 const COMPLETE = 2600;
@@ -37,7 +38,7 @@ function setup(root: HTMLElement) {
 
   render(-1);
 
-  new IntersectionObserver(
+  const io = new IntersectionObserver(
     ([entry]) => {
       visible = entry.isIntersecting;
       if (visible && current < 0) {
@@ -46,7 +47,12 @@ function setup(root: HTMLElement) {
       } else schedule();
     },
     { threshold: 0.35 },
-  ).observe(root);
+  );
+  io.observe(root);
+  onCleanup(() => {
+    io.disconnect();
+    clearTimeout(timer);
+  });
 
   items.forEach((el, i) => {
     el.addEventListener('pointerenter', (e) => {
@@ -67,5 +73,5 @@ function setup(root: HTMLElement) {
     });
   });
 
-  document.addEventListener('visibilitychange', schedule);
+  document.addEventListener('visibilitychange', schedule, { signal: pageSignal() });
 }
