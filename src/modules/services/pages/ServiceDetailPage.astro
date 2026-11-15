@@ -29,7 +29,7 @@ const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
   jsonLd={[serviceLd({ name: service.title[locale], description: service.summary[locale], path: localizePath(path, locale) }), breadcrumbLd(crumbs)]}
 >
   <PageHero eyebrow={text.eyebrow} title={service.title[locale]} description={service.summary[locale]} crumbs={crumbs}>
-    <a href={localizePath('/contact', locale)} class="btn btn-invert btn-lg mt-10" data-magnetic="0.2">{t('cta.quote')} <Icon name="arrowRight" class="arrow size-5" /></a>
+    <a href={localizePath('/contact', locale)} class="btn btn-brand btn-lg mt-10" data-magnetic="0.2">{t('cta.quote')} <Icon name="arrowRight" class="arrow size-5" /></a>
   </PageHero>
 
   <section class="section">
@@ -50,7 +50,7 @@ const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 3);
       <aside class="relative self-start rounded-box frame bg-base-200 p-7 lg:sticky lg:top-28" data-reveal>
         <h2 class="t-h3 relative text-xl">{t('cta.contact')}</h2>
         <p class="relative mt-3 text-sm text-muted">{t('ctaBand.desc')}</p>
-        <a href={localizePath('/contact', locale)} class="btn btn-invert btn-block relative mt-6">{t('cta.quote')}</a>
+        <a href={localizePath('/contact', locale)} class="btn btn-brand btn-block relative mt-6">{t('cta.quote')}</a>
       </aside>
     </div>
   </section>

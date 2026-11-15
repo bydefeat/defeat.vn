@@ -78,7 +78,7 @@ const categories = productsText[locale].categories;
                             <p class="mt-2 text-sm text-muted">{t('header.promoDesc')}</p>
                           </div>
                           <div class="flex flex-col gap-2">
-                            <a href={href('/contact')} class="btn btn-invert btn-sm h-10">{t('cta.quote')} <Icon name="arrowRight" class="size-4" /></a>
+                            <a href={href('/contact')} class="btn btn-brand btn-sm h-10">{t('cta.quote')} <Icon name="arrowRight" class="size-4" /></a>
                             <a href={href('/services')} class="btn btn-line btn-sm h-10">{t('header.allServices')}</a>
                           </div>
                         </div>
@@ -175,7 +175,7 @@ const categories = productsText[locale].categories;
         <Icon name="moon" class="i-moon size-[18px]" />
         <Icon name="sun" class="i-sun size-[18px]" />
       </button>
-      <a href={href('/contact')} class="btn btn-invert btn-sm hidden h-9 px-4 lg:inline-flex">{t('cta.quote')}</a>
+      <a href={href('/contact')} class="btn btn-brand btn-sm hidden h-9 px-4 lg:inline-flex">{t('cta.quote')}</a>
 
       <details class="mobile-menu lg:hidden" data-mobile-menu>
         <summary class="-mr-2 flex size-11 cursor-pointer list-none items-center justify-center rounded-full" aria-label={t('nav.menu')}>
@@ -257,7 +257,7 @@ const categories = productsText[locale].categories;
             </ul>
 
             <div class="mt-auto space-y-4 pt-8">
-              <a href={href('/contact')} class="btn btn-invert btn-block btn-lg">{t('cta.quote')}</a>
+              <a href={href('/contact')} class="btn btn-brand btn-block btn-lg">{t('cta.quote')}</a>
               <div class="flex items-center justify-between gap-4 text-sm">
                 <div class="frame flex items-center rounded-full p-0.5 text-xs font-medium" role="group" aria-label={t('common.language')}>
                   {LOCALES.map((l) => (

@@ -45,7 +45,7 @@ const fallback = props.contentLocale && props.contentLocale !== locale ? props.c
     <slot name="head" />
   </head>
   <body id="top" class="flex min-h-dvh flex-col bg-base-100 font-sans text-base-content">
-    <a href="#main" class="btn btn-invert btn-sm sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]">
+    <a href="#main" class="btn btn-brand btn-sm sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]">
       {t('common.skipToContent')}
     </a>
     <Header locale={locale} path={props.path} availableLocales={props.availableLocales} />

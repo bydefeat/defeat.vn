@@ -63,7 +63,7 @@ nút **viên thuốc** (trắng trên nền tối / đen trên nền sáng), m�
 - Nút đổi theme `[data-theme-toggle]` ở header (`src/shared/motion/theme.ts`), chuyển màu mượt bằng View Transition (type `theme`).
 - Biến theo theme: `--muted`, `--line`, `--line-strong`, `--dot`, `--acc-red|teal|violet|sky|yellow`, `--glow`.
 
-**Thành phần:** `frame`, `frame-t|b|l|r` (viền nét đứt), `cells` (lưới ô ngăn nét đứt), `dot-grid`, `btn-invert`, `btn-line`,
+**Thành phần:** `frame`, `frame-t|b|l|r` (viền nét đứt), `cells` (lưới ô ngăn nét đứt), `dot-grid`, `btn-brand` (CTA chính: gradient màu thương hiệu), `btn-line`,
 `card-base` + `card-hover`, `pill`, `icon-chip`, `beams` (vệt sáng hero), `cta-bars` (nền vạch CTA).
 Font: **Inter** (variable 400–800, latin + vietnamese). Thang chữ: `t-display`, `t-h1`, `t-h2`, `t-h3`, `t-lead`, `t-label`.
 

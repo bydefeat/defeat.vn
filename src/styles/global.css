@@ -404,8 +404,38 @@ html:active-view-transition-type(theme)::view-transition-group(*) { animation: n
   .token.regex, .token.important, .token.variable { color: var(--acc-violet); }
 }
 
-.btn { --radius-field: 9999px; font-weight: 500; transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s; }
-.btn-invert { --btn-color: var(--color-base-content); --btn-fg: var(--color-base-100); --btn-border: var(--color-base-content); }
-.btn-invert:hover { opacity: 0.86; }
+.btn {
+  --radius-field: 0.75rem;
+  font-weight: 600;
+  background-clip: padding-box;
+  transition: filter 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s, color 0.2s, border-color 0.2s, translate 0.1s;
+}
+.btn:active:not([aria-haspopup]) { scale: none; translate: 0 1px; }
+
+/* Primary CTA: brand gradient, top highlight, soft brand glow. The bottom stop is darkened (not faded)
+   so white text keeps its contrast on both themes. */
+.btn-brand {
+  --brand: var(--color-primary);
+  --btn-color: var(--brand);
+  --btn-fg: var(--color-primary-content);
+  --btn-border: color-mix(in oklch, var(--brand) 30%, transparent);
+  background-image: linear-gradient(to bottom, var(--brand), color-mix(in oklch, var(--brand) 82%, black));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    0 4px 12px color-mix(in oklch, var(--brand) 15%, transparent);
+}
+.btn-brand:hover {
+  filter: brightness(1.1);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    0 6px 18px color-mix(in oklch, var(--brand) 26%, transparent);
+}
+.btn-brand:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.25),
+    0 0 0 3px color-mix(in oklch, var(--brand) 50%, transparent);
+}
+.btn-brand:disabled, .btn-brand[aria-disabled='true'] { filter: none; opacity: 0.5; pointer-events: none; }
 .btn-line { --btn-color: transparent; --btn-bg: transparent; --btn-fg: var(--color-base-content); --btn-border: var(--line-strong); }
 .btn-line:hover { --btn-border: var(--color-base-content); }
